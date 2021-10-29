@@ -1,0 +1,7 @@
+{
+  "target": [
+    "es2017",
+    "node12"
+  ],
+  "jsx": "preserve"
+}

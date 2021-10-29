@@ -1,0 +1,56 @@
+{
+  "version": "0.0.0",
+  "types": "dist/types/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.jsx",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.jsx"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "license": "MIT",
+  "keywords": [
+    "pridepack"
+  ],
+  "name": "rigidity",
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.12",
+    "@types/jest": "^27.0.1",
+    "@types/mime-types": "^2.1.1",
+    "@types/node": "^16.7.1",
+    "eslint": "^7.32.0",
+    "eslint-config-lxsmnsyc": "^0.2.3",
+    "pridepack": "^0.12.2",
+    "solid-app-router": "^0.1.5",
+    "solid-js": "^1.1.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.3.5"
+  },
+  "peerDependencies": {
+    "solid-app-router": "^0.1.5",
+    "solid-js": "^1.1.1"
+  },
+  "scripts": {
+    "prepublish": "pridepack clean && pridepack build",
+    "build": "pridepack build",
+    "type-check": "pridepack check",
+    "lint": "pridepack lint",
+    "test": "pridepack test --passWithNoTests",
+    "clean": "pridepack clean",
+    "watch": "pridepack watch"
+  },
+  "dependencies": {
+    "esbuild": "0.9",
+    "esbuild-plugin-solid": "^0.3.1",
+    "fs-extra": "^10.0.0",
+    "http-status-codes": "^2.1.4",
+    "mime-types": "^2.1.32",
+    "web-vitals": "^2.1.0"
+  }
+}
