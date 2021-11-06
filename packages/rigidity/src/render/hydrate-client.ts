@@ -64,7 +64,6 @@ export default function hydrateClient(
         transformedError.name = parsedData.error.name;
         transformedError.stack = parsedData.error.stack;
       }
-      console.error(transformedError);
       Page = () => (
         Solid.createComponent(Custom500Page, {
           statusCode: parsedData.statusCode,

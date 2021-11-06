@@ -6,6 +6,7 @@ import createAPITree from '../router/core/create-api-tree';
 import createPageTree from '../router/core/create-page-tree';
 import { matchRoute } from '../router/core/router';
 import { ServerRenderOptions } from '../types';
+import { green, red } from './colors';
 
 async function fileExists(path: string): Promise<boolean> {
   const fs = await import('fs-extra');
@@ -33,7 +34,7 @@ export default function createServer(
     async function errorHandler(error: Error) {
       const statusCode = (error instanceof StatusCode) ? error.value : 500;
       const reason = (error instanceof StatusCode) ? error.reason : error;
-      console.error(error);
+      console.log(`[${red(`${statusCode}`)}] ${request.url ?? ''}`, reason);
       response.statusCode = statusCode;
       responseEnd('text/html', await renderServerError(serverOptions, {
         statusCode,
@@ -51,18 +52,15 @@ export default function createServer(
 
         const file = url.pathname.substring(prefix.length);
         const targetFile = path.join(basePath, file);
-
-        console.log('Attempting to read', targetFile);
         const exists = await fileExists(targetFile);
         const mimeType = mime.contentType(path.basename(file));
 
         if (exists && mimeType) {
           const buffer = await fs.readFile(targetFile);
-
-          console.log('Serving file', url.pathname);
           response.statusCode = 200;
           response.setHeader('Cache-Control', 'max-age=31536000');
           responseEnd(mimeType, buffer);
+          console.log(`[${green('200')}] ${request.url ?? ''}`);
         } else {
           throw new StatusCode(404);
         }
@@ -85,13 +83,13 @@ export default function createServer(
           const matchedNode = matchRoute(apisTree, url.pathname.substring(apiPrefix.length));
 
           if (matchedNode && matchedNode.value) {
-            console.log('Serving API', url.pathname, matchedNode.value.path);
             await matchedNode.value.call({
               request,
               response,
               params: matchedNode.params,
               query: querystring.decode(url.search),
             });
+            console.log(`[${green(`${response.statusCode}`)}] ${request.url ?? ''}`);
           } else {
             throw new StatusCode(404);
           }
@@ -106,7 +104,6 @@ export default function createServer(
           const matchedNode = matchRoute(pagesTree, url.pathname);
 
           if (matchedNode && matchedNode.value) {
-            console.log('Serving', request.url);
             return renderServer(serverOptions, {
               routes: pagesTree,
               pathname: url.pathname,
@@ -126,6 +123,7 @@ export default function createServer(
 
       getContent().then((value) => {
         response.statusCode = 200;
+        console.log(`[${green('200')}] ${request.url ?? ''}`);
         responseEnd('text/html', value);
       }, errorHandler);
     }

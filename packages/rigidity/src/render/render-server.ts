@@ -10,8 +10,6 @@ async function renderCore(
 ): Promise<string> {
   const DocumentComponent = globalOptions.document ?? DefaultDocument;
 
-  console.log(pageResult);
-
   const documentResult = await renderToStringAsync(() => (
     createComponent(DocumentContext.Provider, {
       value: pageResult,
