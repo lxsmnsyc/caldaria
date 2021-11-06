@@ -72,14 +72,15 @@
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
-    "babel-preset-solid": "^1.2.1",
-    "babel-plugin-solid-labels": "^0.8.0",
     "@babel/preset-typescript": "^7.16.0",
+    "babel-plugin-solid-labels": "^0.8.0",
+    "babel-preset-solid": "^1.2.1",
     "esbuild": "^0.13.12",
     "fs-extra": "^10.0.0",
     "http-status-codes": "^2.1.4",
     "mime-types": "^2.1.33",
     "package-json-type": "^1.0.3",
+    "resolve.exports": "^1.1.0",
     "web-vitals": "^2.1.2"
   }
 }
