@@ -16,8 +16,8 @@ import createPageTree from '../router/core/create-page-tree';
 import { GlobalRenderOptions } from '../types';
 import { Router } from '../router';
 import StatusCode from '../errors/StatusCode';
-import { DefaultApp } from '../components/App';
-import { getErrorPage } from '../components/Error';
+import DefaultApp from '../components/App';
+import { getErrorPage } from './error-page';
 
 interface ParsedErrorProps {
   statusCode: number;
