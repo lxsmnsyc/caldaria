@@ -33,7 +33,7 @@ export default function createServer(
     async function errorHandler(error: Error) {
       const statusCode = (error instanceof StatusCode) ? error.value : 500;
       const reason = (error instanceof StatusCode) ? error.reason : error;
-
+      console.error(error);
       response.statusCode = statusCode;
       responseEnd('text/html', await renderServerError(serverOptions, {
         statusCode,
@@ -42,7 +42,6 @@ export default function createServer(
     }
 
     if (request.headers.host && request.url) {
-      console.log(request.headers.host, request.url);
       const url = new URL(request.url, `http://${request.headers.host}`);
 
       const readStaticFile = async (prefix: string, basePath: string) => {
