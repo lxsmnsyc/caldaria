@@ -17,14 +17,15 @@ export interface AppPage extends App {
   reportWebVitals?: (metric: WebVitalsMetric) => void;
 }
 
-export interface AppRenderResult {
-  tags: TagDescription[];
-  html: string;
-}
-
 export interface ErrorProps {
   statusCode: number;
   error?: Error;
+}
+
+export interface AppRenderResult {
+  tags: TagDescription[];
+  html: string;
+  errorProps?: ErrorProps;
 }
 
 export type ErrorPage = (props: ErrorProps) => JSX.Element;

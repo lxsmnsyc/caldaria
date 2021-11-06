@@ -7,6 +7,8 @@ export const API_PATH = 'api';
 // Directory relative to project root where public files are located
 export const PUBLIC_PATH = 'public';
 
+export const DOCUMENT_ERROR_DATA = 'rigidity_error';
+
 // Name of the app root
 export const DOCUMENT_MAIN_ROOT = 'rigidity__root';
 

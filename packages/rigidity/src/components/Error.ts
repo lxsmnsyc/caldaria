@@ -153,5 +153,6 @@ export async function renderStaticError(
   return {
     html,
     tags,
+    errorProps: options,
   };
 }

@@ -10,17 +10,11 @@ import {
   HydrationScript,
   createComponent,
 } from '../isomorphic-web';
-import { DOCUMENT_MAIN_ROOT } from '../constants';
-import { TagDescription } from '../types';
-
-interface DocumentContextValue {
-  html: string;
-  tags: TagDescription[];
-  scriptURL: string;
-}
+import { DOCUMENT_ERROR_DATA, DOCUMENT_MAIN_ROOT, STATIC_PATH } from '../constants';
+import { AppRenderResult } from '../types';
 
 export const DocumentContext = /* @__PURE__ */ (
-  createContext<DocumentContextValue>()
+  createContext<AppRenderResult>()
 );
 
 export interface DocumentHeadProps {
@@ -73,10 +67,26 @@ export function DocumentScript(): JSX.Element {
 
   return [
     createComponent(Dynamic, { component: HydrationScript }),
+    context?.errorProps && createComponent(Dynamic, {
+      component: 'script',
+      type: 'application/json',
+      id: DOCUMENT_ERROR_DATA,
+      innerHTML: JSON.stringify({
+        statusCode: context.errorProps.statusCode,
+        error: (
+          context.errorProps.error
+            ? {
+              name: context.errorProps.error?.name,
+              message: context.errorProps.error.message,
+            }
+            : undefined
+        ),
+      }),
+    }),
     createComponent(Dynamic, {
       component: 'script',
       type: 'module',
-      src: context?.scriptURL ?? '',
+      src: `/${STATIC_PATH}/index.js`,
     }),
   ];
 }
