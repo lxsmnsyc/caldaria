@@ -1,7 +1,7 @@
+import { createComponent, renderToStringAsync } from 'solid-js/web';
 import { renderApp, RenderAppOptions } from '../components/App';
 import { DefaultDocument, DocumentContext } from '../components/Document';
 import { renderStaticError } from '../components/Error';
-import { createComponent, renderToStringAsync } from '../isomorphic-web';
 import { AppRenderResult, ErrorProps, GlobalRenderOptions } from '../types';
 
 async function renderCore(
@@ -9,6 +9,8 @@ async function renderCore(
   pageResult: AppRenderResult,
 ): Promise<string> {
   const DocumentComponent = globalOptions.document ?? DefaultDocument;
+
+  console.log(pageResult);
 
   const documentResult = await renderToStringAsync(() => (
     createComponent(DocumentContext.Provider, {

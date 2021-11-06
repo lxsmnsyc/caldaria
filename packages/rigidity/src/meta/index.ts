@@ -8,13 +8,13 @@ import {
   useContext,
   mergeProps,
   Show,
-} from '../isomorphic';
+} from 'solid-js';
 import {
   isServer,
   Portal,
   Dynamic,
   createComponent,
-} from '../isomorphic-web';
+} from 'solid-js/web';
 
 interface TagDescription {
   tag: string;

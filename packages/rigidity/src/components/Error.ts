@@ -9,7 +9,7 @@ import {
   ErrorBoundary,
   createComponent,
   Dynamic,
-} from '../isomorphic-web';
+} from 'solid-js/web';
 import {
   MetaProvider,
   Style,
@@ -31,29 +31,30 @@ import {
 const ERROR_ROOT_STYLE = {
   color: '#000',
   background: '#fff',
-  fontFamily: '-apple-system, BlinkMacSystemFont, Roboto, "Segoe UI", "Fira Sans", Avenir, "Helvetica Neue", "Lucida Grande", sans-serif',
+  'font-family': '-apple-system, BlinkMacSystemFont, Roboto, "Segoe UI", "Fira Sans", Avenir, "Helvetica Neue", "Lucida Grande", sans-serif',
   width: '100vw',
   height: '100vh',
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  'align-items': 'center',
+  'justify-content': 'center',
 };
 
 const ERROR_STATUS_CODE_STYLE = {
-  fontSize: '1.5rem',
-  lineHeight: '2rem',
-  fontWeight: 'bold',
-  marginRight: '2rem',
+  'font-size': '1.5rem',
+  'line-height': '2rem',
+  'font-weight': 'bold',
+  'margin-right': '2rem',
 };
 
 const ERROR_REASON_STYLE = {
-  fontSize: '1.25rem',
-  lineHeight: '1.75rem',
+  'font-size': '1.25rem',
+  'line-height': '1.75rem',
 };
 
 export function DefaultErrorComponent(props: ErrorProps): JSX.Element {
   return (
     createComponent(Dynamic, {
+      component: 'div',
       style: ERROR_ROOT_STYLE,
       get children() {
         return [

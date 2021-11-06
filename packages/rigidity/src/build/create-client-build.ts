@@ -54,7 +54,6 @@ export default async function createClientBuild(
   // Create import header
   const lines = [
     'import { lazy } from "solid-js";',
-    'import { hydrate } from "solid-js/web";',
     ...await getPageImports(
       pagesDirectory,
       artifactDirectory,
@@ -95,6 +94,7 @@ export default async function createClientBuild(
 
   lines.push(
     `
+import { hydrate } from 'solid-js/web';
 import { hydrateClient } from 'rigidity';
 hydrateClient({
   ${appPage ? `app: ${appPage},` : '// app: undefined'}

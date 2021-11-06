@@ -82,7 +82,7 @@ export default function createServer(
         const readAPI = async () => {
           const querystring = await import('querystring');
 
-          const matchedNode = matchRoute(apisTree, url.pathname.replace(apiPrefix, ''));
+          const matchedNode = matchRoute(apisTree, url.pathname.substring(apiPrefix.length));
 
           if (matchedNode && matchedNode.value) {
             console.log('Serving API', url.pathname, matchedNode.value.path);

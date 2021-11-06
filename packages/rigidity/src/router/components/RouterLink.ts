@@ -1,17 +1,15 @@
 import {
   JSX,
-} from 'solid-js';
-import {
   mergeProps,
   Show,
   createEffect,
   createSignal,
   onCleanup,
-} from '../../isomorphic';
+} from 'solid-js';
 import {
   createComponent,
   Dynamic,
-} from '../../isomorphic-web';
+} from 'solid-js/web';
 import { excludeProps } from '../../utils/exclude-props';
 import { isModifiedEvent, isLocalURL } from '../utils/routing';
 import { useRouterUnsafe } from './Router';

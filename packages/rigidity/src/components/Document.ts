@@ -1,15 +1,13 @@
 import {
   JSX,
-} from 'solid-js';
-import {
   createContext,
   useContext,
-} from '../isomorphic';
+} from 'solid-js';
 import {
   Dynamic,
   HydrationScript,
   createComponent,
-} from '../isomorphic-web';
+} from 'solid-js/web';
 import { DOCUMENT_ERROR_DATA, DOCUMENT_MAIN_ROOT, STATIC_PATH } from '../constants';
 import { AppRenderResult } from '../types';
 
@@ -57,7 +55,7 @@ export function DocumentMain(): JSX.Element {
     createComponent(Dynamic, {
       component: 'div',
       id: DOCUMENT_MAIN_ROOT,
-      innerHTML: context?.html ?? '',
+      children: context?.html ?? '',
     })
   );
 }
@@ -71,7 +69,7 @@ export function DocumentScript(): JSX.Element {
       component: 'script',
       type: 'application/json',
       id: DOCUMENT_ERROR_DATA,
-      innerHTML: JSON.stringify({
+      children: JSON.stringify({
         statusCode: context.errorProps.statusCode,
         error: (
           context.errorProps.error

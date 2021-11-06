@@ -1,14 +1,12 @@
 import {
   JSX,
-} from 'solid-js';
-import {
   createContext,
   useContext,
   createMemo,
   Show,
   mergeProps,
-} from '../../isomorphic';
-import { createComponent } from '../../isomorphic-web';
+} from 'solid-js';
+import { createComponent } from 'solid-js/web';
 import { Page, PageTree } from '../core/create-page-tree';
 import {
   matchRoute,
