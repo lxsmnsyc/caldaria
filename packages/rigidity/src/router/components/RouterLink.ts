@@ -14,7 +14,7 @@ import {
 } from '../../isomorphic-web';
 import { excludeProps } from '../../utils/exclude-props';
 import { isModifiedEvent, isLocalURL } from '../utils/routing';
-import { useRouter } from './Router';
+import { useRouterUnsafe } from './Router';
 
 function Throwable(props: { error: Error }): JSX.Element {
   throw props.error;
@@ -33,7 +33,28 @@ export interface RouterLinkProps extends BaseAnchorAttributes {
 export default function RouterLink(
   props: RouterLinkProps,
 ): JSX.Element {
-  const router = useRouter();
+  const router = useRouterUnsafe();
+
+  if (!router) {
+    return (
+      createComponent(Dynamic, mergeProps(
+        {
+          component: 'a',
+        },
+        excludeProps(props, [
+          'prefetch',
+          'scroll',
+          'ref',
+          'replace',
+        ]),
+        {
+          get children() {
+            return props.children;
+          },
+        },
+      ))
+    );
+  }
 
   let anchorRef!: HTMLAnchorElement;
 

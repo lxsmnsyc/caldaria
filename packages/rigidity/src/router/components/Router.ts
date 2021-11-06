@@ -71,13 +71,21 @@ export default function Router(
   );
 }
 
-export function useRouter<P extends RouterParams>(): RouterInstance<P> {
+export function useRouterUnsafe<P extends RouterParams>(): RouterInstance<P> | undefined {
   const location = useContext(LocationContext);
   const params = useContext(ParamsContext);
-  if (location && params) {
+  if (location) {
     return mergeProps(location, {
       params: params as P,
     });
+  }
+  return undefined;
+}
+
+export function useRouter<P extends RouterParams>(): RouterInstance<P> {
+  const router = useRouterUnsafe<P>();
+  if (router) {
+    return router;
   }
   throw new Error('useRouter must be used in a component within <Router>');
 }
