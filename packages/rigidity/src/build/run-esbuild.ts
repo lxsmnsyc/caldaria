@@ -38,7 +38,6 @@ export default async function runESBuild(
     define: {
       ...(esbuildConfig?.define ?? {}),
       'process.env.NODE_ENV': JSON.stringify(context.isDev ? 'development' : 'production'),
-      RIGIDITY_SERVER: JSON.stringify(context.isServer || null),
     },
     conditions: ['solid'],
     plugins: [
