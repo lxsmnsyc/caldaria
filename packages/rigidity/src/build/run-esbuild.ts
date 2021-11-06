@@ -39,7 +39,7 @@ export default async function runESBuild(
       ...(esbuildConfig?.define ?? {}),
       'process.env.NODE_ENV': JSON.stringify(context.isDev ? 'development' : 'production'),
     },
-    conditions: ['solid'],
+    conditions: ['solid', context.isDev ? 'development' : 'production'],
     plugins: [
       solidPlugin({
         generate: context.isServer ? 'ssr' : 'dom',
