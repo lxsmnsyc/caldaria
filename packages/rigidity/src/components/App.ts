@@ -54,6 +54,10 @@ export async function renderApp(
                 createComponent(CustomAppPage, {
                   Component: () => (
                     createComponent(Router, {
+                      location: {
+                        pathname: options.pathname,
+                        search: options.search,
+                      },
                       get fallback() {
                         return (
                           createComponent(CustomNotFound, {
