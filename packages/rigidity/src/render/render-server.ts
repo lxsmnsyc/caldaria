@@ -1,14 +1,16 @@
 import { createComponent, renderToStringAsync } from 'solid-js/web';
-import { renderApp, RenderAppOptions } from '../components/App';
 import { DefaultDocument, DocumentContext } from '../components/Document';
-import { renderStaticError } from '../components/Error';
 import { AppRenderResult, ErrorProps, GlobalRenderOptions } from '../types';
+import { RenderAppOptions, renderApp } from './render-app';
+import renderError from './render-error';
 
 async function renderCore(
   globalOptions: GlobalRenderOptions,
   pageResult: AppRenderResult,
 ): Promise<string> {
   const DocumentComponent = globalOptions.document ?? DefaultDocument;
+
+  console.log(pageResult);
 
   const documentResult = await renderToStringAsync(() => (
     createComponent(DocumentContext.Provider, {
@@ -28,7 +30,7 @@ export async function renderServerError(
   globalOptions: GlobalRenderOptions,
   renderOptions: ErrorProps,
 ): Promise<string> {
-  return renderCore(globalOptions, await renderStaticError(
+  return renderCore(globalOptions, await renderError(
     globalOptions,
     renderOptions,
   ));
