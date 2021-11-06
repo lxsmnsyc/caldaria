@@ -1,5 +1,5 @@
-import { BUILD_OUTPUT, BUILD_PATH } from './constants';
-import { BuildOptions, BundleType } from './types';
+import { BUILD_OUTPUT, BUILD_PATH } from '../constants';
+import { BuildOptions, BundleType } from '../types';
 
 export async function getArtifactBaseDirectory(
   options: BuildOptions,

@@ -1,11 +1,39 @@
 {
   "version": "0.0.0",
   "types": "dist/types/index.d.ts",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.jsx",
+  "main": "dist/cjs/production/index.js",
+  "module": "dist/esm/production/index.js",
   "exports": {
-    "require": "./dist/cjs/index.js",
-    "import": "./dist/esm/index.jsx"
+    ".": {
+      "development": {
+        "require": "./dist/cjs/development/index.js",
+        "import": "./dist/esm/development/index.js"
+      },
+      "require": "./dist/cjs/production/index.js",
+      "import": "./dist/esm/production/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./dev": {
+      "production": {
+        "require": "./dist/cjs/production/index.js",
+        "import": "./dist/esm/production/index.js"
+      },
+      "require": "./dist/cjs/development/index.js",
+      "import": "./dist/esm/development/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./esm": {
+      "development": "./dist/esm/development/index.js",
+      "production": "./dist/esm/production/index.js",
+      "default": "./dist/esm/production/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./cjs": {
+      "development": "./dist/cjs/development/index.js",
+      "production": "./dist/cjs/production/index.js",
+      "default": "./dist/cjs/production/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
   },
   "files": [
     "dist",
@@ -21,23 +49,20 @@
   "name": "rigidity",
   "devDependencies": {
     "@types/fs-extra": "^9.0.12",
-    "@types/jest": "^27.0.1",
     "@types/mime-types": "^2.1.1",
-    "@types/node": "^16.7.1",
+    "@types/node": "^16.11.6",
     "eslint": "^7.32.0",
-    "eslint-config-lxsmnsyc": "^0.2.3",
-    "pridepack": "^0.12.2",
-    "solid-app-router": "^0.1.5",
-    "solid-js": "^1.1.1",
+    "eslint-config-lxsmnsyc": "^0.3.0",
+    "pridepack": "^1.0.3",
+    "solid-js": "^1.2.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.3.5"
+    "typescript": "^4.4.4"
   },
   "peerDependencies": {
-    "solid-app-router": "^0.1.5",
-    "solid-js": "^1.1.1"
+    "solid-js": "^1.2.1"
   },
   "scripts": {
-    "prepublish": "pridepack clean && pridepack build",
+    "prepublishOnly": "pridepack clean && pridepack build",
     "build": "pridepack build",
     "type-check": "pridepack check",
     "lint": "pridepack lint",
@@ -46,11 +71,15 @@
     "watch": "pridepack watch"
   },
   "dependencies": {
-    "esbuild": "0.9",
-    "esbuild-plugin-solid": "^0.3.1",
+    "@babel/core": "^7.16.0",
+    "babel-preset-solid": "^1.2.1",
+    "babel-plugin-solid-labels": "^0.8.0",
+    "@babel/preset-typescript": "^7.16.0",
+    "esbuild": "^0.13.12",
     "fs-extra": "^10.0.0",
     "http-status-codes": "^2.1.4",
-    "mime-types": "^2.1.32",
-    "web-vitals": "^2.1.0"
+    "mime-types": "^2.1.33",
+    "package-json-type": "^1.0.3",
+    "web-vitals": "^2.1.2"
   }
 }

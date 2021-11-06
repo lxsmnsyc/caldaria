@@ -1,17 +1,25 @@
+// Directory relative to project root where all pages are located
 export const PAGES_PATH = 'pages';
 
-export const DOCUMENT_MAIN_ROOT = 'rigidity__root';
-
-export const STATIC_PATH = '_rigidity';
-
+// Directory relative to project root where api files are located
 export const API_PATH = 'api';
 
+// Directory relative to project root where public files are located
 export const PUBLIC_PATH = 'public';
 
+// Name of the app root
+export const DOCUMENT_MAIN_ROOT = 'rigidity__root';
+
+// Base URL path for static file serving
+export const STATIC_PATH = '_rigidity';
+
+// Directory output
 export const BUILD_PATH = '.rigidity';
 
+// Custom app name
 export const CUSTOM_APP = '_app';
 
+// Custom document name
 export const CUSTOM_DOCUMENT = '_document';
 
 export const CUSTOM_404 = '_404';

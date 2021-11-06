@@ -1,5 +1,7 @@
 const rigidity = require('rigidity');
 
 rigidity.createBuild({
-  tsconfig: './tsconfig.json',
+  esbuild: {
+    tsconfig: './tsconfig.json',
+  },
 });

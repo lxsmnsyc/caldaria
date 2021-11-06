@@ -1,6 +1,6 @@
 {
   "exclude": ["node_modules"],
-  "include": ["pages"],
+  "include": ["pages", "types"],
   "compilerOptions": {
     "module": "ESNext",
     "lib": ["DOM", "ESNext"],

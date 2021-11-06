@@ -1,24 +1,29 @@
 export {
-  default as Head,
-  HeadProps,
-} from './components/Head';
-export {
-  default as Tail,
-  TailProps,
-} from './components/Tail';
-export {
-  default as Link,
-  LinkProps,
-} from './components/Link';
-export {
   DocumentHead,
   DocumentHeadProps,
   DocumentHtml,
   DocumentMain,
   DocumentScript,
-  DocumentTail,
-  DocumentTailProps,
 } from './components/Document';
 export {
   default as createBuild,
-} from './create-build';
+} from './build/create-build';
+export {
+  RouterInstance,
+  useRouter,
+  RouterLink,
+  RouterLinkProps,
+} from './router';
+export {
+  Meta,
+  Title,
+  Link,
+  Base,
+  Style,
+} from './meta';
+export {
+  default as hydrateClient,
+} from './render/hydrate-client';
+export {
+  default as createServer,
+} from './server';

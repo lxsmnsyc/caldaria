@@ -1,6 +1,7 @@
-import DuplicateRouterPathError from './errors/DuplicateRouterPathError';
-import InvalidRouterSyntaxError from './errors/InvalidRouterSyntaxError';
-import SharedRouterPathError from './errors/SharedRouterPathError';
+/* eslint-disable no-param-reassign */
+import DuplicateRouterPathError from '../errors/DuplicateRouterPathError';
+import InvalidRouterPathError from '../errors/InvalidRouterPathError';
+import SharedRouterPathError from '../errors/SharedRouterPathError';
 
 export interface RouterParams {
   [key: string]: string | string[];
@@ -38,7 +39,7 @@ export function addRoute<T>(
   value: T,
 ): void {
   function addRouteToChildren(children: RouterNode<T>[]) {
-    for (let i = 0, len = children.length; i < len; i++) {
+    for (let i = 0, len = children.length; i < len; i += 1) {
       const child = children[i];
 
       if (child.key === lead) {
@@ -89,7 +90,7 @@ export function addRoute<T>(
       }
       return;
     }
-    throw new InvalidRouterSyntaxError(lead);
+    throw new InvalidRouterPathError(lead);
   }
   addRouteToChildren(parent.normal);
 }
@@ -99,18 +100,18 @@ export interface RouterResult<T, P extends RouterParams = RouterParams> {
   params: P;
 }
 
-export function matchRoute<T, P extends RouterParams = RouterParams>(
+function matchRouteInternal<T, P extends RouterParams = RouterParams>(
   parent: RouterNode<T>,
   [lead, ...names]: string[],
   params: P = {} as P,
 ): RouterResult<T, P> | undefined {
   // Find first if the lead exists in the normal children
-  for (let i = 0, len = parent.normal.length; i < len; i++) {
+  for (let i = 0, len = parent.normal.length; i < len; i += 1) {
     const child = parent.normal[i];
 
     if (child.key === lead) {
       if (names.length > 0) {
-        const matched = matchRoute(child, names, {
+        const matched = matchRouteInternal(child, names, {
           ...params,
         });
 
@@ -133,7 +134,7 @@ export function matchRoute<T, P extends RouterParams = RouterParams>(
     if (names.length > 0) {
       const namedKey = parent.named.key;
       const paramKey = namedKey.substring(1, namedKey.length - 1);
-      const matched = matchRoute(parent.named, names, {
+      const matched = matchRouteInternal(parent.named, names, {
         ...params,
         [paramKey]: lead,
       });
@@ -166,4 +167,11 @@ export function matchRoute<T, P extends RouterParams = RouterParams>(
     };
   }
   return undefined;
+}
+
+export function matchRoute<T, P extends RouterParams = RouterParams>(
+  parent: RouterNode<T>,
+  route: string,
+): RouterResult<T, P> | undefined {
+  return matchRouteInternal(parent, route.split('/'));
 }
