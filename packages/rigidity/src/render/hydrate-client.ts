@@ -9,6 +9,7 @@ import * as Solid from 'solid-js';
 import { MountableElement } from 'solid-js/web';
 import { JSX } from 'solid-js/jsx-runtime';
 import {
+  DOCUMENT_ERROR_DATA,
   DOCUMENT_MAIN_ROOT,
 } from '../constants';
 import createPageTree from '../router/core/create-page-tree';
@@ -17,6 +18,15 @@ import { Router } from '../router';
 import StatusCode from '../errors/StatusCode';
 import { DefaultApp } from '../components/App';
 import { getErrorPage } from '../components/Error';
+
+interface ParsedErrorProps {
+  statusCode: number;
+  error?: {
+    name: string;
+    message: string;
+    stack?: string;
+  };
+}
 
 export default function hydrateClient(
   options: GlobalRenderOptions,
@@ -29,7 +39,7 @@ export default function hydrateClient(
   }
 
   const CustomAppPage = options.app ?? DefaultApp;
-  const CustomErrorPage = getErrorPage(500, options);
+  const Custom500Page = getErrorPage(500, options);
   const CustomNotFound = getErrorPage(404, options);
 
   if (CustomAppPage.reportWebVitals) {
@@ -40,13 +50,49 @@ export default function hydrateClient(
     getTTFB(CustomAppPage.reportWebVitals);
   }
 
-  const routerTree = createPageTree(options.pages);
+  const errorData = document.getElementById(DOCUMENT_ERROR_DATA);
+
+  let Page: () => JSX.Element;
+
+  if (errorData) {
+    const encodedData = errorData.textContent;
+    if (encodedData) {
+      const parsedData = JSON.parse(encodedData) as ParsedErrorProps;
+      let transformedError: Error | undefined;
+      if (parsedData.error) {
+        transformedError = new Error(parsedData.error.message);
+        transformedError.name = parsedData.error.name;
+        transformedError.stack = parsedData.error.stack;
+      }
+      Page = () => (
+        Solid.createComponent(Custom500Page, {
+          statusCode: parsedData.statusCode,
+          error: transformedError,
+        })
+      );
+    }
+  } else {
+    const routerTree = createPageTree(options.pages);
+    Page = () => (
+      Solid.createComponent(Router, {
+        routes: routerTree,
+        get fallback() {
+          return (
+            Solid.createComponent(CustomNotFound, {
+              error: new StatusCode(404),
+              statusCode: 404,
+            })
+          );
+        },
+      })
+    );
+  }
 
   hydrate(
     () => (
       Solid.createComponent(Solid.ErrorBoundary, {
         fallback: (err) => (
-          Solid.createComponent(CustomErrorPage, {
+          Solid.createComponent(Custom500Page, {
             error: err,
             statusCode: 500,
           })
@@ -54,19 +100,7 @@ export default function hydrateClient(
         get children() {
           return (
             Solid.createComponent(CustomAppPage, {
-              Component: () => (
-                Solid.createComponent(Router, {
-                  routes: routerTree,
-                  get fallback() {
-                    return (
-                      Solid.createComponent(CustomNotFound, {
-                        error: new StatusCode(404),
-                        statusCode: 404,
-                      })
-                    );
-                  },
-                })
-              ),
+              Component: Page,
             })
           );
         },

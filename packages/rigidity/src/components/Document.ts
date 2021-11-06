@@ -78,6 +78,7 @@ export function DocumentScript(): JSX.Element {
             ? {
               name: context.errorProps.error?.name,
               message: context.errorProps.error.message,
+              stack: context.errorProps.error?.stack,
             }
             : undefined
         ),
