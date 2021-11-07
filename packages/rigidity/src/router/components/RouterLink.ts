@@ -1,22 +1,18 @@
 import {
   JSX,
   mergeProps,
-  Show,
   createEffect,
   createSignal,
   onCleanup,
 } from 'solid-js';
 import {
+  isServer,
   createComponent,
   Dynamic,
 } from 'solid-js/web';
 import { excludeProps } from '../../utils/exclude-props';
 import { isModifiedEvent, isLocalURL } from '../utils/routing';
 import { useRouterUnsafe } from './Router';
-
-function Throwable(props: { error: Error }): JSX.Element {
-  throw props.error;
-}
 
 type BaseAnchorAttributes = JSX.AnchorHTMLAttributes<HTMLAnchorElement>;
 
@@ -33,25 +29,18 @@ export default function RouterLink(
 ): JSX.Element {
   const router = useRouterUnsafe();
 
-  if (!router) {
-    return (
-      createComponent(Dynamic, mergeProps(
-        {
-          component: 'a',
-        },
-        excludeProps(props, [
-          'prefetch',
-          'scroll',
-          'ref',
-          'replace',
-        ]),
-        {
-          get children() {
-            return props.children;
-          },
-        },
-      ))
-    );
+  if (!router || isServer) {
+    return createComponent(Dynamic, mergeProps(
+      {
+        component: 'a',
+      },
+      excludeProps(props, [
+        'prefetch',
+        'scroll',
+        'ref',
+        'replace',
+      ]),
+    ));
   }
 
   let anchorRef!: HTMLAnchorElement;
@@ -86,6 +75,13 @@ export default function RouterLink(
   });
 
   const [error, setError] = createSignal<Error>();
+
+  createEffect(() => {
+    const instance = error();
+    if (instance) {
+      throw instance;
+    }
+  });
 
   const [visible, setVisible] = createSignal(false);
 
@@ -141,17 +137,7 @@ export default function RouterLink(
     });
   });
 
-  return [
-    createComponent(Show, {
-      get when(): Error | undefined {
-        return error();
-      },
-      children: (err: Error) => (
-        createComponent(Throwable, {
-          error: err,
-        })
-      ),
-    }),
+  return (
     createComponent(Dynamic, mergeProps(
       {
         component: 'a',
@@ -168,11 +154,6 @@ export default function RouterLink(
         'ref',
         'replace',
       ]),
-      {
-        get children() {
-          return props.children;
-        },
-      },
-    )),
-  ];
+    ))
+  );
 }
