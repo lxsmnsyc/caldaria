@@ -51,6 +51,7 @@
     "@types/fs-extra": "^9.0.12",
     "@types/mime-types": "^2.1.1",
     "@types/node": "^16.11.6",
+    "@types/postcss-import": "^12.0.1",
     "eslint": "^7.32.0",
     "eslint-config-lxsmnsyc": "^0.3.0",
     "pridepack": "^1.0.3",
@@ -80,6 +81,10 @@
     "http-status-codes": "^2.1.4",
     "mime-types": "^2.1.33",
     "package-json-type": "^1.0.3",
+    "postcss": "^8.3.11",
+    "postcss-import": "^14.0.2",
+    "postcss-load-config": "^3.1.0",
+    "postcss-modules": "^4.2.2",
     "resolve.exports": "^1.1.0",
     "web-vitals": "^2.1.2"
   }

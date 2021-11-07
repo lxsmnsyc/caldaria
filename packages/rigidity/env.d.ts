@@ -102,6 +102,16 @@ declare module '*.otf' {
 }
 
 // CSS
+
+interface CSSModule {
+  [key: string]: string;
+}
+
+declare module '*.module.css' {
+  const contents: CSSModule;
+  export default contents;
+}
+
 declare module '*.css' {
   const contents: string;
   export default contents;
