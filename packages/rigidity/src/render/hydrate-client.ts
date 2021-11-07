@@ -18,6 +18,7 @@ import { Router } from '../router';
 import StatusCode from '../errors/StatusCode';
 import DefaultApp from '../components/App';
 import { getErrorPage } from './error-page';
+import { MetaProvider } from '../meta';
 
 interface ParsedErrorProps {
   statusCode: number;
@@ -90,17 +91,23 @@ export default function hydrateClient(
 
   hydrate(
     () => (
-      Solid.createComponent(Solid.ErrorBoundary, {
-        fallback: (err) => (
-          Solid.createComponent(Custom500Page, {
-            error: err,
-            statusCode: 500,
-          })
-        ),
+      Solid.createComponent(MetaProvider, {
         get children() {
           return (
-            Solid.createComponent(CustomAppPage, {
-              Component: Page,
+            Solid.createComponent(Solid.ErrorBoundary, {
+              fallback: (err) => (
+                Solid.createComponent(Custom500Page, {
+                  error: err,
+                  statusCode: 500,
+                })
+              ),
+              get children() {
+                return (
+                  Solid.createComponent(CustomAppPage, {
+                    Component: Page,
+                  })
+                );
+              },
             })
           );
         },

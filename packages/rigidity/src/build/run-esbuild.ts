@@ -2,6 +2,7 @@ import { BuildResult } from 'esbuild';
 import resolveTSConfig from './resolve-tsconfig';
 import { BuildContext, BuildOptions } from '../types';
 import readPackage from './read-package';
+import { STATIC_PATH } from '../constants';
 
 export default async function runESBuild(
   artifact: string,
@@ -42,6 +43,7 @@ export default async function runESBuild(
       ...(esbuildConfig?.define ?? {}),
       'process.env.NODE_ENV': JSON.stringify(context.isDev ? 'development' : 'production'),
     },
+    publicPath: `/${STATIC_PATH}`,
     conditions: [
       'solid',
       // context.isDev ? 'development' : 'production',

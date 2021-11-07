@@ -1,16 +1,5 @@
 /// <reference types="babel-plugin-solid-labels" />
 
-// queries
-declare module '*?raw' {
-  const contents: string;
-  export default contents;
-}
-
-declare module '*?url' {
-  const contents: string;
-  export default contents;
-}
-
 // images
 
 // images
@@ -107,15 +96,47 @@ interface CSSModule {
   [key: string]: string;
 }
 
+
+declare module '*.module.css?raw' {
+  export const styles: CSSModule;
+  export const sheet: string;
+}
+
+declare module '*.module.css?url' {
+  export const styles: CSSModule;
+  export const source: string;
+}
+
 declare module '*.module.css' {
   const contents: CSSModule;
   export default contents;
 }
 
-declare module '*.css' {
+declare module '*.css?url' {
   const contents: string;
   export default contents;
 }
+
+declare module '*.css?raw' {
+  const contents: string;
+  export default contents;
+}
+
+declare module '*.css' {
+  //no-op
+}
+
+// queries
+declare module '*?raw' {
+  const contents: string;
+  export default contents;
+}
+
+declare module '*?url' {
+  const contents: string;
+  export default contents;
+}
+
 
 // JSON
 declare module '*.json' {

@@ -16,17 +16,17 @@ export default function solidPlugin(options: SolidOptions): Plugin {
   return {
     name: 'esbuild:solid',
 
-    setup(build) {
+    async setup(build) {
+      const path = await import('path');
+      const fs = await import('fs/promises');
+
+      const babel = await import('@babel/core');
+
+      const solid = (await import('babel-preset-solid')).default;
+      const ts = (await import('@babel/preset-typescript')).default;
+      const solidLabels = (await import('babel-plugin-solid-labels')).default;
+
       build.onLoad({ filter: /\.(t|j)sx$/ }, async (args) => {
-        const path = await import('path');
-        const fs = await import('fs/promises');
-
-        const solid = (await import('babel-preset-solid')).default;
-        const ts = (await import('@babel/preset-typescript')).default;
-        const solidLabels = (await import('babel-plugin-solid-labels')).default;
-
-        const babel = await import('@babel/core');
-
         const source = await fs.readFile(args.path, { encoding: 'utf-8' });
 
         const { name, ext } = path.parse(args.path);

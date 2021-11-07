@@ -25,5 +25,8 @@ export {
   default as hydrateClient,
 } from './render/hydrate-client';
 export {
+  default as renderStyle,
+} from './render/render-style';
+export {
   default as createServer,
 } from './server';
