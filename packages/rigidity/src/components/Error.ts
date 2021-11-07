@@ -40,7 +40,6 @@ const ERROR_REASON_STYLE = {
 };
 
 export default function DefaultErrorComponent(props: ErrorProps): JSX.Element {
-  console.log(props);
   return (
     createComponent(Dynamic, {
       component: 'div',

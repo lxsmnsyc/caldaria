@@ -97,14 +97,19 @@ interface CSSModule {
 }
 
 
-declare module '*.module.css?raw' {
-  export const styles: CSSModule;
-  export const sheet: string;
+declare module '*.module.css?url-only' {
+  const contents: string;
+  export default contents;
 }
 
 declare module '*.module.css?url' {
   export const styles: CSSModule;
   export const source: string;
+}
+
+declare module '*.module.css?raw' {
+  export const styles: CSSModule;
+  export const sheet: string;
 }
 
 declare module '*.module.css' {

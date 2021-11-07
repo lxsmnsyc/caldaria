@@ -1,6 +1,6 @@
 import { JSX } from 'solid-js';
-import { Style } from 'rigidity';
-import style from '../styles/index.css?raw';
+import { Link } from 'rigidity';
+import { styles, source } from '../styles/example.module.css?url';
 
 export default function Index(): JSX.Element {
   let count = $signal(0);
@@ -14,8 +14,8 @@ export default function Index(): JSX.Element {
 
   return (
     <div>
-      <Style>{style}</Style>
-      <h1>{`Count: ${count}`}</h1>
+      <Link rel="stylesheet" href={source} />
+      <h1 class={styles.title}>{`Count: ${count}`}</h1>
       <button type="button" onClick={increment}>+</button>
       <button type="button" onClick={decrement}>-</button>
     </div>

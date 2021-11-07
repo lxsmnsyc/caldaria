@@ -57,11 +57,11 @@ export default async function runESBuild(
         },
         dev: context.isDev,
       }),
-      rawPlugin(),
-      urlPlugin(),
       postcssPlugin({
         dev: context.isDev,
       }),
+      rawPlugin(),
+      urlPlugin(),
       ...(esbuildConfig?.plugins ?? []),
     ],
     external: esbuildConfig?.external,

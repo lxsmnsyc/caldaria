@@ -19,6 +19,13 @@ export const sheet = ${JSON.stringify(css)};
 `;
 }
 
+function createURLCSSModule(path: string, json: Record<string, string>) {
+  return `
+export const styles = ${JSON.stringify(json)};
+export { default as source } from ${JSON.stringify(`${path}?url-only`)};
+`;
+}
+
 export default function postcssPlugin(options: PostCSSOptions): Plugin {
   return {
     name: 'esbuild:postcss',
@@ -47,24 +54,28 @@ export default function postcssPlugin(options: PostCSSOptions): Plugin {
         return newID;
       }
 
-      build.onResolve({ filter: /\.module.css\?raw$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path),
-        namespace: 'postcss-modules-raw',
+      build.onResolve({ filter: /\.module\.css\?url-only$/ }, (args) => ({
+        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 9)),
+        namespace: 'postcss-modules-url-only',
       }));
-      build.onResolve({ filter: /\.module.css\?url$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path),
+      build.onResolve({ filter: /\.module\.css\?url$/ }, (args) => ({
+        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
         namespace: 'postcss-modules-url',
       }));
-      build.onResolve({ filter: /\.module.css$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path),
+      build.onResolve({ filter: /\.module\.css\?raw$/ }, (args) => ({
+        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+        namespace: 'postcss-modules-raw',
+      }));
+      build.onResolve({ filter: /\.module\.css$/ }, (args) => ({
+        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
         namespace: 'postcss-modules',
       }));
       build.onResolve({ filter: /\.css\?raw$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path),
+        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
         namespace: 'postcss-raw',
       }));
       build.onResolve({ filter: /\.css\?url$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path),
+        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
         namespace: 'postcss-url',
       }));
       build.onResolve({ filter: /\.css$/ }, (args) => ({
@@ -153,6 +164,25 @@ export default function postcssPlugin(options: PostCSSOptions): Plugin {
           contents: createRawCSSModule(css, json),
           resolveDir: path.dirname(args.path),
           loader: 'js',
+        };
+      });
+      build.onLoad({ filter: /.*/, namespace: 'postcss-modules-url' }, async (args) => {
+        const { json } = await processPostCSSModules(args);
+
+        const { dir, base } = path.parse(args.path);
+
+        return {
+          contents: createURLCSSModule(`./${base}`, json),
+          resolveDir: dir,
+          loader: 'js',
+        };
+      });
+      build.onLoad({ filter: /.*/, namespace: 'postcss-modules-url-only' }, async (args) => {
+        const { css } = await processPostCSSModules(args);
+
+        return {
+          contents: css,
+          loader: 'file',
         };
       });
     },
