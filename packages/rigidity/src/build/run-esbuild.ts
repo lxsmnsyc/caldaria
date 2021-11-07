@@ -11,6 +11,8 @@ export default async function runESBuild(
 ): Promise<BuildResult> {
   const esbuild = await import('esbuild');
   const solidPlugin = (await import('../plugins/solid')).default;
+  const rawPlugin = (await import('../plugins/raw')).default;
+  const urlPlugin = (await import('../plugins/url')).default;
   const pkg = await readPackage();
 
   const esbuildConfig = typeof options.esbuild === 'function'
@@ -52,6 +54,8 @@ export default async function runESBuild(
         },
         dev: context.isDev,
       }),
+      rawPlugin(),
+      urlPlugin(),
       ...(esbuildConfig?.plugins ?? []),
     ],
     external: esbuildConfig?.external,
