@@ -1,11 +1,16 @@
-import { createComponent, Suspense } from 'solid-js';
-import { renderToStringAsync } from 'solid-js/web';
+import {
+  createComponent,
+  JSX,
+  Suspense,
+  useContext,
+} from 'solid-js';
 import DefaultApp from '../components/App';
+import { DocumentContext } from '../components/Document';
 import StatusCode from '../errors/StatusCode';
 import { MetaProvider } from '../meta';
 import { Router } from '../router';
 import { PageTree } from '../router/core/create-page-tree';
-import { GlobalRenderOptions, AppRenderResult, TagDescription } from '../types';
+import { GlobalRenderOptions } from '../types';
 import { getErrorPage } from './error-page';
 
 export interface RenderAppOptions {
@@ -14,52 +19,48 @@ export interface RenderAppOptions {
   routes: PageTree;
 }
 
-export async function renderApp(
+export function renderApp(
   global: GlobalRenderOptions,
   options: RenderAppOptions,
-): Promise<AppRenderResult> {
+): () => JSX.Element {
   const CustomAppPage = global.app ?? DefaultApp;
   const CustomNotFound = getErrorPage(404, global);
 
-  const tags: TagDescription[] = [];
-
-  const html = await renderToStringAsync(() => (
-    createComponent(Suspense, {
-      get children() {
-        return (
-          createComponent(MetaProvider, {
-            tags,
-            get children() {
-              return (
-                createComponent(CustomAppPage, {
-                  Component: () => (
-                    createComponent(Router, {
-                      location: {
-                        pathname: options.pathname,
-                        search: options.search,
-                      },
-                      get fallback() {
-                        return (
-                          createComponent(CustomNotFound, {
-                            statusCode: 404,
-                            error: new StatusCode(404),
-                          })
-                        );
-                      },
-                      routes: options.routes,
-                    })
-                  ),
-                })
-              );
-            },
-          })
-        );
-      },
-    })
-  ));
-
-  return {
-    html,
-    tags,
+  return () => {
+    const context = useContext(DocumentContext);
+    return (
+      createComponent(Suspense, {
+        get children() {
+          return (
+            createComponent(MetaProvider, {
+              tags: context?.tags ?? [],
+              get children() {
+                return (
+                  createComponent(CustomAppPage, {
+                    Component: () => (
+                      createComponent(Router, {
+                        location: {
+                          pathname: options.pathname,
+                          search: options.search,
+                        },
+                        get fallback() {
+                          return (
+                            createComponent(CustomNotFound, {
+                              statusCode: 404,
+                              error: new StatusCode(404),
+                            })
+                          );
+                        },
+                        routes: options.routes,
+                      })
+                    ),
+                  })
+                );
+              },
+            })
+          );
+        },
+      })
+    );
   };
 }

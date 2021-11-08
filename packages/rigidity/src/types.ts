@@ -22,9 +22,9 @@ export interface ErrorProps {
   error?: Error;
 }
 
-export interface AppRenderResult {
+export interface RenderResult {
+  App: () => JSX.Element;
   tags: TagDescription[];
-  html: string;
   errorProps?: ErrorProps;
 }
 

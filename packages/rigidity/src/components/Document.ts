@@ -7,16 +7,19 @@ import {
   Dynamic,
   HydrationScript,
   createComponent,
+  ssr,
+  Assets,
 } from 'solid-js/web';
 import { DOCUMENT_ERROR_DATA, DOCUMENT_MAIN_ROOT, STATIC_PATH } from '../constants';
-import { AppRenderResult } from '../types';
+import { renderTags } from '../meta';
+import { RenderResult } from '../types';
 
 export const DocumentContext = /* @__PURE__ */ (
-  createContext<AppRenderResult>()
+  createContext<RenderResult>()
 );
 
 export interface DocumentHeadProps {
-  children: JSX.Element;
+  children?: JSX.Element;
 }
 
 export function DocumentHead(props: DocumentHeadProps): JSX.Element {
@@ -35,12 +38,11 @@ export function DocumentHead(props: DocumentHeadProps): JSX.Element {
             name: 'viewport',
             content: 'width=device-width, initial-scale=1',
           }),
-          context?.tags.map((value) => (
-            createComponent(Dynamic, {
-              component: value.tag,
-              ...value.props,
-            })
-          )),
+          createComponent(Assets, {
+            get children() {
+              return ssr(renderTags(context?.tags ?? [])) as unknown as JSX.Element;
+            },
+          }),
           props.children,
         ];
       },
@@ -55,7 +57,11 @@ export function DocumentMain(): JSX.Element {
     createComponent(Dynamic, {
       component: 'div',
       id: DOCUMENT_MAIN_ROOT,
-      children: context?.html ?? '',
+      get children() {
+        return createComponent(Dynamic, {
+          component: context?.App,
+        });
+      },
     })
   );
 }
@@ -85,6 +91,7 @@ export function DocumentScript(): JSX.Element {
     createComponent(Dynamic, {
       component: 'script',
       type: 'module',
+      async: true,
       src: `/${STATIC_PATH}/index.js`,
     }),
   ];
@@ -104,19 +111,14 @@ export function DefaultDocument(): JSX.Element {
     createComponent(DocumentHtml, {
       get children() {
         return [
-          createComponent(DocumentHead, {
-            get children() {
-              return (
-                createComponent(DocumentScript, {})
-              );
-            },
-          }),
+          createComponent(DocumentHead, {}),
           createComponent(Dynamic, {
             component: 'body',
             get children() {
-              return (
-                createComponent(DocumentMain, {})
-              );
+              return [
+                createComponent(DocumentMain, {}),
+                createComponent(DocumentScript, {}),
+              ];
             },
           }),
         ];
