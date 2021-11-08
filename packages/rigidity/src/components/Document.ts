@@ -111,14 +111,19 @@ export function DefaultDocument(): JSX.Element {
     createComponent(DocumentHtml, {
       get children() {
         return [
-          createComponent(DocumentHead, {}),
+          createComponent(DocumentHead, {
+            get children() {
+              return (
+                createComponent(DocumentScript, {})
+              );
+            },
+          }),
           createComponent(Dynamic, {
             component: 'body',
             get children() {
-              return [
-                createComponent(DocumentMain, {}),
-                createComponent(DocumentScript, {}),
-              ];
+              return (
+                createComponent(DocumentMain, {})
+              );
             },
           }),
         ];
