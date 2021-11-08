@@ -1,19 +1,19 @@
 {
   "license": "MIT",
   "name": "hello-world",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "serve": "node ./.rigidity",
     "build": "node build-src"
   },
   "dependencies": {
-    "rigidity": "0.0.1",
-    "solid-js": "^1.1.1",
-    "solid-headless": "^0.10.5"
+    "rigidity": "0.0.2",
+    "solid-headless": "^0.10.5",
+    "solid-js": "^1.1.1"
   },
   "devDependencies": {
-    "tailwindcss": "^2.2.19",
-    "autoprefixer": "^10.4.0"
+    "autoprefixer": "^10.4.0",
+    "tailwindcss": "^2.2.19"
   },
   "private": true
 }
