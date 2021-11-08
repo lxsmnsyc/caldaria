@@ -34,7 +34,8 @@ export default function createServer(
     async function errorHandler(error: Error) {
       const statusCode = (error instanceof StatusCode) ? error.value : 500;
       const reason = (error instanceof StatusCode) ? error.reason : error;
-      console.log(`[${red(`${statusCode}`)}] ${request.url ?? ''}`, reason);
+      console.log(`[${red(`${statusCode}`)}] ${request.url ?? ''}`);
+      console.error(reason);
       response.statusCode = statusCode;
       responseEnd('text/html', await renderServerError(serverOptions, {
         statusCode,
