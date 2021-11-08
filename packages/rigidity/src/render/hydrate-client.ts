@@ -5,20 +5,20 @@ import {
   getLCP,
   getTTFB,
 } from 'web-vitals';
-import * as Solid from 'solid-js';
-import { MountableElement, Suspense } from 'solid-js/web';
+import { createComponent, MountableElement } from 'solid-js/web';
 import { JSX } from 'solid-js/jsx-runtime';
 import {
   DOCUMENT_ERROR_DATA,
-  DOCUMENT_MAIN_ROOT,
 } from '../constants';
 import createPageTree from '../router/core/create-page-tree';
-import { GlobalRenderOptions } from '../types';
-import { Router } from '../router';
-import StatusCode from '../errors/StatusCode';
+import { GlobalRenderOptions, RenderResult } from '../types';
 import DefaultApp from '../components/App';
-import { getErrorPage } from './error-page';
-import { MetaProvider } from '../meta';
+import {
+  DocumentContext,
+  DefaultDocument,
+} from '../components/Document';
+import { renderApp } from './render-app';
+import renderError from './render-error';
 
 interface ParsedErrorProps {
   statusCode: number;
@@ -33,15 +33,8 @@ export default function hydrateClient(
   options: GlobalRenderOptions,
   hydrate: (fn: () => JSX.Element, node: MountableElement) => void,
 ): void {
-  const root = document.getElementById(DOCUMENT_MAIN_ROOT);
-
-  if (!root) {
-    throw new Error('Missing rigidity root');
-  }
-
+  const DocumentComponent = options.document ?? DefaultDocument;
   const CustomAppPage = options.app ?? DefaultApp;
-  const Custom500Page = getErrorPage(500, options);
-  const CustomNotFound = getErrorPage(404, options);
 
   if (CustomAppPage.reportWebVitals) {
     getCLS(CustomAppPage.reportWebVitals);
@@ -53,7 +46,7 @@ export default function hydrateClient(
 
   const errorData = document.getElementById(DOCUMENT_ERROR_DATA);
 
-  let Page: () => JSX.Element;
+  let pageResult: RenderResult;
 
   if (errorData) {
     const encodedData = errorData.textContent;
@@ -65,60 +58,39 @@ export default function hydrateClient(
         transformedError.name = parsedData.error.name;
         transformedError.stack = parsedData.error.stack;
       }
-      Page = () => (
-        Solid.createComponent(Custom500Page, {
-          statusCode: parsedData.statusCode,
-          error: transformedError,
-        })
-      );
+      const errorProps = {
+        statusCode: parsedData.statusCode,
+        error: transformedError,
+      };
+      pageResult = {
+        App: renderError(options, errorProps),
+        tags: [],
+        errorProps,
+      };
     }
   } else {
     const routerTree = createPageTree(options.pages);
-    Page = () => (
-      Solid.createComponent(Router, {
+    pageResult = {
+      App: renderApp(options, {
+        pathname: window.location.pathname,
+        search: window.location.search,
         routes: routerTree,
-        get fallback() {
-          return (
-            Solid.createComponent(CustomNotFound, {
-              error: new StatusCode(404),
-              statusCode: 404,
-            })
-          );
-        },
-      })
-    );
+      }),
+      tags: [],
+    };
   }
 
   hydrate(
     () => (
-      Solid.createComponent(Suspense, {
+      createComponent(DocumentContext.Provider, {
+        value: pageResult,
         get children() {
           return (
-            Solid.createComponent(MetaProvider, {
-              get children() {
-                return (
-                  Solid.createComponent(Solid.ErrorBoundary, {
-                    fallback: (err) => (
-                      Solid.createComponent(Custom500Page, {
-                        error: err,
-                        statusCode: 500,
-                      })
-                    ),
-                    get children() {
-                      return (
-                        Solid.createComponent(CustomAppPage, {
-                          Component: Page,
-                        })
-                      );
-                    },
-                  })
-                );
-              },
-            })
+            createComponent(DocumentComponent, {})
           );
         },
       })
     ),
-    root,
+    document,
   );
 }
