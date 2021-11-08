@@ -1,5 +1,6 @@
 import {
   createComponent,
+  ErrorBoundary,
   JSX,
   Suspense,
   useContext,
@@ -24,6 +25,7 @@ export function renderApp(
   options: RenderAppOptions,
 ): () => JSX.Element {
   const CustomAppPage = global.app ?? DefaultApp;
+  const Custom500Page = getErrorPage(500, global);
   const CustomNotFound = getErrorPage(404, global);
 
   return () => {
@@ -36,24 +38,36 @@ export function renderApp(
               tags: context?.tags ?? [],
               get children() {
                 return (
-                  createComponent(CustomAppPage, {
-                    Component: () => (
-                      createComponent(Router, {
-                        location: {
-                          pathname: options.pathname,
-                          search: options.search,
-                        },
-                        get fallback() {
-                          return (
-                            createComponent(CustomNotFound, {
-                              statusCode: 404,
-                              error: new StatusCode(404),
-                            })
-                          );
-                        },
-                        routes: options.routes,
+                  createComponent(ErrorBoundary, {
+                    fallback: (err) => (
+                      createComponent(Custom500Page, {
+                        error: err,
+                        statusCode: 500,
                       })
                     ),
+                    get children() {
+                      return (
+                        createComponent(CustomAppPage, {
+                          Component: () => (
+                            createComponent(Router, {
+                              location: {
+                                pathname: options.pathname,
+                                search: options.search,
+                              },
+                              get fallback() {
+                                return (
+                                  createComponent(CustomNotFound, {
+                                    statusCode: 404,
+                                    error: new StatusCode(404),
+                                  })
+                                );
+                              },
+                              routes: options.routes,
+                            })
+                          ),
+                        })
+                      );
+                    },
                   })
                 );
               },

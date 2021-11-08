@@ -1,4 +1,10 @@
-import { createComponent, JSX, useContext } from 'solid-js';
+import {
+  createComponent,
+  ErrorBoundary,
+  JSX,
+  Suspense,
+  useContext,
+} from 'solid-js';
 import DefaultApp from '../components/App';
 import { DocumentContext } from '../components/Document';
 import { MetaProvider } from '../meta';
@@ -14,20 +20,39 @@ export default function renderError(
 ): () => JSX.Element {
   const CustomAppPage = global.app ?? DefaultApp;
   const CustomErrorPage = getErrorPage(options.statusCode, global);
+  const Custom500Page = getErrorPage(500, global);
   return () => {
     const context = useContext(DocumentContext);
     return (
-      createComponent(MetaProvider, {
-        tags: context?.tags ?? [],
+      createComponent(Suspense, {
         get children() {
           return (
-            createComponent(CustomAppPage, {
-              Component: () => (
-                createComponent(CustomErrorPage, {
-                  statusCode: options.statusCode,
-                  error: options.error,
-                })
-              ),
+            createComponent(MetaProvider, {
+              tags: context?.tags ?? [],
+              get children() {
+                return (
+                  createComponent(ErrorBoundary, {
+                    fallback: (err) => (
+                      createComponent(Custom500Page, {
+                        error: err,
+                        statusCode: 500,
+                      })
+                    ),
+                    get children() {
+                      return (
+                        createComponent(CustomAppPage, {
+                          Component: () => (
+                            createComponent(CustomErrorPage, {
+                              statusCode: options.statusCode,
+                              error: options.error,
+                            })
+                          ),
+                        })
+                      );
+                    },
+                  })
+                );
+              },
             })
           );
         },

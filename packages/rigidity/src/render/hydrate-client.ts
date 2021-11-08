@@ -6,7 +6,7 @@ import {
   getTTFB,
 } from 'web-vitals';
 import * as Solid from 'solid-js';
-import { MountableElement } from 'solid-js/web';
+import { MountableElement, Suspense } from 'solid-js/web';
 import { JSX } from 'solid-js/jsx-runtime';
 import {
   DOCUMENT_ERROR_DATA,
@@ -91,20 +91,26 @@ export default function hydrateClient(
 
   hydrate(
     () => (
-      Solid.createComponent(MetaProvider, {
+      Solid.createComponent(Suspense, {
         get children() {
           return (
-            Solid.createComponent(Solid.ErrorBoundary, {
-              fallback: (err) => (
-                Solid.createComponent(Custom500Page, {
-                  error: err,
-                  statusCode: 500,
-                })
-              ),
+            Solid.createComponent(MetaProvider, {
               get children() {
                 return (
-                  Solid.createComponent(CustomAppPage, {
-                    Component: Page,
+                  Solid.createComponent(Solid.ErrorBoundary, {
+                    fallback: (err) => (
+                      Solid.createComponent(Custom500Page, {
+                        error: err,
+                        statusCode: 500,
+                      })
+                    ),
+                    get children() {
+                      return (
+                        Solid.createComponent(CustomAppPage, {
+                          Component: Page,
+                        })
+                      );
+                    },
                   })
                 );
               },
