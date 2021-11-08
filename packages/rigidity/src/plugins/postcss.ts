@@ -1,4 +1,9 @@
-import { OnLoadArgs, Plugin } from 'esbuild';
+import {
+  OnLoadArgs,
+  OnResolveArgs,
+  OnResolveResult,
+  Plugin,
+} from 'esbuild';
 
 interface PostCSSOptions {
   dev: boolean;
@@ -54,34 +59,58 @@ export default function postcssPlugin(options: PostCSSOptions): Plugin {
         return newID;
       }
 
-      build.onResolve({ filter: /\.module\.css\?url-only$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 9)),
-        namespace: 'postcss-modules-url-only',
-      }));
-      build.onResolve({ filter: /\.module\.css\?url$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
-        namespace: 'postcss-modules-url',
-      }));
-      build.onResolve({ filter: /\.module\.css\?raw$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
-        namespace: 'postcss-modules-raw',
-      }));
-      build.onResolve({ filter: /\.module\.css$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
-        namespace: 'postcss-modules',
-      }));
-      build.onResolve({ filter: /\.css\?raw$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
-        namespace: 'postcss-raw',
-      }));
-      build.onResolve({ filter: /\.css\?url$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
-        namespace: 'postcss-url',
-      }));
-      build.onResolve({ filter: /\.css$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path),
-        namespace: 'postcss',
-      }));
+      function pickCSSinJS(kind: OnResolveArgs['kind'], args: OnResolveResult): OnResolveResult {
+        if (kind === 'import-rule' || kind === 'entry-point') {
+          return {
+            path: args.path,
+            namespace: 'postcss-vanilla',
+          };
+        }
+        return args;
+      }
+
+      build.onResolve({ filter: /\.module\.css\?url-only$/ }, (args) => (
+        pickCSSinJS(args.kind, {
+          path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 9)),
+          namespace: 'postcss-modules-url-only',
+        })
+      ));
+      build.onResolve({ filter: /\.module\.css\?url$/ }, (args) => (
+        pickCSSinJS(args.kind, {
+          path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+          namespace: 'postcss-modules-url',
+        })
+      ));
+      build.onResolve({ filter: /\.module\.css\?raw$/ }, (args) => (
+        pickCSSinJS(args.kind, {
+          path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+          namespace: 'postcss-modules-raw',
+        })
+      ));
+      build.onResolve({ filter: /\.module\.css$/ }, (args) => (
+        pickCSSinJS(args.kind, {
+          path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+          namespace: 'postcss-modules',
+        })
+      ));
+      build.onResolve({ filter: /\.css\?raw$/ }, (args) => (
+        pickCSSinJS(args.kind, {
+          path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+          namespace: 'postcss-raw',
+        })
+      ));
+      build.onResolve({ filter: /\.css\?url$/ }, (args) => (
+        pickCSSinJS(args.kind, {
+          path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+          namespace: 'postcss-url',
+        })
+      ));
+      build.onResolve({ filter: /\.css$/ }, (args) => (
+        pickCSSinJS(args.kind, {
+          path: path.join(args.resolveDir, args.path),
+          namespace: 'postcss',
+        })
+      ));
 
       async function processPostCSS(args: OnLoadArgs): Promise<string> {
         const source = await fs.readFile(args.path, 'utf8');
@@ -99,6 +128,14 @@ export default function postcssPlugin(options: PostCSSOptions): Plugin {
         return result.css;
       }
 
+      build.onLoad({ filter: /.*/, namespace: 'postcss-vanilla' }, async (args) => {
+        const result = await processPostCSS(args);
+        return {
+          contents: result,
+          resolveDir: path.dirname(args.path),
+          loader: 'css',
+        };
+      });
       build.onLoad({ filter: /.*/, namespace: 'postcss' }, async (args) => {
         const result = await processPostCSS(args);
         return {
