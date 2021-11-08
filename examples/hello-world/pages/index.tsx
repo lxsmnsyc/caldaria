@@ -6,17 +6,17 @@ import {
   Transition,
   TransitionChild,
 } from 'solid-headless';
-import { createSignal, JSX } from 'solid-js';
+import { JSX } from 'solid-js';
 
-export default function App(): JSX.Element {
-  const [isOpen, setIsOpen] = createSignal(false);
+export default function Index(): JSX.Element {
+  let isOpen = $signal(false);
 
   function closeModal() {
-    setIsOpen(false);
+    isOpen = false;
   }
 
   function openModal() {
-    setIsOpen(true);
+    isOpen = true;
   }
 
   return (
@@ -37,7 +37,7 @@ export default function App(): JSX.Element {
         onOpen={openModal}
         onClose={closeModal}
       >
-        <Transition appear show={isOpen()} class="min-h-screen px-4 flex items-center justify-center">
+        <Transition appear show={isOpen} class="min-h-screen px-4 flex items-center justify-center">
           <TransitionChild
             enter="ease-out duration-300"
             enterFrom="opacity-0"
