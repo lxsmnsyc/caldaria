@@ -1,13 +1,13 @@
 {
   "license": "MIT",
   "name": "hello-world",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "serve": "node ./.rigidity",
     "build": "node build-src"
   },
   "dependencies": {
-    "rigidity": "0.0.2",
+    "rigidity": "0.0.3",
     "solid-headless": "^0.10.5",
     "solid-js": "^1.1.1"
   },
