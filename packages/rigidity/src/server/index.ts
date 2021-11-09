@@ -1,12 +1,28 @@
-import { RequestListener } from 'http';
-import { API_PATH, PUBLIC_PATH, STATIC_PATH } from '../constants';
+import {
+  RequestListener,
+} from 'http';
+import {
+  API_PATH,
+  PUBLIC_PATH,
+  STATIC_PATH,
+} from '../constants';
 import StatusCode from '../errors/StatusCode';
-import { renderServer, renderServerError } from '../render/render-server';
+import {
+  renderServer,
+  renderServerError,
+} from '../render/render-server';
 import createAPITree from '../router/core/create-api-tree';
 import createPageTree from '../router/core/create-page-tree';
-import { matchRoute } from '../router/core/router';
-import { ServerRenderOptions } from '../types';
-import { green, red } from './colors';
+import {
+  matchRoute,
+} from '../router/core/router';
+import {
+  ServerRenderOptions,
+} from '../types';
+import {
+  green,
+  red,
+} from './colors';
 
 async function fileExists(path: string): Promise<boolean> {
   const fs = await import('fs-extra');

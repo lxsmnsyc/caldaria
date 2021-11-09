@@ -10,9 +10,17 @@ import {
   ssr,
   Assets,
 } from 'solid-js/web';
-import { DOCUMENT_ERROR_DATA, DOCUMENT_MAIN_ROOT, STATIC_PATH } from '../constants';
-import { renderTags } from '../meta';
-import { RenderResult } from '../types';
+import {
+  DOCUMENT_ERROR_DATA,
+  DOCUMENT_MAIN_ROOT,
+  STATIC_PATH,
+} from '../constants';
+import {
+  renderTags,
+} from '../meta';
+import {
+  RenderResult,
+} from '../types';
 
 export const DocumentContext = /* @__PURE__ */ (
   createContext<RenderResult>()
@@ -127,6 +135,21 @@ export function DefaultDocument(): JSX.Element {
             },
           }),
         ];
+      },
+    })
+  );
+}
+
+export interface RootProps extends RenderResult {
+  document?: () => JSX.Element;
+}
+
+export function Root(props: RootProps): JSX.Element {
+  return (
+    createComponent(DocumentContext.Provider, {
+      value: props,
+      get children() {
+        return createComponent(props.document ?? DefaultDocument, {});
       },
     })
   );

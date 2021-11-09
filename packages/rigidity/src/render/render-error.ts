@@ -16,7 +16,9 @@ import {
   GlobalRenderOptions,
   ErrorProps,
 } from '../types';
-import { getErrorPage } from './error-page';
+import {
+  getErrorPage,
+} from './error-page';
 
 export default function renderError(
   global: GlobalRenderOptions,

@@ -1,7 +1,11 @@
 import {
   JSX,
 } from 'solid-js';
-import { addRoute, createRouterNode, RouterNode } from './router';
+import {
+  addRoute,
+  createRouterNode,
+  RouterNode,
+} from './router';
 
 export interface Page {
   (): JSX.Element;

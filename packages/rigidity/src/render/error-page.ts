@@ -1,6 +1,13 @@
 import DefaultErrorComponent from '../components/Error';
-import { CUSTOM_404, CUSTOM_500, CUSTOM_ERROR } from '../constants';
-import { GlobalRenderOptions, ErrorPage } from '../types';
+import {
+  CUSTOM_404,
+  CUSTOM_500,
+  CUSTOM_ERROR,
+} from '../constants';
+import {
+  GlobalRenderOptions,
+  ErrorPage,
+} from '../types';
 
 export function getErrorPage(
   statusCode: number,

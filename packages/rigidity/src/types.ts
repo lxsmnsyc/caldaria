@@ -1,9 +1,17 @@
 import * as esbuild from 'esbuild';
 import * as babel from '@babel/core';
-import { JSX } from 'solid-js';
-import { Metric } from 'web-vitals';
-import { PageRoute } from './router/core/create-page-tree';
-import { APIRoute } from './router/core/create-api-tree';
+import {
+  JSX,
+} from 'solid-js';
+import {
+  Metric,
+} from 'web-vitals';
+import {
+  PageRoute,
+} from './router/core/create-page-tree';
+import {
+  APIRoute,
+} from './router/core/create-api-tree';
 
 export interface AppProps {
   Component: () => JSX.Element;

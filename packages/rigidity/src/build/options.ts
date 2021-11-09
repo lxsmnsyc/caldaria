@@ -1,6 +1,12 @@
-import { RESERVED_PAGES, DIRECTORY_ROOT } from '../constants';
+import {
+  RESERVED_PAGES,
+  DIRECTORY_ROOT,
+} from '../constants';
 import getPOSIXPath from '../utils/get-posix-path';
-import { getPageLiteral, getAPILiteral } from './literal';
+import {
+  getPageLiteral,
+  getAPILiteral,
+} from './literal';
 
 async function getPageOption(page: string, index: number): Promise<string> {
   const path = await import('path');

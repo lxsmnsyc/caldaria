@@ -1,4 +1,6 @@
-import { getReasonPhrase } from 'http-status-codes';
+import {
+  getReasonPhrase,
+} from 'http-status-codes';
 
 export default class StatusCode extends Error {
   public readonly value: number;

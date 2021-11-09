@@ -1,8 +1,14 @@
-import { BuildResult } from 'esbuild';
+import {
+  BuildResult,
+} from 'esbuild';
 import resolveTSConfig from './resolve-tsconfig';
-import { BuildContext, BuildOptions } from '../types';
-import readPackage from './read-package';
-import { STATIC_PATH } from '../constants';
+import {
+  BuildContext,
+  BuildOptions,
+} from '../types';
+import {
+  STATIC_PATH,
+} from '../constants';
 
 export default async function runESBuild(
   artifact: string,
@@ -15,7 +21,6 @@ export default async function runESBuild(
   const rawPlugin = (await import('../plugins/raw')).default;
   const urlPlugin = (await import('../plugins/url')).default;
   const postcssPlugin = (await import('../plugins/postcss')).default;
-  const pkg = await readPackage();
 
   const esbuildConfig = typeof options.esbuild === 'function'
     ? options.esbuild(context)
@@ -35,7 +40,7 @@ export default async function runESBuild(
     bundle: true,
     minify: !context.isDev,
     sourcemap: context.isDev,
-    format: !context.isServer || pkg.type === 'module' ? 'esm' : 'cjs',
+    format: context.isServer ? 'cjs' : 'esm',
     platform: context.isServer ? 'node' : 'browser',
     splitting: !context.isServer,
     target: esbuildConfig?.target,

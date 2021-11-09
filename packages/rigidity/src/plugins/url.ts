@@ -1,4 +1,6 @@
-import { Plugin } from 'esbuild';
+import {
+  Plugin,
+} from 'esbuild';
 
 export default function urlPlugin(): Plugin {
   return {

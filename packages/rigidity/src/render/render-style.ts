@@ -1,4 +1,6 @@
-import { isServer } from 'solid-js/web';
+import {
+  isServer,
+} from 'solid-js/web';
 
 export default function renderStyle(id: string, content: string): void {
   if (!isServer) {

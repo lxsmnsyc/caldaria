@@ -6,13 +6,25 @@ import {
   useContext,
 } from 'solid-js';
 import DefaultApp from '../components/App';
-import { DocumentContext } from '../components/Document';
+import {
+  DocumentContext,
+} from '../components/Document';
 import StatusCode from '../errors/StatusCode';
-import { MetaProvider } from '../meta';
-import { Router } from '../router';
-import { PageTree } from '../router/core/create-page-tree';
-import { GlobalRenderOptions } from '../types';
-import { getErrorPage } from './error-page';
+import {
+  MetaProvider,
+} from '../meta';
+import {
+  Router,
+} from '../router';
+import {
+  PageTree,
+} from '../router/core/create-page-tree';
+import {
+  GlobalRenderOptions,
+} from '../types';
+import {
+  getErrorPage,
+} from './error-page';
 
 export interface RenderAppOptions {
   pathname: string;

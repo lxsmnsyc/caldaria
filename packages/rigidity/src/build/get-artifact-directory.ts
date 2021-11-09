@@ -1,5 +1,11 @@
-import { BUILD_OUTPUT, BUILD_PATH } from '../constants';
-import { BuildOptions, BundleType } from '../types';
+import {
+  BUILD_OUTPUT,
+  BUILD_PATH,
+} from '../constants';
+import {
+  BuildOptions,
+  BundleType,
+} from '../types';
 
 export async function getArtifactBaseDirectory(
   options: BuildOptions,
@@ -21,8 +27,8 @@ export default async function getArtifactDirectory(
   directory: string,
 ): Promise<string> {
   const path = await import('path');
-  return /* @__PURE__ */ path.join(
-    /* @__PURE__ */ await getArtifactBaseDirectory(
+  return path.join(
+    await getArtifactBaseDirectory(
       options,
       environment,
       bundleType,

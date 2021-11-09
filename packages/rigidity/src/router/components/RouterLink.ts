@@ -10,9 +10,16 @@ import {
   createComponent,
   Dynamic,
 } from 'solid-js/web';
-import { excludeProps } from '../../utils/exclude-props';
-import { isModifiedEvent, isLocalURL } from '../utils/routing';
-import { useRouterUnsafe } from './Router';
+import {
+  excludeProps,
+} from '../../utils/exclude-props';
+import {
+  isModifiedEvent,
+  isLocalURL,
+} from '../utils/routing';
+import {
+  useRouterUnsafe,
+} from './Router';
 
 type BaseAnchorAttributes = JSX.AnchorHTMLAttributes<HTMLAnchorElement>;
 

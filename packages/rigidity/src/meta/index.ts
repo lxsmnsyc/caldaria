@@ -1,4 +1,3 @@
-import { JSX } from 'solid-js/jsx-runtime';
 import {
   createSignal,
   createContext,
@@ -8,6 +7,7 @@ import {
   useContext,
   mergeProps,
   Show,
+  JSX,
 } from 'solid-js';
 import {
   isServer,

@@ -1,5 +1,10 @@
-import { RESERVED_PAGES } from '../constants';
-import { getPageLiteral, getAPILiteral } from './literal';
+import {
+  RESERVED_PAGES,
+} from '../constants';
+import {
+  getPageLiteral,
+  getAPILiteral,
+} from './literal';
 
 // Generates import declarations
 export async function getPageImports(

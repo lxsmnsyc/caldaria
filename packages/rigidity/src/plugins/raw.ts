@@ -1,4 +1,6 @@
-import { Plugin } from 'esbuild';
+import {
+  Plugin,
+} from 'esbuild';
 
 export default function rawPlugin(): Plugin {
   return {

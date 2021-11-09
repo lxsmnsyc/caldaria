@@ -1,5 +1,9 @@
-import { Plugin } from 'esbuild';
-import { PluginItem } from '@babel/core';
+import {
+  Plugin,
+} from 'esbuild';
+import {
+  PluginItem,
+} from '@babel/core';
 
 interface SolidBabelOption {
   plugins: PluginItem[];

@@ -6,14 +6,22 @@ import {
   Show,
   mergeProps,
 } from 'solid-js';
-import { createComponent } from 'solid-js/web';
-import { Page, PageTree } from '../core/create-page-tree';
+import {
+  createComponent,
+} from 'solid-js/web';
+import {
+  Page,
+  PageTree,
+} from '../core/create-page-tree';
 import {
   matchRoute,
   RouterParams,
   RouterResult,
 } from '../core/router';
-import useLocation, { UseLocation, UseLocationOptions } from '../core/use-location';
+import useLocation, {
+  UseLocation,
+  UseLocationOptions,
+} from '../core/use-location';
 
 export interface RouterInstance<P extends RouterParams = RouterParams> extends UseLocation {
   params: P;
