@@ -133,8 +133,8 @@ export default function postcssPlugin(
 
         const processor = postcss.default(config.plugins);
         const result = await processor.process(source, {
-          from: args.path,
           ...config.options,
+          from: args.path,
         });
         const tempName = `${path.basename(args.path)}.tmp`;
         const artifactDirectory = path.join(
@@ -201,8 +201,8 @@ export default function postcssPlugin(
           },
         }));
         const result = await processor.process(source, {
-          from: args.path,
           ...config.options,
+          from: args.path,
         });
         const artifactDirectory = path.join(
           options.artifactDirectory,
