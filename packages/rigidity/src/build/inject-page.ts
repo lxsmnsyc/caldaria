@@ -1,4 +1,6 @@
-import { SUPPORTED_PAGE_EXT } from '../constants';
+import {
+  SUPPORTED_PAGE_EXT,
+} from '../constants';
 import getPOSIXPath from '../utils/get-posix-path';
 
 export async function getCustomPage(
@@ -56,32 +58,10 @@ export async function injectCustomPageImport(
 
     const literal = page.toUpperCase();
     lines.push(
-      `import ${literal}Component from '${importPath}';`,
+      `import ${literal} from '${importPath}';`,
     );
 
     return literal;
-  }
-  return undefined;
-}
-
-export async function injectReservedPage(
-  pagesDirectory: string,
-  artifactDirectory: string,
-  lines: string[],
-  page: string,
-): Promise<string | undefined> {
-  const result = await injectCustomPageImport(
-    pagesDirectory,
-    artifactDirectory,
-    lines,
-    page,
-  );
-
-  if (result) {
-    lines.push(
-      `const ${result} = ${result}Component;`,
-    );
-    return result;
   }
   return undefined;
 }

@@ -11,7 +11,9 @@ import {
   CUSTOM_500,
   CUSTOM_ERROR,
 } from '../constants';
-import { BuildOptions } from '../types';
+import {
+  BuildOptions,
+} from '../types';
 import {
   getArtifactBaseDirectory,
 } from './get-artifact-directory';
@@ -19,7 +21,9 @@ import getPages from './get-pages';
 import {
   getPageImports,
 } from './imports';
-import { injectReservedPage, injectCustomPageImport } from './inject-page';
+import {
+  injectCustomPageImport,
+} from './inject-page';
 import {
   getPagesOptions,
 } from './options';
@@ -61,7 +65,7 @@ export default async function createClientBuild(
     ),
   ];
 
-  const appPage = await injectReservedPage(
+  const appPage = await injectCustomPageImport(
     pagesDirectory,
     artifactDirectory,
     lines,
@@ -73,19 +77,19 @@ export default async function createClientBuild(
     lines,
     CUSTOM_DOCUMENT,
   );
-  const error404 = await injectReservedPage(
+  const error404 = await injectCustomPageImport(
     pagesDirectory,
     artifactDirectory,
     lines,
     CUSTOM_404,
   );
-  const error500 = await injectReservedPage(
+  const error500 = await injectCustomPageImport(
     pagesDirectory,
     artifactDirectory,
     lines,
     CUSTOM_500,
   );
-  const errorPage = await injectReservedPage(
+  const errorPage = await injectCustomPageImport(
     pagesDirectory,
     artifactDirectory,
     lines,
