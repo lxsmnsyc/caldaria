@@ -15,7 +15,9 @@ export default async function runESBuild(
   outputDirectory: string,
   context: BuildContext,
   options: BuildOptions,
+  enablePostCSS = true,
 ): Promise<BuildResult> {
+  const path = await import('path');
   const esbuild = await import('esbuild');
   const solidPlugin = (await import('../plugins/solid')).default;
   const rawPlugin = (await import('../plugins/raw')).default;
@@ -44,6 +46,8 @@ export default async function runESBuild(
     platform: context.isServer ? 'node' : 'browser',
     splitting: !context.isServer,
     target: esbuildConfig?.target,
+    write: false,
+    allowOverwrite: true,
     define: {
       ...(esbuildConfig?.define ?? {}),
       'process.env.NODE_ENV': JSON.stringify(context.isDev ? 'development' : 'production'),
@@ -62,9 +66,19 @@ export default async function runESBuild(
         },
         dev: context.isDev,
       }),
-      postcssPlugin({
-        dev: context.isDev,
-      }),
+      ...(
+        enablePostCSS
+          ? [
+            postcssPlugin({
+              dev: context.isDev,
+              artifactDirectory: path.dirname(artifact),
+              recurseBuild(source, directory) {
+                return runESBuild(source, directory, context, options, false);
+              },
+            }),
+          ]
+          : []
+      ),
       rawPlugin(),
       urlPlugin(),
       ...(esbuildConfig?.plugins ?? []),

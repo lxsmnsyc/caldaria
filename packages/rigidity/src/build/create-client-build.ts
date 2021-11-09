@@ -125,6 +125,12 @@ hydrateClient({
     options,
   );
 
+  if (result.outputFiles) {
+    await Promise.all(result.outputFiles.map((file) => (
+      fs.outputFile(file.path, file.contents)
+    )));
+  }
+
   await fs.remove(artifact);
   await fs.remove(artifactDirectory);
 
