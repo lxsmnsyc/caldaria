@@ -58,16 +58,24 @@ export default function postcssPlugin(
 
       const paths = new Map<string, string>();
 
-      let ids = 0;
+      let styleIds = 0;
 
       function getStyleID(source: string) {
         const id = paths.get(source);
         if (id) {
           return id;
         }
-        const newID = `style-${ids}`;
-        ids += 1;
+        const newID = `style-${styleIds}`;
+        styleIds += 1;
         paths.set(source, newID);
+        return newID;
+      }
+
+      let buildIds = 0;
+
+      function getBuildId() {
+        const newID = `build-${buildIds}`;
+        buildIds += 1;
         return newID;
       }
 
@@ -136,10 +144,9 @@ export default function postcssPlugin(
           ...config.options,
           from: args.path,
         });
-        const tempName = `${path.basename(args.path)}.tmp`;
         const artifactDirectory = path.join(
           options.artifactDirectory,
-          tempName,
+          getBuildId(),
         );
         const artifact = path.join(
           artifactDirectory,
@@ -206,7 +213,7 @@ export default function postcssPlugin(
         });
         const artifactDirectory = path.join(
           options.artifactDirectory,
-          `${path.basename(args.path)}.tmp`,
+          getBuildId(),
         );
         const artifact = path.join(
           artifactDirectory,
