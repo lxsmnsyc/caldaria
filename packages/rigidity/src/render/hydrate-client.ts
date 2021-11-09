@@ -5,19 +5,26 @@ import {
   getLCP,
   getTTFB,
 } from 'web-vitals';
-import { createComponent, MountableElement } from 'solid-js/web';
-import { JSX } from 'solid-js/jsx-runtime';
+import {
+  createComponent,
+  MountableElement,
+} from 'solid-js/web';
+import {
+  JSX,
+} from 'solid-js/jsx-runtime';
 import {
   DOCUMENT_ERROR_DATA,
 } from '../constants';
 import createPageTree from '../router/core/create-page-tree';
-import { GlobalRenderOptions, RenderResult } from '../types';
+import {
+  GlobalRenderOptions,
+  RenderResult,
+} from '../types';
 import DefaultApp from '../components/App';
 import {
-  DocumentContext,
-  DefaultDocument,
+  Root,
 } from '../components/Document';
-import { renderApp } from './render-app';
+import renderApp from './render-app';
 import renderError from './render-error';
 
 interface ParsedErrorProps {
@@ -33,7 +40,6 @@ export default function hydrateClient(
   options: GlobalRenderOptions,
   hydrate: (fn: () => JSX.Element, node: MountableElement) => void,
 ): void {
-  const DocumentComponent = options.document ?? DefaultDocument;
   const CustomAppPage = options.app ?? DefaultApp;
 
   if (CustomAppPage.reportWebVitals) {
@@ -82,13 +88,9 @@ export default function hydrateClient(
 
   hydrate(
     () => (
-      createComponent(DocumentContext.Provider, {
-        value: pageResult,
-        get children() {
-          return (
-            createComponent(DocumentComponent, {})
-          );
-        },
+      createComponent(Root, {
+        ...pageResult,
+        document: options.document,
       })
     ),
     document,

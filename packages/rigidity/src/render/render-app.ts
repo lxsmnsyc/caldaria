@@ -20,7 +20,7 @@ export interface RenderAppOptions {
   routes: PageTree;
 }
 
-export function renderApp(
+export default function renderApp(
   global: GlobalRenderOptions,
   options: RenderAppOptions,
 ): () => JSX.Element {

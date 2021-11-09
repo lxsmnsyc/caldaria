@@ -6,8 +6,12 @@ import {
   useContext,
 } from 'solid-js';
 import DefaultApp from '../components/App';
-import { DocumentContext } from '../components/Document';
-import { MetaProvider } from '../meta';
+import {
+  DocumentContext,
+} from '../components/Document';
+import {
+  MetaProvider,
+} from '../meta';
 import {
   GlobalRenderOptions,
   ErrorProps,

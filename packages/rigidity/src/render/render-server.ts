@@ -1,23 +1,26 @@
-import { createComponent, renderToStringAsync } from 'solid-js/web';
-import { DefaultDocument, DocumentContext } from '../components/Document';
-import { RenderResult, ErrorProps, GlobalRenderOptions } from '../types';
-import { RenderAppOptions, renderApp } from './render-app';
+import {
+  createComponent,
+  renderToStringAsync,
+} from 'solid-js/web';
+import {
+  Root,
+} from '../components/Document';
+import {
+  RenderResult,
+  ErrorProps,
+  GlobalRenderOptions,
+} from '../types';
+import renderApp, { RenderAppOptions } from './render-app';
 import renderError from './render-error';
 
 async function renderCore(
   globalOptions: GlobalRenderOptions,
   pageResult: RenderResult,
 ): Promise<string> {
-  const DocumentComponent = globalOptions.document ?? DefaultDocument;
-
   const documentResult = await renderToStringAsync(() => (
-    createComponent(DocumentContext.Provider, {
-      value: pageResult,
-      get children() {
-        return (
-          createComponent(DocumentComponent, {})
-        );
-      },
+    createComponent(Root, {
+      ...pageResult,
+      document: globalOptions.document,
     })
   ));
 
