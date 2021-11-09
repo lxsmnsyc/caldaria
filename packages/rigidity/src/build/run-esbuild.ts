@@ -93,7 +93,7 @@ export default async function runESBuild(
       }),
       postcssPlugin({
         dev: context.isDev,
-        artifactDirectory: input.recurse ? input.outputDirectory : input.sourceDirectory,
+        artifactDirectory: input.outputDirectory,
         recurseBuild(opts) {
           return runESBuild(opts, context, options);
         },

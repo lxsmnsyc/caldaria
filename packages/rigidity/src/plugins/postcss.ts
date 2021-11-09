@@ -71,14 +71,6 @@ export default function postcssPlugin(
         return newID;
       }
 
-      let buildIds = 0;
-
-      function getBuildId() {
-        const newID = `build-${buildIds}`;
-        buildIds += 1;
-        return newID;
-      }
-
       function pickCSSinJS(kind: OnResolveArgs['kind'], args: OnResolveResult): OnResolveResult {
         if (kind === 'import-rule' || kind === 'entry-point') {
           return {
@@ -144,12 +136,8 @@ export default function postcssPlugin(
           ...config.options,
           from: args.path,
         });
-        const artifactDirectory = path.join(
-          options.artifactDirectory,
-          getBuildId(),
-        );
         const artifact = path.join(
-          artifactDirectory,
+          options.artifactDirectory,
           'stdin.css',
         );
         await options.recurseBuild({
@@ -157,7 +145,7 @@ export default function postcssPlugin(
           content: result.css,
           filename: path.basename(args.path),
           sourceDirectory: path.dirname(args.path),
-          outputDirectory: artifactDirectory,
+          outputDirectory: options.artifactDirectory,
         });
         return fs.readFile(artifact, 'utf8');
       }
@@ -211,12 +199,8 @@ export default function postcssPlugin(
           ...config.options,
           from: args.path,
         });
-        const artifactDirectory = path.join(
-          options.artifactDirectory,
-          getBuildId(),
-        );
         const artifact = path.join(
-          artifactDirectory,
+          options.artifactDirectory,
           'stdin.css',
         );
         await options.recurseBuild({
@@ -224,7 +208,7 @@ export default function postcssPlugin(
           content: result.css,
           filename: path.basename(args.path),
           sourceDirectory: path.dirname(args.path),
-          outputDirectory: artifactDirectory,
+          outputDirectory: options.artifactDirectory,
         });
         return {
           css: await fs.readFile(artifact, 'utf8'),
