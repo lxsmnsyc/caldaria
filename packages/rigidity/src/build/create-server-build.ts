@@ -135,17 +135,14 @@ export default createServer({
   );
 
   const result = await runESBuild(
-    artifact,
-    outputDirectory,
+    {
+      content: artifact,
+      sourceDirectory: artifactDirectory,
+      outputDirectory,
+    },
     { isDev: environment !== 'production', isServer: true },
     options,
   );
-
-  if (result.outputFiles) {
-    await Promise.all(result.outputFiles.map((file) => (
-      fs.outputFile(file.path, file.contents)
-    )));
-  }
 
   await fs.remove(artifact);
   await fs.remove(artifactDirectory);

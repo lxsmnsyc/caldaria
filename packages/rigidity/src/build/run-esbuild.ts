@@ -1,4 +1,5 @@
 import {
+  BuildOptions as ESBuildOption,
   BuildResult,
 } from 'esbuild';
 import resolveTSConfig from './resolve-tsconfig';
@@ -9,15 +10,17 @@ import {
 import {
   STATIC_PATH,
 } from '../constants';
+import { RecurseBuild } from '../plugins/postcss';
+
+function createOption(opt: ESBuildOption): ESBuildOption {
+  return opt;
+}
 
 export default async function runESBuild(
-  artifact: string,
-  outputDirectory: string,
+  input: RecurseBuild,
   context: BuildContext,
   options: BuildOptions,
-  enablePostCSS = true,
 ): Promise<BuildResult> {
-  const path = await import('path');
   const esbuild = await import('esbuild');
   const solidPlugin = (await import('../plugins/solid')).default;
   const rawPlugin = (await import('../plugins/raw')).default;
@@ -34,19 +37,41 @@ export default async function runESBuild(
     ? options.babel.presets(context)
     : options.babel?.presets;
 
+  const entry = input.recurse
+    ? createOption({
+      stdin: {
+        contents: input.content,
+        resolveDir: input.sourceDirectory,
+        loader: 'css',
+        sourcefile: input.filename,
+      },
+    })
+    : createOption({
+      entryPoints: [
+        input.content,
+      ],
+    });
+
+  let sourcemap: ESBuildOption['sourcemap'];
+
+  if (context.isDev) {
+    if (input.recurse) {
+      sourcemap = 'inline';
+    } else {
+      sourcemap = true;
+    }
+  }
+
   return esbuild.build({
-    entryPoints: [
-      artifact,
-    ],
-    outdir: outputDirectory,
+    ...entry,
+    outdir: input.outputDirectory,
     bundle: true,
     minify: !context.isDev,
-    sourcemap: context.isDev,
+    sourcemap,
     format: context.isServer ? 'cjs' : 'esm',
     platform: context.isServer ? 'node' : 'browser',
     splitting: !context.isServer,
     target: esbuildConfig?.target,
-    write: false,
     allowOverwrite: true,
     define: {
       ...(esbuildConfig?.define ?? {}),
@@ -66,19 +91,13 @@ export default async function runESBuild(
         },
         dev: context.isDev,
       }),
-      ...(
-        enablePostCSS
-          ? [
-            postcssPlugin({
-              dev: context.isDev,
-              artifactDirectory: path.dirname(artifact),
-              recurseBuild(source, directory) {
-                return runESBuild(source, directory, context, options, false);
-              },
-            }),
-          ]
-          : []
-      ),
+      postcssPlugin({
+        dev: context.isDev,
+        artifactDirectory: input.recurse ? input.outputDirectory : input.sourceDirectory,
+        recurseBuild(opts) {
+          return runESBuild(opts, context, options);
+        },
+      }),
       rawPlugin(),
       urlPlugin(),
       ...(esbuildConfig?.plugins ?? []),

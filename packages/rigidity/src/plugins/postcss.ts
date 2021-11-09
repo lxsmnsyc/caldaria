@@ -6,10 +6,18 @@ import {
   Plugin,
 } from 'esbuild';
 
+export interface RecurseBuild {
+  filename?: string;
+  recurse?: boolean;
+  content: string;
+  sourceDirectory: string;
+  outputDirectory: string;
+}
+
 interface PostCSSOptions {
   dev: boolean;
   artifactDirectory: string;
-  recurseBuild: (source: string, directory: string) => Promise<BuildResult>
+  recurseBuild: (opts: RecurseBuild) => Promise<BuildResult>
 }
 
 function createLazyCSS(id: string, content: string, json: Record<string, string>) {
@@ -128,21 +136,22 @@ export default function postcssPlugin(
           from: args.path,
           ...config.options,
         });
+        const tempName = `${path.basename(args.path)}.tmp`;
         const artifactDirectory = path.join(
           options.artifactDirectory,
-          `${path.basename(args.path)}.tmp`,
+          tempName,
         );
         const artifact = path.join(
           artifactDirectory,
-          'index.css',
+          'stdin.css',
         );
-        await fs.outputFile(artifact, result.css, 'utf8');
-        const buildResult = await options.recurseBuild(artifact, artifactDirectory);
-        if (buildResult.outputFiles) {
-          await Promise.all(buildResult.outputFiles.map((file) => (
-            fs.outputFile(file.path, file.contents)
-          )));
-        }
+        await options.recurseBuild({
+          recurse: true,
+          content: result.css,
+          filename: path.basename(args.path),
+          sourceDirectory: path.dirname(args.path),
+          outputDirectory: artifactDirectory,
+        });
         return fs.readFile(artifact, 'utf8');
       }
 
@@ -201,15 +210,15 @@ export default function postcssPlugin(
         );
         const artifact = path.join(
           artifactDirectory,
-          'index.css',
+          'stdin.css',
         );
-        await fs.outputFile(artifact, result.css, 'utf8');
-        const buildResult = await options.recurseBuild(artifact, artifactDirectory);
-        if (buildResult.outputFiles) {
-          await Promise.all(buildResult.outputFiles.map((file) => (
-            fs.outputFile(file.path, file.contents)
-          )));
-        }
+        await options.recurseBuild({
+          recurse: true,
+          content: result.css,
+          filename: path.basename(args.path),
+          sourceDirectory: path.dirname(args.path),
+          outputDirectory: artifactDirectory,
+        });
         return {
           css: await fs.readFile(artifact, 'utf8'),
           json: resultJSON,
