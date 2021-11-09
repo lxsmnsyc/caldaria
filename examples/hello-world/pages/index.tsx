@@ -7,6 +7,8 @@ import {
   TransitionChild,
 } from 'solid-headless';
 import { JSX } from 'solid-js';
+import { Style } from 'rigidity';
+import { styles, sheet } from '../styles/example.module.css?raw';
 
 export default function Index(): JSX.Element {
   let isOpen = $signal(false);
@@ -21,6 +23,8 @@ export default function Index(): JSX.Element {
 
   return (
     <>
+      <Style>{sheet}</Style>
+      <h1 class={styles.title}>Example</h1>
       <div class="fixed inset-0 flex items-center justify-center">
         <span class="text-white text-sm bg-blue-900 bg-opacity-50 p-4 rounded-lg">
           {'Press '}

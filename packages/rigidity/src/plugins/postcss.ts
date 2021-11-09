@@ -46,7 +46,6 @@ export default function postcssPlugin(
 
       const postcss = await import('postcss');
       const postcssLoadConfig = await import('postcss-load-config');
-      const postcssImport = await import('postcss-import');
       const postcssModules = await import('postcss-modules');
 
       const paths = new Map<string, string>();
@@ -125,7 +124,6 @@ export default function postcssPlugin(
         });
 
         const processor = postcss.default(config.plugins);
-        processor.use(postcssImport.default() as any);
         const result = await processor.process(source, {
           from: args.path,
           ...config.options,
@@ -193,7 +191,6 @@ export default function postcssPlugin(
             resultJSON = json;
           },
         }));
-        processor.use(postcssImport.default() as any);
         const result = await processor.process(source, {
           from: args.path,
           ...config.options,
