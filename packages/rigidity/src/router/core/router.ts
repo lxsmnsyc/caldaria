@@ -82,11 +82,11 @@ export function addRoute<T>(
         }
       } else {
         parent.named = createRouterNode(lead);
-        if (names.length > 0) {
-          addRoute(parent.named, names, value);
-        } else {
-          parent.named.value = value;
-        }
+      }
+      if (names.length > 0) {
+        addRoute(parent.named, names, value);
+      } else {
+        parent.named.value = value;
       }
       return;
     }
