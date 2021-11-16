@@ -30,3 +30,14 @@ export {
 export {
   default as createServer,
 } from './server';
+export {
+  App,
+  AppProps,
+  AppPage,
+  WebVitalsMetric,
+  ErrorPage,
+  ErrorProps,
+  BabelBuildOptions,
+  BuildContext,
+  BuildOptions,
+} from './types';

@@ -11,8 +11,8 @@ import {
   Dynamic,
 } from 'solid-js/web';
 import {
-  excludeProps,
-} from '../../utils/exclude-props';
+  omitProps,
+} from 'solid-use';
 import {
   isModifiedEvent,
   isLocalURL,
@@ -41,7 +41,7 @@ export default function RouterLink(
       {
         component: 'a',
       },
-      excludeProps(props, [
+      omitProps(props, [
         'prefetch',
         'scroll',
         'ref',
@@ -155,7 +155,7 @@ export default function RouterLink(
           anchorRef = e;
         },
       },
-      excludeProps(props, [
+      omitProps(props, [
         'prefetch',
         'scroll',
         'ref',
