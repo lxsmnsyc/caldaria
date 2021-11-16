@@ -3,20 +3,17 @@ import {
   createContext,
   useContext,
   createMemo,
-  Show,
   mergeProps,
 } from 'solid-js';
 import {
   createComponent,
 } from 'solid-js/web';
 import {
-  Page,
   PageTree,
 } from '../core/create-page-tree';
 import {
   matchRoute,
   RouterParams,
-  RouterResult,
 } from '../core/router';
 import useLocation, {
   UseLocation,
@@ -49,28 +46,27 @@ export default function Router(
     createComponent(LocationContext.Provider, {
       value: location,
       get children() {
-        return createComponent(Show, {
-          get when(): RouterResult<Page, RouterParams> | undefined {
-            return matchedRoute();
-          },
-          get fallback() {
-            return props.fallback;
-          },
-          children: (result: RouterResult<Page, RouterParams>) => (
-            createComponent(ParamsContext.Provider, {
-              get value() {
-                return result.params;
-              },
-              get children() {
-                return createComponent(Show, {
-                  get when(): Page | undefined {
-                    return result.value;
-                  },
-                  children: (Comp: Page) => createComponent(Comp, {}),
-                });
-              },
-            })
-          ),
+        return createMemo(() => {
+          const route = matchedRoute();
+          if (route != null) {
+            const result = route;
+            return (
+              createComponent(ParamsContext.Provider, {
+                get value() {
+                  return result.params;
+                },
+                get children() {
+                  return createMemo(() => {
+                    if (result.value) {
+                      return createComponent(result.value, {});
+                    }
+                    return undefined;
+                  });
+                },
+              })
+            );
+          }
+          return props.fallback;
         });
       },
     })
