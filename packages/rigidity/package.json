@@ -37,7 +37,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "env.d.ts"
   ],
   "engines": {
     "node": ">=10"
