@@ -23,10 +23,10 @@ export default async function runESBuild(
 ): Promise<BuildResult> {
   const esbuild = await import('esbuild');
   const solidPlugin = (await import('../plugins/solid')).default;
+  const solidSFCPlugin = (await import('../plugins/solid-sfc')).default;
   const rawPlugin = (await import('../plugins/raw')).default;
   const urlPlugin = (await import('../plugins/url')).default;
   const postcssPlugin = (await import('../plugins/postcss')).default;
-  const solidSFCPlugin = (await import('esbuild-plugin-solid-sfc')).default;
 
   const esbuildConfig = typeof options.esbuild === 'function'
     ? options.esbuild(context)
