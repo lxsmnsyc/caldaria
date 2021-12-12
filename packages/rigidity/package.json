@@ -75,9 +75,10 @@
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
-    "babel-plugin-solid-labels": "^0.9.1",
-    "babel-preset-solid": "^1.2.3",
-    "esbuild": "^0.13.13",
+    "babel-plugin-solid-labels": "^0.9.4",
+    "babel-preset-solid": "^1.2.6",
+    "esbuild": "^0.14.2",
+    "esbuild-plugin-solid-sfc": "^0.0.8",
     "fs-extra": "^10.0.0",
     "http-status-codes": "^2.1.4",
     "mime-types": "^2.1.33",
@@ -86,6 +87,7 @@
     "postcss-load-config": "^3.1.0",
     "postcss-modules": "^4.2.2",
     "solid-use": "^0.3.1",
+    "solid-sfc": "^0.0.8",
     "web-vitals": "^2.1.2"
   }
 }

@@ -1,6 +1,4 @@
-import {
-  RequestListener,
-} from 'http';
+import { RequestAdapter, ResponseAdapter } from '../adapter';
 import {
   API_PATH,
   PUBLIC_PATH,
@@ -36,31 +34,41 @@ async function fileExists(path: string): Promise<boolean> {
   }
 }
 
-export default function createServer(
+export type RigidityServer<
+  Request extends RequestAdapter,
+  Response extends ResponseAdapter,
+>
+  = (request: Request, response: Response) => void;
+
+export default function createServer<
+  Request extends RequestAdapter,
+  Response extends ResponseAdapter,
+>(
   serverOptions: ServerRenderOptions,
-): RequestListener {
+): RigidityServer<Request, Response> {
   const pagesTree = createPageTree(serverOptions.pages);
   const apisTree = createAPITree(serverOptions.endpoints);
 
   return (request, response) => {
     function responseEnd(type: string, content: string | Buffer): void {
       response.setHeader('Content-Type', type);
-      response.end(content);
+      response.write(content);
     }
     async function errorHandler(error: Error) {
       const statusCode = (error instanceof StatusCode) ? error.value : 500;
       const reason = (error instanceof StatusCode) ? error.reason : error;
       console.log(`[${red(`${statusCode}`)}] ${request.url ?? ''}`);
       console.error(reason);
-      response.statusCode = statusCode;
+      response.setStatusCode(statusCode);
       responseEnd('text/html', await renderServerError(serverOptions, {
         statusCode,
         error: reason,
       }));
     }
 
-    if (request.headers.host && request.url) {
-      const url = new URL(request.url, `http://${request.headers.host}`);
+    const host = request.getHeader('host');
+    if (host && request.url) {
+      const url = new URL(request.url, `http://${host}`);
 
       const readStaticFile = async (prefix: string, basePath: string) => {
         const fs = await import('fs-extra');
@@ -74,7 +82,7 @@ export default function createServer(
 
         if (exists && mimeType) {
           const buffer = await fs.readFile(targetFile);
-          response.statusCode = 200;
+          response.setStatusCode(200);
           response.setHeader('Cache-Control', 'max-age=31536000');
           responseEnd(mimeType, buffer);
           console.log(`[${green('200')}] ${request.url ?? ''}`);
@@ -106,7 +114,7 @@ export default function createServer(
               params: matchedNode.params,
               query: querystring.decode(url.search),
             });
-            console.log(`[${green(`${response.statusCode}`)}] ${request.url ?? ''}`);
+            console.log(`[${green(`${response.getStatusCode()}`)}] ${request.url ?? ''}`);
           } else {
             throw new StatusCode(404);
           }
@@ -139,7 +147,7 @@ export default function createServer(
       };
 
       getContent().then((value) => {
-        response.statusCode = 200;
+        response.setStatusCode(200);
         console.log(`[${green('200')}] ${request.url ?? ''}`);
         responseEnd('text/html', value);
       }, errorHandler);

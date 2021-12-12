@@ -15,9 +15,9 @@ export async function getPageImports(
   const path = await import('path');
 
   return pages.map((page, index) => {
-    const { name, dir } = path.parse(page);
+    const { name, dir, ext } = path.parse(page);
 
-    const srcFile = path.join(targetDirectory, dir, name);
+    const srcFile = path.join(targetDirectory, dir, `${name}${ext}`);
 
     // Transform path to POSIX
     const targetFile = path.relative(artifactDirectory, srcFile)

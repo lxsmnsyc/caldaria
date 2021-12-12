@@ -1,11 +1,11 @@
 // Directory relative to project root where all pages are located
-export const PAGES_PATH = 'pages';
+export const PAGES_PATH = 'src/pages';
 
 // Directory relative to project root where api files are located
-export const API_PATH = 'api';
+export const API_PATH = 'src/api';
 
 // Directory relative to project root where public files are located
-export const PUBLIC_PATH = 'public';
+export const PUBLIC_PATH = 'src/public';
 
 export const DOCUMENT_ERROR_DATA = 'rigidity_error';
 
@@ -45,6 +45,7 @@ export const SUPPORTED_PAGE_EXT = [
   '.jsx',
   '.ts',
   '.tsx',
+  '.solid',
 ];
 
 export const BUILD_OUTPUT = {

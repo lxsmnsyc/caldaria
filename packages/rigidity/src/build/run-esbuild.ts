@@ -26,6 +26,7 @@ export default async function runESBuild(
   const rawPlugin = (await import('../plugins/raw')).default;
   const urlPlugin = (await import('../plugins/url')).default;
   const postcssPlugin = (await import('../plugins/postcss')).default;
+  const solidSFCPlugin = (await import('esbuild-plugin-solid-sfc')).default;
 
   const esbuildConfig = typeof options.esbuild === 'function'
     ? options.esbuild(context)
@@ -80,9 +81,18 @@ export default async function runESBuild(
     publicPath: `/${STATIC_PATH}`,
     conditions: [
       'solid',
-      // context.isDev ? 'development' : 'production',
+      context.isDev && !context.isServer ? 'development' : 'production',
     ],
     plugins: [
+      solidSFCPlugin({
+        target: context.isServer ? 'ssr' : 'dom',
+        hydratable: true,
+        dev: context.isDev,
+        babel: {
+          plugins: babelPluginsConfig ?? [],
+          presets: babelPresetsConfig ?? [],
+        },
+      }),
       solidPlugin({
         generate: context.isServer ? 'ssr' : 'dom',
         babel: {

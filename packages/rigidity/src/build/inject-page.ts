@@ -50,8 +50,8 @@ export async function injectCustomPageImport(
   const result = await getCustomPage(pagesDirectory, page);
 
   if (result) {
-    const { name, dir } = path.parse(result);
-    const extensionless = path.join(dir, name);
+    const { name, dir, ext } = path.parse(result);
+    const extensionless = path.join(dir, `${name}${ext}`);
     const importPath = path.relative(artifactDirectory, extensionless)
       .split(path.sep)
       .join(path.posix.sep);

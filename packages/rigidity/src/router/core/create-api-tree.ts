@@ -1,10 +1,7 @@
 import {
-  IncomingMessage,
-  ServerResponse,
-} from 'http';
-import {
   ParsedUrlQuery,
 } from 'querystring';
+import { RequestAdapter, ResponseAdapter } from '../../adapter';
 import {
   addRoute,
   createRouterNode,
@@ -15,14 +12,24 @@ import {
 export type Params = RouterParams;
 export type Query = ParsedUrlQuery;
 
-export interface ServerSideContext<P extends Params = Params, Q extends Query = Query> {
-  request: IncomingMessage;
-  response: ServerResponse;
+export interface ServerSideContext<
+  Request extends RequestAdapter,
+  Response extends ResponseAdapter,
+  P extends Params = Params,
+  Q extends Query = Query,
+> {
+  request: Request;
+  response: Response;
   params: P;
   query: Q;
 }
 
-export type APICallback = (ctx: ServerSideContext) => void | Promise<void>;
+export type APICallback = <
+  Request extends RequestAdapter,
+  Response extends ResponseAdapter,
+  P extends Params = Params,
+  Q extends Query = Query,
+>(ctx: ServerSideContext<Request, Response, P, Q>) => void | Promise<void>;
 
 interface API {
   path: string;
