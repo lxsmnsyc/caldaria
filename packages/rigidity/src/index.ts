@@ -43,3 +43,4 @@ export {
 } from './types';
 export * from './adapter';
 export * from './adapters/http-adapter';
+export * from './adapters/vercel-adapter';
