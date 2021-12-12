@@ -67,7 +67,9 @@ export default function createServer<Request, Response>(
           if (exists && mimeType) {
             const buffer = await fs.readFile(targetFile);
             response.setStatusCode(200);
-            response.setHeader('Cache-Control', 'max-age=31536000');
+            if (process.env.NODE_ENV === 'production') {
+              response.setHeader('Cache-Control', 'max-age=31536000');
+            }
             responseEnd(mimeType, buffer);
             console.log(`[${green('200')}] ${request.url ?? ''}`);
           } else {
@@ -115,9 +117,9 @@ export default function createServer<Request, Response>(
             response.setStatusCode(200);
             console.log(`[${green('200')}] ${request.url ?? ''}`);
             responseEnd('text/html', value);
+          } else {
+            throw new StatusCode(404, new Error(`"${request.url}" not found.`));
           }
-
-          throw new StatusCode(404);
         } catch (error) {
           if (error instanceof StatusCode) {
             throw error;
