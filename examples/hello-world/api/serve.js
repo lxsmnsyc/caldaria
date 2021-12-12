@@ -1,9 +1,9 @@
-const rigidity = require('rigidity');
-const server = require('./.rigidity/development/server').default;
+import * as rigidity from 'rigidity';
+import server from './.rigidity/development/server';
 
-module.exports = (request, response) => (
-  server(
+export default async function (request, response) {
+  await server(
     rigidity.createVercelRequestAdapter(request),
     rigidity.createVercelResponseAdapter(response),
-  )
-);
+  );
+}
