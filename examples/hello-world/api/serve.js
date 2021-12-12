@@ -3,7 +3,7 @@ const server = require('./.rigidity/development/server').default;
 
 module.exports = (request, response) => (
   server(
-    rigidity.createHTTPRequestAdapter(request),
-    rigidity.createHTTPResponseAdapter(response),
+    rigidity.createVercelRequestAdapter(request),
+    rigidity.createVercelResponseAdapter(response),
   )
 );
