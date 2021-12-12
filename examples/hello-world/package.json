@@ -3,7 +3,6 @@
   "name": "hello-world",
   "version": "0.0.8",
   "scripts": {
-    "serve": "node ./.rigidity",
     "build": "node build-src"
   },
   "dependencies": {
