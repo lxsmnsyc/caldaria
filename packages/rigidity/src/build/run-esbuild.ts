@@ -8,7 +8,7 @@ import {
   BuildOptions,
 } from '../types';
 import {
-  STATIC_PATH,
+  STATIC_PATH, STATIC_URL,
 } from '../constants';
 import { RecurseBuild } from '../plugins/postcss';
 
@@ -78,7 +78,7 @@ export default async function runESBuild(
       ...(esbuildConfig?.define ?? {}),
       'process.env.NODE_ENV': JSON.stringify(context.isDev ? 'development' : 'production'),
     },
-    publicPath: `/${STATIC_PATH}`,
+    publicPath: `/${STATIC_URL}`,
     conditions: [
       'solid',
       context.isDev && !context.isServer ? 'development' : 'production',

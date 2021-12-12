@@ -13,7 +13,7 @@ import {
 import {
   DOCUMENT_ERROR_DATA,
   DOCUMENT_MAIN_ROOT,
-  STATIC_PATH,
+  STATIC_URL,
 } from '../constants';
 import {
   renderTags,
@@ -100,7 +100,7 @@ export function DocumentScript(): JSX.Element {
       component: 'script',
       type: 'module',
       async: true,
-      src: `/${STATIC_PATH}/index.js`,
+      src: `/${STATIC_URL}/index.js`,
     }),
   ];
 }

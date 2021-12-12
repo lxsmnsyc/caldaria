@@ -64,7 +64,6 @@ export interface DirectoryOptions {
 
 export interface PathOptions {
   api?: string;
-  static?: string;
   public?: string;
 }
 
