@@ -1,12 +1,12 @@
 {
   "license": "MIT",
   "name": "hello-world",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "scripts": {
     "build": "node build-src"
   },
   "dependencies": {
-    "rigidity": "0.0.8",
+    "rigidity": "0.0.9",
     "solid-headless": "^0.10.5",
     "solid-js": "^1.1.1"
   },
