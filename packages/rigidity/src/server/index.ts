@@ -1,8 +1,8 @@
 import { RequestAdapter, ResponseAdapter } from '../adapter';
 import {
-  API_PATH,
-  PUBLIC_PATH,
-  STATIC_PATH,
+  API_URL,
+  PUBLIC_URL,
+  STATIC_URL,
 } from '../constants';
 import StatusCode from '../errors/StatusCode';
 import {
@@ -76,17 +76,17 @@ export default function createServer<Request, Response>(
             throw new StatusCode(404);
           }
         };
-        const publicPrefix = `/${PUBLIC_PATH}/`;
+        const publicPrefix = `/${PUBLIC_URL}/`;
         if (request.url.startsWith(publicPrefix)) {
           await readStaticFile(publicPrefix, serverOptions.publicDir);
           return;
         }
-        const staticPrefix = `/${STATIC_PATH}/`;
+        const staticPrefix = `/${STATIC_URL}/`;
         if (request.url.startsWith(staticPrefix)) {
           await readStaticFile(staticPrefix, serverOptions.buildDir);
           return;
         }
-        const apiPrefix = `/${API_PATH}`;
+        const apiPrefix = `/${API_URL}`;
         if (request.url.startsWith(apiPrefix)) {
           const querystring = await import('querystring');
 

@@ -13,7 +13,13 @@ export const DOCUMENT_ERROR_DATA = 'rigidity_error';
 export const DOCUMENT_MAIN_ROOT = 'rigidity__root';
 
 // Base URL path for static file serving
-export const STATIC_PATH = '_rigidity';
+export const STATIC_URL = '_rigidity';
+
+export const API_URL = 'api';
+
+export const PAGES_URL = 'pages';
+
+export const PUBLIC_URL = 'public';
 
 // Directory output
 export const BUILD_PATH = '.rigidity';

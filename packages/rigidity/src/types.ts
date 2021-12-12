@@ -62,6 +62,12 @@ export interface DirectoryOptions {
   public?: string;
 }
 
+export interface PathOptions {
+  api?: string;
+  static?: string;
+  public?: string;
+}
+
 export interface BuildContext {
   isServer: boolean;
   isDev: boolean;
@@ -73,6 +79,7 @@ export interface BabelBuildOptions {
 }
 
 export interface BuildOptions {
+  paths?: PathOptions;
   directories?: DirectoryOptions;
   esbuild?: esbuild.BuildOptions | ((context: BuildContext) => esbuild.BuildOptions);
   babel?: BabelBuildOptions;

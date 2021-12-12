@@ -9,14 +9,12 @@
     "sourceMap": true,
     "rootDir": "./",
     "strict": true,
-    "isolatedModules": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
     "jsx": "preserve",
-    "jsxImportSource": "solid-js",
     "esModuleInterop": true,
     "target": "ES2017"
   }
