@@ -1,11 +1,9 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { RequestAdapter, ResponseAdapter } from '../adapter';
 
-export interface HTTPRequestAdapter extends RequestAdapter {
-  raw: IncomingMessage;
-}
-
-export function createHTTPRequestAdapter(request: IncomingMessage): HTTPRequestAdapter {
+export function createHTTPRequestAdapter(
+  request: IncomingMessage,
+): RequestAdapter<IncomingMessage> {
   return {
     getHeader(key) {
       return request.headers[key];
@@ -15,11 +13,9 @@ export function createHTTPRequestAdapter(request: IncomingMessage): HTTPRequestA
   };
 }
 
-export interface HTTPResponseAdapter extends ResponseAdapter {
-  raw: ServerResponse;
-}
-
-export function createHTTPResponseAdapter(response: ServerResponse): HTTPResponseAdapter {
+export function createHTTPResponseAdapter(
+  response: ServerResponse,
+): ResponseAdapter<ServerResponse> {
   return {
     setHeader(key, value) {
       response.setHeader(key, value);
@@ -30,7 +26,7 @@ export function createHTTPResponseAdapter(response: ServerResponse): HTTPRespons
     getStatusCode() {
       return response.statusCode;
     },
-    write(value) {
+    setContent(value) {
       response.end(value);
     },
     raw: response,

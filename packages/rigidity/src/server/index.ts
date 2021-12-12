@@ -34,106 +34,87 @@ async function fileExists(path: string): Promise<boolean> {
   }
 }
 
-export type RigidityServer<
-  Request extends RequestAdapter,
-  Response extends ResponseAdapter,
->
-  = (request: Request, response: Response) => void;
+export type RigidityServer<Request, Response>
+  = (request: RequestAdapter<Request>, response: ResponseAdapter<Response>) => Promise<void>;
 
-export default function createServer<
-  Request extends RequestAdapter,
-  Response extends ResponseAdapter,
->(
+export default function createServer<Request, Response>(
   serverOptions: ServerRenderOptions,
 ): RigidityServer<Request, Response> {
   const pagesTree = createPageTree(serverOptions.pages);
   const apisTree = createAPITree(serverOptions.endpoints);
 
-  return (request, response) => {
+  return async (request, response) => {
     function responseEnd(type: string, content: string | Buffer): void {
       response.setHeader('Content-Type', type);
-      response.write(content);
-    }
-    async function errorHandler(error: Error) {
-      const statusCode = (error instanceof StatusCode) ? error.value : 500;
-      const reason = (error instanceof StatusCode) ? error.reason : error;
-      console.log(`[${red(`${statusCode}`)}] ${request.url ?? ''}`);
-      console.error(reason);
-      response.setStatusCode(statusCode);
-      responseEnd('text/html', await renderServerError(serverOptions, {
-        statusCode,
-        error: reason,
-      }));
+      response.setContent(content);
     }
 
-    const host = request.getHeader('host');
-    if (host && request.url) {
-      const url = new URL(request.url, `http://${host}`);
+    try {
+      const host = request.getHeader('host');
+      if (host && typeof host === 'string' && request.url) {
+        const url = new URL(request.url, `http://${host}`);
 
-      const readStaticFile = async (prefix: string, basePath: string) => {
-        const fs = await import('fs-extra');
-        const path = await import('path');
-        const mime = await import('mime-types');
+        const readStaticFile = async (prefix: string, basePath: string) => {
+          const fs = await import('fs-extra');
+          const path = await import('path');
+          const mime = await import('mime-types');
 
-        const file = url.pathname.substring(prefix.length);
-        const targetFile = path.join(basePath, file);
-        const exists = await fileExists(targetFile);
-        const mimeType = mime.contentType(path.basename(file));
+          const file = url.pathname.substring(prefix.length);
+          const targetFile = path.join(basePath, file);
+          const exists = await fileExists(targetFile);
+          const mimeType = mime.contentType(path.basename(file));
 
-        if (exists && mimeType) {
-          const buffer = await fs.readFile(targetFile);
-          response.setStatusCode(200);
-          response.setHeader('Cache-Control', 'max-age=31536000');
-          responseEnd(mimeType, buffer);
-          console.log(`[${green('200')}] ${request.url ?? ''}`);
-        } else {
-          throw new StatusCode(404);
+          if (exists && mimeType) {
+            const buffer = await fs.readFile(targetFile);
+            response.setStatusCode(200);
+            response.setHeader('Cache-Control', 'max-age=31536000');
+            responseEnd(mimeType, buffer);
+            console.log(`[${green('200')}] ${request.url ?? ''}`);
+          } else {
+            throw new StatusCode(404);
+          }
+        };
+        const publicPrefix = `/${PUBLIC_PATH}/`;
+        if (request.url.startsWith(publicPrefix)) {
+          await readStaticFile(publicPrefix, serverOptions.publicDir);
+          return;
         }
-      };
-      const publicPrefix = `/${PUBLIC_PATH}/`;
-      if (request.url.startsWith(publicPrefix)) {
-        readStaticFile(publicPrefix, serverOptions.publicDir).catch(errorHandler);
-        return;
-      }
-      const staticPrefix = `/${STATIC_PATH}/`;
-      if (request.url.startsWith(staticPrefix)) {
-        readStaticFile(staticPrefix, serverOptions.buildDir).catch(errorHandler);
-        return;
-      }
-      const apiPrefix = `/${API_PATH}`;
-      if (request.url.startsWith(apiPrefix)) {
-        const readAPI = async () => {
+        const staticPrefix = `/${STATIC_PATH}/`;
+        if (request.url.startsWith(staticPrefix)) {
+          await readStaticFile(staticPrefix, serverOptions.buildDir);
+          return;
+        }
+        const apiPrefix = `/${API_PATH}`;
+        if (request.url.startsWith(apiPrefix)) {
           const querystring = await import('querystring');
 
           const matchedNode = matchRoute(apisTree, url.pathname.substring(apiPrefix.length));
 
           if (matchedNode && matchedNode.value) {
             await matchedNode.value.call({
-              request,
-              response,
+              request: request.raw,
+              response: response.raw,
               params: matchedNode.params,
               query: querystring.decode(url.search),
             });
-            console.log(`[${green(`${response.getStatusCode()}`)}] ${request.url ?? ''}`);
+            console.log(`[${green(`${response.getStatusCode()}`)}] ${request.url}`);
           } else {
-            throw new StatusCode(404);
+            throw new StatusCode(404, new Error(`"${request.url}" not found.`));
           }
-        };
+        }
 
-        readAPI().catch(errorHandler);
-        return;
-      }
-
-      const getContent = async (): Promise<string> => {
         try {
           const matchedNode = matchRoute(pagesTree, url.pathname);
 
           if (matchedNode && matchedNode.value) {
-            return renderServer(serverOptions, {
+            const value = await renderServer(serverOptions, {
               routes: pagesTree,
               pathname: url.pathname,
               search: url.search,
             });
+            response.setStatusCode(200);
+            console.log(`[${green('200')}] ${request.url ?? ''}`);
+            responseEnd('text/html', value);
           }
 
           throw new StatusCode(404);
@@ -144,13 +125,17 @@ export default function createServer<
             throw new StatusCode(500, error as Error);
           }
         }
-      };
-
-      getContent().then((value) => {
-        response.setStatusCode(200);
-        console.log(`[${green('200')}] ${request.url ?? ''}`);
-        responseEnd('text/html', value);
-      }, errorHandler);
+      }
+    } catch (error: any) {
+      const statusCode = (error instanceof StatusCode) ? error.value : 500;
+      const reason = (error instanceof StatusCode) ? error.reason : error;
+      console.log(`[${red(`${statusCode}`)}] ${request.url ?? ''}`);
+      console.error(reason);
+      response.setStatusCode(statusCode);
+      responseEnd('text/html', await renderServerError(serverOptions, {
+        statusCode,
+        error: reason,
+      }));
     }
   };
 }
