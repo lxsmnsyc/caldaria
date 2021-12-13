@@ -1,3 +1,5 @@
+import './shims';
+
 export {
   DocumentHead,
   DocumentHeadProps,
@@ -41,6 +43,5 @@ export {
   BuildContext,
   BuildOptions,
 } from './types';
-export * from './adapter';
-export * from './adapters/http-adapter';
-export * from './adapters/vercel-adapter';
+export { default as createHTTPAdapter } from './adapters/http-adapter';
+export { default as createVercelAdapter } from './adapters/vercel-adapter';

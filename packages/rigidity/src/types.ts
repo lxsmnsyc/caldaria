@@ -13,6 +13,8 @@ import {
   APIRoute,
 } from './router/core/create-api-tree';
 
+export type ServerFunction = (request: Request) => Promise<Response>;
+
 export interface AppProps {
   Component: () => JSX.Element;
 }

@@ -12,23 +12,18 @@ export type Params = RouterParams;
 export type Query = ParsedUrlQuery;
 
 export interface ServerSideContext<
-  Request,
-  Response,
   P extends Params = Params,
   Q extends Query = Query,
 > {
   request: Request;
-  response: Response;
   params: P;
   query: Q;
 }
 
 export type APICallback = <
-  Request,
-  Response,
   P extends Params = Params,
   Q extends Query = Query,
->(ctx: ServerSideContext<Request, Response, P, Q>) => void | Promise<void>;
+>(ctx: ServerSideContext<P, Q>) => Response | Promise<Response>;
 
 interface API {
   path: string;

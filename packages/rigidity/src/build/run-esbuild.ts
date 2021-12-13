@@ -8,7 +8,7 @@ import {
   BuildOptions,
 } from '../types';
 import {
-  STATIC_PATH, STATIC_URL,
+  STATIC_URL,
 } from '../constants';
 import { RecurseBuild } from '../plugins/postcss';
 
