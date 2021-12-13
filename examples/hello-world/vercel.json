@@ -1,6 +1,14 @@
 {
   "builds": [
     {
+      "src": ".rigidity/**/*",
+      "use": "@vercel/static-build"
+    },
+    {
+      "src": "public/**/*",
+      "use": "@vercel/static"
+    },
+    {
       "src": "index.js",
       "use": "@vercel/node"
     }
