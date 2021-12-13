@@ -1,8 +1,9 @@
 {
   "builds": [
     {
-      "src": ".rigidity/**/*",
-      "use": "@vercel/static-build"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": ".rigidity" }
     },
     {
       "src": "public/**/*",
