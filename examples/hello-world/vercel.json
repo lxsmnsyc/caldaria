@@ -3,11 +3,7 @@
     {
       "src": "package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "." }
-    },
-    {
-      "src": "public/**/*",
-      "use": "@vercel/static"
+      "config": { "distDir": ".rigidity" }
     },
     {
       "src": "index.js",
