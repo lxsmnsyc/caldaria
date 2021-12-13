@@ -8,7 +8,8 @@
   "dependencies": {
     "rigidity": "0.0.11",
     "solid-headless": "^0.10.5",
-    "solid-js": "^1.1.1"
+    "solid-js": "^1.1.1",
+    "@vercel/node": "1.12.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
