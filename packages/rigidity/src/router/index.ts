@@ -12,5 +12,6 @@ export {
   RouterParams,
 } from './core/router';
 export {
-  default as createPage,
+  createClientPage,
+  createServerPage,
 } from './components/Page';

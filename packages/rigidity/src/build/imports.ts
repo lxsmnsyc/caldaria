@@ -11,6 +11,7 @@ export async function getPageImports(
   targetDirectory: string,
   artifactDirectory: string,
   pages: string[],
+  isServer: boolean,
 ): Promise<string[]> {
   const path = await import('path');
 
@@ -30,8 +31,13 @@ export async function getPageImports(
     if (RESERVED_PAGES.includes(extensionless)) {
       return '';
     }
+    const literal = getPageLiteral(index);
+    if (isServer) {
+      return `import ${literal}Default from '${targetFile}';
+const ${literal} = createServerPage(${literal}Default);`;
+    }
     // Create lazy load declaration
-    return `const ${getPageLiteral(index)} = createPage(() => import('${targetFile}'))`;
+    return `const ${literal} = createClientPage(() => import('${targetFile}'))`;
   });
 }
 

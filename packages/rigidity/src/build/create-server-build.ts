@@ -64,7 +64,7 @@ export default async function createServerBuild(
 
   // Create import header
   const lines = [
-    'import { createPage } from "rigidity";',
+    'import { createServerPage } from "rigidity";',
     ...await getAPIImports(
       apiDirectory,
       artifactDirectory,
@@ -74,6 +74,7 @@ export default async function createServerBuild(
       pagesDirectory,
       artifactDirectory,
       pages,
+      true,
     ),
   ];
 
@@ -112,6 +113,7 @@ export default async function createServerBuild(
     `
 import { createServer } from 'rigidity';
 export default createServer({
+  ssrMode: ${JSON.stringify(options.ssrMode ?? 'sync')},
   version: ${JSON.stringify(Date.now())},
   buildDir: ${JSON.stringify(path.join(buildDirectory, environment, 'client'))},
   publicDir: ${JSON.stringify(publicDirectory)},

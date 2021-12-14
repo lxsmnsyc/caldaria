@@ -57,11 +57,12 @@ export default async function createClientBuild(
 
   // Create import header
   const lines = [
-    'import { createPage } from "rigidity";',
+    'import { createClientPage } from "rigidity";',
     ...await getPageImports(
       pagesDirectory,
       artifactDirectory,
       pages,
+      false,
     ),
   ];
 
