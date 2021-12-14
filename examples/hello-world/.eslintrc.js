@@ -12,5 +12,7 @@ module.exports = {
         "devDependencies": ["**/*.test.tsx"]
       }
     ],
+    "react/no-unknown-property": "off",
+    "react/destructuring-assignment": "off"
   },
 };

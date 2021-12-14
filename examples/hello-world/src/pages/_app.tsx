@@ -1,3 +1,4 @@
+/* @jsxImportSource solid-js */
 import { JSX, Suspense } from 'solid-js';
 import { Link, AppProps } from 'rigidity';
 import styles from '../styles/main.css?url';
