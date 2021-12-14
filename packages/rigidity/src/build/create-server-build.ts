@@ -1,7 +1,7 @@
 import {
   BuildResult,
 } from 'esbuild';
-import { adapters } from '..';
+import adapters from '../adapters';
 import {
   PAGES_PATH,
   API_PATH,
