@@ -3,21 +3,25 @@
     {
       "src": "package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "." }
+      "config": { "distDir": ".rigidity" }
     },
     {
-      "src": ".rigidity/client/**/*",
+      "src": "client/**/*",
       "use": "@vercel/static"
     },
     {
-      "src": ".rigidity/server/index.js",
+      "src": "server/index.js",
       "use": "@vercel/node"
     }
   ],
   "rewrites": [
     {
+      "source": "/assets/:match*",
+      "destination": "/client/:match*"
+    },
+    {
       "source": "/(.*)",
-      "destination": "/.rigidity/server/index.js"
+      "destination": "/server/index.js"
     }
   ]
 }
