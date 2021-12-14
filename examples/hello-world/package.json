@@ -1,16 +1,16 @@
 {
   "license": "MIT",
   "name": "hello-world",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "scripts": {
     "build": "node build-src"
   },
   "dependencies": {
-    "rigidity": "0.0.11",
-    "solid-headless": "^0.10.5",
-    "solid-js": "^1.1.1",
     "@vercel/node": "1.12.1",
-    "@vercel/static-build": "^0.18.0"
+    "@vercel/static-build": "^0.18.0",
+    "rigidity": "0.0.12",
+    "solid-headless": "^0.10.5",
+    "solid-js": "^1.1.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
