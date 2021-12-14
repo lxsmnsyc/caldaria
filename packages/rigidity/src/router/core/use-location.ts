@@ -25,14 +25,18 @@ function hasPrefetch(): boolean {
 
 function viaDOM(url: string): Promise<void> {
   return new Promise<void>((res, rej) => {
-    const link = document.createElement('link');
-    link.rel = 'prefetch';
-    link.href = url;
+    if (!document.querySelector(`link[rel="prefetch"][href="${url}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = url;
 
-    link.onload = () => res();
-    link.onerror = rej;
+      link.onload = () => res();
+      link.onerror = rej;
 
-    document.head.appendChild(link);
+      document.head.appendChild(link);
+    } else {
+      res();
+    }
   });
 }
 
@@ -183,7 +187,10 @@ export default function useLocation(
     async prefetch(url, isPriority) {
       if (isLocalURL(url)) {
         const matchedNode = matchRoute(routes(), normalizeURL(url));
-        await matchedNode?.value?.preload?.();
+        if (matchedNode?.value) {
+          await matchedNode.value.preload?.();
+          // TODO Should prefetch data?
+        }
       }
       return prefetch(url, isPriority);
     },
