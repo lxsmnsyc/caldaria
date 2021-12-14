@@ -37,6 +37,7 @@ async function handle(
 
   // Set status code
   response.statusCode = newResponse.status;
+  response.statusMessage = newResponse.statusText;
   // Set headers
   newResponse.headers.forEach((value, key) => {
     response.setHeader(key, value);

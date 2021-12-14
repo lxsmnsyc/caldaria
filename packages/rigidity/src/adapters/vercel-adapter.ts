@@ -37,12 +37,21 @@ async function handle(
 
   // Set status code
   response.statusCode = newResponse.status;
+  response.statusMessage = newResponse.statusText;
   // Set headers
   newResponse.headers.forEach((value, key) => {
     response.setHeader(key, value);
   });
   // Set content
-  (newResponse.body as unknown as Readable).pipe(response);
+  if (
+    newResponse.body instanceof Buffer
+    || typeof newResponse.body === 'string'
+    || newResponse.body == null
+  ) {
+    response.end(newResponse.body);
+  } else {
+    (newResponse.body as unknown as Readable).pipe(response);
+  }
 }
 
 export default function createVercelAdapter(
