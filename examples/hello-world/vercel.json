@@ -1,6 +1,10 @@
 {
   "builds": [
     {
+      "src": "package.json",
+      "use": "@vercel/static-build"
+    },
+    {
       "src": ".rigidity/client/**/*",
       "use": "@vercel/static"
     },
