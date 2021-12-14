@@ -15,6 +15,7 @@ export {
   useRouter,
   RouterLink,
   RouterLinkProps,
+  createPage,
 } from './router';
 export {
   Meta,

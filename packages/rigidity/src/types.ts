@@ -7,6 +7,7 @@ import {
   Metric,
 } from 'web-vitals';
 import {
+  Page,
   PageRoute,
 } from './router/core/create-page-tree';
 import {
@@ -32,13 +33,13 @@ export interface ErrorProps {
   error?: Error;
 }
 
-export interface RenderResult {
+export type ErrorPage = Page<ErrorProps>;
+
+export interface RenderResult<T> {
   App: () => JSX.Element;
   tags: TagDescription[];
-  errorProps?: ErrorProps;
+  data: T;
 }
-
-export type ErrorPage = (props: ErrorProps) => JSX.Element;
 
 export interface GlobalRenderOptions {
   app?: AppPage;

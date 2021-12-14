@@ -11,7 +11,7 @@ import {
   Assets,
 } from 'solid-js/web';
 import {
-  DOCUMENT_ERROR_DATA,
+  DOCUMENT_DATA,
   DOCUMENT_MAIN_ROOT,
   STATIC_URL,
 } from '../constants';
@@ -23,7 +23,7 @@ import {
 } from '../types';
 
 export const DocumentContext = /* @__PURE__ */ (
-  createContext<RenderResult>()
+  createContext<RenderResult<any>>()
 );
 
 export interface DocumentHeadProps {
@@ -79,22 +79,11 @@ export function DocumentScript(): JSX.Element {
 
   return [
     createComponent(Dynamic, { component: HydrationScript }),
-    context?.errorProps && createComponent(Dynamic, {
+    createComponent(Dynamic, {
       component: 'script',
       type: 'application/json',
-      id: DOCUMENT_ERROR_DATA,
-      children: JSON.stringify({
-        statusCode: context.errorProps.statusCode,
-        error: (
-          context.errorProps.error
-            ? {
-              name: context.errorProps.error?.name,
-              message: context.errorProps.error.message,
-              stack: context.errorProps.error?.stack,
-            }
-            : undefined
-        ),
-      }),
+      id: DOCUMENT_DATA,
+      children: JSON.stringify(context?.data),
     }),
     createComponent(Dynamic, {
       component: 'script',
@@ -140,7 +129,7 @@ export function DefaultDocument(): JSX.Element {
   );
 }
 
-export interface RootProps extends RenderResult {
+export interface RootProps extends RenderResult<any> {
   document?: () => JSX.Element;
 }
 

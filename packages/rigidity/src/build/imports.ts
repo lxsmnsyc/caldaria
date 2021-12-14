@@ -31,7 +31,7 @@ export async function getPageImports(
       return '';
     }
     // Create lazy load declaration
-    return `const ${getPageLiteral(index)} = lazy(() => import('${targetFile}'))`;
+    return `const ${getPageLiteral(index)} = createPage(() => import('${targetFile}'))`;
   });
 }
 

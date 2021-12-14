@@ -40,8 +40,10 @@ export default function renderError(
                   createComponent(ErrorBoundary, {
                     fallback: (err) => (
                       createComponent(Custom500Page, {
-                        error: err,
-                        statusCode: 500,
+                        data: {
+                          error: err,
+                          statusCode: 500,
+                        },
                       })
                     ),
                     get children() {
@@ -49,8 +51,10 @@ export default function renderError(
                         createComponent(CustomAppPage, {
                           Component: () => (
                             createComponent(CustomErrorPage, {
-                              statusCode: options.statusCode,
-                              error: options.error,
+                              data: {
+                                statusCode: options.statusCode,
+                                error: options.error,
+                              },
                             })
                           ),
                         })

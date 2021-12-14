@@ -57,7 +57,7 @@ export default async function createClientBuild(
 
   // Create import header
   const lines = [
-    'import { lazy } from "solid-js";',
+    'import { createPage } from "rigidity";',
     ...await getPageImports(
       pagesDirectory,
       artifactDirectory,

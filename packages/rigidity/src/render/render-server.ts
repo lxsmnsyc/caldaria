@@ -13,9 +13,9 @@ import {
 import renderApp, { RenderAppOptions } from './render-app';
 import renderError from './render-error';
 
-async function renderCore(
+async function renderCore<T>(
   globalOptions: GlobalRenderOptions,
-  pageResult: RenderResult,
+  pageResult: RenderResult<T>,
 ): Promise<string> {
   const documentResult = await renderToStringAsync(() => (
     createComponent(Root, {
@@ -37,19 +37,22 @@ export async function renderServerError(
       renderOptions,
     ),
     tags: [],
-    errorProps: renderOptions,
+    data: renderOptions,
   });
 }
 
-export async function renderServer(
+export async function renderServer<T>(
   globalOptions: GlobalRenderOptions,
   renderOptions: RenderAppOptions,
+  response?: T,
 ): Promise<string> {
   return renderCore(globalOptions, {
     App: renderApp(
       globalOptions,
       renderOptions,
+      response,
     ),
     tags: [],
+    data: response,
   });
 }

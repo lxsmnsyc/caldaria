@@ -17,6 +17,7 @@ module.exports = {
     "@typescript-eslint/no-unsafe-assignment": "off",
     "react/prop-types": "off",
     "react/destructuring-assignment": "off",
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "react-hooks/rules-of-hooks": "off"
   },
 };

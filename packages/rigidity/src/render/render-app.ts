@@ -16,6 +16,7 @@ import {
 import {
   Router,
 } from '../router';
+import DataContext from '../router/components/Data';
 import {
   PageTree,
 } from '../router/core/create-page-tree';
@@ -32,9 +33,10 @@ export interface RenderAppOptions {
   routes: PageTree;
 }
 
-export default function renderApp(
+export default function renderApp<T>(
   global: GlobalRenderOptions,
   options: RenderAppOptions,
+  response?: T,
 ): () => JSX.Element {
   const CustomAppPage = global.app ?? DefaultApp;
   const Custom500Page = getErrorPage(500, global);
@@ -43,48 +45,57 @@ export default function renderApp(
   return () => {
     const context = useContext(DocumentContext);
     return (
-      createComponent(Suspense, {
+      createComponent(DataContext.Provider, {
+        value: response,
         get children() {
-          return (
-            createComponent(MetaProvider, {
-              tags: context?.tags ?? [],
-              get children() {
-                return (
-                  createComponent(ErrorBoundary, {
-                    fallback: (err) => (
-                      createComponent(Custom500Page, {
-                        error: err,
-                        statusCode: 500,
-                      })
-                    ),
-                    get children() {
-                      return (
-                        createComponent(CustomAppPage, {
-                          Component: () => (
-                            createComponent(Router, {
-                              location: {
-                                pathname: options.pathname,
-                                search: options.search,
-                              },
-                              get fallback() {
-                                return (
-                                  createComponent(CustomNotFound, {
-                                    statusCode: 404,
-                                    error: new StatusCode(404),
-                                  })
-                                );
-                              },
-                              routes: options.routes,
+          return createComponent(Suspense, {
+            get children() {
+              return (
+                createComponent(MetaProvider, {
+                  tags: context?.tags ?? [],
+                  get children() {
+                    return (
+                      createComponent(ErrorBoundary, {
+                        fallback: (err) => (
+                          createComponent(Custom500Page, {
+                            data: {
+                              error: err,
+                              statusCode: 500,
+                            },
+                          })
+                        ),
+                        get children() {
+                          return (
+                            createComponent(CustomAppPage, {
+                              Component: () => (
+                                createComponent(Router, {
+                                  location: {
+                                    pathname: options.pathname,
+                                    search: options.search,
+                                  },
+                                  get fallback() {
+                                    return (
+                                      createComponent(CustomNotFound, {
+                                        data: {
+                                          statusCode: 404,
+                                          error: new StatusCode(404),
+                                        },
+                                      })
+                                    );
+                                  },
+                                  routes: options.routes,
+                                })
+                              ),
                             })
-                          ),
-                        })
-                      );
-                    },
-                  })
-                );
-              },
-            })
-          );
+                          );
+                        },
+                      })
+                    );
+                  },
+                })
+              );
+            },
+          });
         },
       })
     );

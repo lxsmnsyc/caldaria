@@ -42,7 +42,11 @@ async function handle(
     response.setHeader(key, value);
   });
   // Set content
-  if (newResponse.body instanceof Buffer) {
+  if (
+    newResponse.body instanceof Buffer
+    || typeof newResponse.body === 'string'
+    || newResponse.body == null
+  ) {
     response.end(newResponse.body);
   } else {
     (newResponse.body as unknown as Readable).pipe(response);

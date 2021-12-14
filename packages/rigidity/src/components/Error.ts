@@ -2,6 +2,7 @@ import {
   getReasonPhrase,
 } from 'http-status-codes';
 import {
+  createMemo,
   JSX,
 } from 'solid-js';
 import {
@@ -12,6 +13,7 @@ import {
   Style,
   Title,
 } from '../meta';
+import { Page } from '../router/core/create-page-tree';
 import {
   ErrorProps,
 } from '../types';
@@ -39,39 +41,47 @@ const ERROR_REASON_STYLE = {
   'line-height': '1.75rem',
 };
 
-export default function DefaultErrorComponent(props: ErrorProps): JSX.Element {
-  return (
-    createComponent(Dynamic, {
-      component: 'div',
-      style: ERROR_ROOT_STYLE,
-      get children() {
-        return [
-          createComponent(Title, {
-            get children() {
-              return `${props.statusCode}: ${getReasonPhrase(props.statusCode)}`;
-            },
-          }),
-          createComponent(Style, {
-            get children() {
-              return 'body { margin: 0 }';
-            },
-          }),
-          createComponent(Dynamic, {
-            component: 'span',
-            style: ERROR_STATUS_CODE_STYLE,
-            get children() {
-              return props.statusCode;
-            },
-          }),
-          createComponent(Dynamic, {
-            component: 'span',
-            style: ERROR_REASON_STYLE,
-            get children() {
-              return getReasonPhrase(props.statusCode);
-            },
-          }),
-        ];
-      },
-    })
-  );
-}
+const DefaultErrorComponent: Page<ErrorProps> = (props): JSX.Element => (
+  createMemo(() => {
+    const currentData = props.data;
+    if (!currentData) {
+      return null;
+    }
+    return (
+      createComponent(Dynamic, {
+        component: 'div',
+        style: ERROR_ROOT_STYLE,
+        get children() {
+          return [
+            createComponent(Title, {
+              get children() {
+                return `${currentData.statusCode}: ${getReasonPhrase(currentData.statusCode)}`;
+              },
+            }),
+            createComponent(Style, {
+              get children() {
+                return 'body { margin: 0 }';
+              },
+            }),
+            createComponent(Dynamic, {
+              component: 'span',
+              style: ERROR_STATUS_CODE_STYLE,
+              get children() {
+                return currentData.statusCode;
+              },
+            }),
+            createComponent(Dynamic, {
+              component: 'span',
+              style: ERROR_REASON_STYLE,
+              get children() {
+                return getReasonPhrase(currentData.statusCode);
+              },
+            }),
+          ];
+        },
+      })
+    );
+  })
+);
+
+export default DefaultErrorComponent;

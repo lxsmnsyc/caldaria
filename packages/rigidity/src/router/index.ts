@@ -11,3 +11,6 @@ export {
 export {
   RouterParams,
 } from './core/router';
+export {
+  default as createPage,
+} from './components/Page';

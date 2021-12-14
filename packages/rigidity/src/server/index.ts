@@ -20,6 +20,7 @@ import {
 import {
   green,
   red,
+  yellow,
 } from './colors';
 
 async function fileExists(path: string): Promise<boolean> {
@@ -78,11 +79,11 @@ export default function createServer(
         };
         const publicPrefix = `/${PUBLIC_URL}/`;
         if (request.url.startsWith(publicPrefix)) {
-          return readStaticFile(publicPrefix, serverOptions.publicDir);
+          return await readStaticFile(publicPrefix, serverOptions.publicDir);
         }
         const staticPrefix = `/${STATIC_URL}/`;
         if (request.url.startsWith(staticPrefix)) {
-          return readStaticFile(staticPrefix, serverOptions.buildDir);
+          return await readStaticFile(staticPrefix, serverOptions.buildDir);
         }
         const apiPrefix = `/${API_URL}`;
         if (request.url.startsWith(apiPrefix)) {
@@ -106,14 +107,29 @@ export default function createServer(
           const matchedNode = matchRoute(pagesTree, url.pathname);
 
           if (matchedNode && matchedNode.value) {
+            const page = await matchedNode.value.preload();
+            const data = page.getData ? await page.getData(request) : null;
+            if (request.headers.get('x-rigidity-method')) {
+              console.log(`[${green('200')}][${yellow('DATA')}] ${request.url ?? ''}`);
+              return new Response(
+                data,
+                {
+                  headers: new Headers({
+                    'Content-Type': 'application/json',
+                  }),
+                  status: 200,
+                },
+              );
+            }
+            const result = await renderServer(serverOptions, {
+              routes: pagesTree,
+              pathname: url.pathname,
+              search: url.search,
+            }, data);
             console.log(`[${green('200')}] ${request.url ?? ''}`);
 
             return new Response(
-              await renderServer(serverOptions, {
-                routes: pagesTree,
-                pathname: url.pathname,
-                search: url.search,
-              }),
+              result,
               {
                 headers: new Headers({
                   'Content-Type': 'text/html',

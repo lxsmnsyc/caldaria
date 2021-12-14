@@ -64,7 +64,7 @@ export default async function createServerBuild(
 
   // Create import header
   const lines = [
-    'import { lazy } from "solid-js";',
+    'import { createPage } from "rigidity";',
     ...await getAPIImports(
       apiDirectory,
       artifactDirectory,

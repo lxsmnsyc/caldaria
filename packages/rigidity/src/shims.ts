@@ -6,5 +6,3 @@ if (!globalThis.fetch) {
   globalThis.Request = Request as unknown as typeof globalThis.Request;
   globalThis.Response = Response as unknown as typeof globalThis.Response;
 }
-
-export {};

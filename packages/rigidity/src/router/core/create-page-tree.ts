@@ -7,20 +7,29 @@ import {
   RouterNode,
 } from './router';
 
-export interface Page {
+export interface PageProps<T> {
+  data?: T;
+}
+
+export interface Page<T> {
+  (props: PageProps<T>): JSX.Element;
+  getData?: (request: Request) => T | Promise<T>;
+}
+
+export interface LazyPage<T> {
   (): JSX.Element;
-  preload?: () => (void | Promise<Page>);
+  preload: () => Promise<Page<T>>;
 }
 
 export interface PageRoute {
   path: string;
-  component: Page;
+  component: LazyPage<any>;
 }
 
-export type PageTree = RouterNode<Page>;
+export type PageTree = RouterNode<LazyPage<any>>;
 
 export default function createPageTree(routes: PageRoute[]): PageTree {
-  const root = createRouterNode<Page>('');
+  const root = createRouterNode<LazyPage<any>>('');
 
   for (let i = 0, len = routes.length; i < len; i += 1) {
     const route = routes[i];
