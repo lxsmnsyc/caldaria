@@ -129,7 +129,7 @@ export default function createServer(
             console.log(`[${green('200')}] ${request.url ?? ''}`);
 
             return new Response(
-              result,
+              result as BodyInit,
               {
                 headers: new Headers({
                   'Content-Type': 'text/html',
@@ -159,7 +159,7 @@ export default function createServer(
         await renderServerError(serverOptions, {
           statusCode,
           error: reason,
-        }),
+        }) as BodyInit,
         {
           headers: new Headers({
             'Content-Type': 'text/html',

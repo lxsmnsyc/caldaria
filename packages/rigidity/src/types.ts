@@ -14,6 +14,8 @@ import {
   APIRoute,
 } from './router/core/create-api-tree';
 
+export type SSRMode = 'sync' | 'async' | 'node-stream' | 'web-stream';
+
 export type ServerFunction = (request: Request) => Promise<Response>;
 
 export interface AppProps {
@@ -42,6 +44,7 @@ export interface RenderResult<T> {
 }
 
 export interface GlobalRenderOptions {
+  ssrMode: SSRMode;
   app?: AppPage;
   document?: () => JSX.Element;
   error404?: ErrorPage;
@@ -81,6 +84,7 @@ export interface BabelBuildOptions {
 }
 
 export interface BuildOptions {
+  ssrMode?: SSRMode;
   paths?: PathOptions;
   directories?: DirectoryOptions;
   esbuild?: esbuild.BuildOptions | ((context: BuildContext) => esbuild.BuildOptions);
