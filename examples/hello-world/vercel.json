@@ -1,27 +1,33 @@
 {
   "builds": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": ".rigidity" }
-    },
-    {
-      "src": "client/**/*",
+      "src": ".rigidity/client/**/*",
       "use": "@vercel/static"
     },
     {
-      "src": "server/index.js",
+      "src": "index.js",
       "use": "@vercel/node"
     }
   ],
   "rewrites": [
     {
       "source": "/assets/:match*",
-      "destination": "/client/:match*"
+      "destination": "/.rigidity/client/:match*"
     },
     {
       "source": "/(.*)",
-      "destination": "/server/index.js"
+      "destination": "/"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/.rigidity/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000"
+        }
+      ]
     }
   ]
 }
