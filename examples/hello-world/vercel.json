@@ -17,7 +17,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/"
+      "destination": ".rigidity/server/index.js"
     }
   ]
 }
