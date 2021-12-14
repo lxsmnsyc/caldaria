@@ -44,6 +44,7 @@ export default function hydrateClient(
 
   const routerTree = createPageTree(options.pages);
   const pageResult = {
+    assets: options.assetsUrl,
     App: renderApp(options, {
       pathname: window.location.pathname,
       search: window.location.search,

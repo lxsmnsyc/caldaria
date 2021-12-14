@@ -47,6 +47,7 @@ const DefaultErrorComponent: Page<ErrorProps> = (props): JSX.Element => (
     if (!currentData) {
       return null;
     }
+    console.log(currentData.error);
     return (
       createComponent(Dynamic, {
         component: 'div',

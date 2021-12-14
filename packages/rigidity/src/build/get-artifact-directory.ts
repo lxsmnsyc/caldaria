@@ -9,20 +9,17 @@ import {
 
 export async function getArtifactBaseDirectory(
   options: BuildOptions,
-  environment: string,
   bundleType: BundleType,
 ): Promise<string> {
   const path = await import('path');
   return path.join(
     options.directories?.build ?? BUILD_PATH,
-    environment,
     BUILD_OUTPUT[bundleType].temp,
   );
 }
 
 export default async function getArtifactDirectory(
   options: BuildOptions,
-  environment: string,
   bundleType: BundleType,
   directory: string,
 ): Promise<string> {
@@ -30,7 +27,6 @@ export default async function getArtifactDirectory(
   return path.join(
     await getArtifactBaseDirectory(
       options,
-      environment,
       bundleType,
     ),
     directory,

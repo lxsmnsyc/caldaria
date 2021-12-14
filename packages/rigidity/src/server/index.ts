@@ -1,8 +1,4 @@
-import {
-  API_URL,
-  PUBLIC_URL,
-  STATIC_URL,
-} from '../constants';
+import { API_URL } from '../constants';
 import StatusCode from '../errors/StatusCode';
 import {
   renderServer,
@@ -47,55 +43,60 @@ export default function createServer(
       if (host && request.url) {
         const url = new URL(request.url, `http://${host}`);
 
-        const readStaticFile = async (prefix: string, basePath: string) => {
-          const fs = await import('fs-extra');
-          const path = await import('path');
-          const mime = await import('mime-types');
+        if (serverOptions.enableStaticFileServing || !serverOptions.cdn) {
+          const readStaticFile = async (prefix: string, basePath: string) => {
+            const fs = await import('fs-extra');
+            const path = await import('path');
+            const mime = await import('mime-types');
 
-          const file = url.pathname.substring(prefix.length);
-          const targetFile = path.join(basePath, file);
-          const exists = await fileExists(targetFile);
-          const mimeType = mime.contentType(path.basename(file));
+            const file = url.pathname.substring(prefix.length);
+            const targetFile = path.join(basePath, file);
+            const exists = await fileExists(targetFile);
+            const mimeType = mime.contentType(path.basename(file));
 
-          if (exists && mimeType) {
-            const cacheControl: Record<string, string> = {};
-            if (process.env.NODE_ENV === 'production') {
-              cacheControl['Cache-Control'] = 'max-age=31536000';
+            if (exists && mimeType) {
+              const cacheControl: Record<string, string> = {};
+              if (process.env.NODE_ENV === 'production') {
+                cacheControl['Cache-Control'] = 'max-age=31536000';
+              }
+              console.log(`[${green('200')}] ${request.url ?? ''}`);
+
+              return new Response(
+                fs.createReadStream(targetFile) as unknown as ReadableStream,
+                {
+                  headers: new Headers({
+                    ...cacheControl,
+                    'Content-Type': mimeType,
+                  }),
+                  status: 200,
+                },
+              );
             }
-            console.log(`[${green('200')}] ${request.url ?? ''}`);
-
-            return new Response(
-              fs.createReadStream(targetFile) as unknown as ReadableStream,
-              {
-                headers: new Headers({
-                  ...cacheControl,
-                  'Content-Type': mimeType,
-                }),
-                status: 200,
-              },
-            );
+            throw new StatusCode(404);
+          };
+          const publicPrefix = `/${serverOptions.publicUrl}/`;
+          if (request.url.startsWith(publicPrefix)) {
+            return await readStaticFile(publicPrefix, serverOptions.publicDir);
           }
-          throw new StatusCode(404);
-        };
-        const publicPrefix = `/${PUBLIC_URL}/`;
-        if (request.url.startsWith(publicPrefix)) {
-          return await readStaticFile(publicPrefix, serverOptions.publicDir);
-        }
-        const staticPrefix = `/${STATIC_URL}/`;
-        if (request.url.startsWith(staticPrefix)) {
-          return await readStaticFile(staticPrefix, serverOptions.buildDir);
+          const staticPrefix = `/${serverOptions.assetsUrl}/`;
+          if (request.url.startsWith(staticPrefix)) {
+            return await readStaticFile(staticPrefix, serverOptions.buildDir);
+          }
         }
         const apiPrefix = `/${API_URL}`;
         if (request.url.startsWith(apiPrefix)) {
-          const querystring = await import('querystring');
-
           const matchedNode = matchRoute(apisTree, url.pathname.substring(apiPrefix.length));
 
           if (matchedNode && matchedNode.value) {
+            const search = new URLSearchParams(url.search);
+            const queries: Record<string, string> = {};
+            search.forEach((value, key) => {
+              queries[key] = value;
+            });
             const response = await matchedNode.value.call({
               request,
               params: matchedNode.params,
-              query: querystring.decode(url.search),
+              query: queries,
             });
             console.log(`[${green(`${response.status}`)}] ${request.url}`);
             return response;

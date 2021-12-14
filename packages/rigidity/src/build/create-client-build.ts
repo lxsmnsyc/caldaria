@@ -10,6 +10,8 @@ import {
   CUSTOM_404,
   CUSTOM_500,
   CUSTOM_ERROR,
+  ASSETS_URL,
+  PUBLIC_URL,
 } from '../constants';
 import {
   BuildOptions,
@@ -31,11 +33,11 @@ import runESBuild from './run-esbuild';
 
 export default async function createClientBuild(
   options: BuildOptions,
-  environment: string,
 ): Promise<BuildResult> {
   const path = await import('path');
   const fs = await import('fs-extra');
 
+  const environment = options.env ?? 'production';
   const pagesDirectory = options.directories?.pages ?? PAGES_PATH;
   const buildDirectory = options.directories?.build ?? BUILD_PATH;
 
@@ -43,7 +45,6 @@ export default async function createClientBuild(
 
   const outputDirectory = path.join(
     buildDirectory,
-    environment,
     BUILD_OUTPUT.client.output,
   );
 
@@ -51,7 +52,6 @@ export default async function createClientBuild(
 
   const artifactDirectory = await getArtifactBaseDirectory(
     options,
-    environment,
     'client',
   );
 
@@ -102,11 +102,14 @@ export default async function createClientBuild(
 import { hydrate } from 'solid-js/web';
 import { hydrateClient } from 'rigidity';
 hydrateClient({
-  ${appPage ? `app: ${appPage},` : '// app: undefined'}
-  ${documentPage ? `document: ${documentPage},` : '// document: undefined'}
-  ${errorPage ? `error: ${errorPage},` : '// error: undefined'}
-  ${error404 ? `error404: ${error404},` : '// error404: undefined'}
-  ${error500 ? `error500: ${error500},` : '// error500: undefined'}
+  cdn: ${options.paths?.cdn ? JSON.stringify(options.paths.cdn) : 'undefined'},
+  assetsUrl: ${JSON.stringify(options.paths?.assets ?? ASSETS_URL)},
+  publicUrl: ${JSON.stringify(options.paths?.public ?? PUBLIC_URL)},
+  app: ${appPage ?? 'undefined'},
+  document: ${documentPage ?? 'undefined'},
+  error: ${errorPage ?? 'undefined'},
+  error500: ${error500 ?? 'undefined'},
+  error404: ${error404 ?? 'undefined'},
   pages: ${await getPagesOptions(pages)},
 }, hydrate);
     `,

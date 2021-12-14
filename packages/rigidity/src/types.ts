@@ -15,6 +15,7 @@ import {
 } from './router/core/create-api-tree';
 
 export type SSRMode = 'sync' | 'async' | 'node-stream' | 'web-stream';
+export type AdapterType = 'vanilla' | 'http' | 'vercel' | 'worker';
 
 export type ServerFunction = (request: Request) => Promise<Response>;
 
@@ -38,12 +39,16 @@ export interface ErrorProps {
 export type ErrorPage = Page<ErrorProps>;
 
 export interface RenderResult<T> {
+  assets: string;
   App: () => JSX.Element;
   tags: TagDescription[];
   data: T;
 }
 
 export interface GlobalRenderOptions {
+  cdn?: string;
+  assetsUrl: string;
+  publicUrl: string;
   ssrMode: SSRMode;
   app?: AppPage;
   document?: () => JSX.Element;
@@ -54,6 +59,7 @@ export interface GlobalRenderOptions {
 }
 
 export interface ServerRenderOptions extends GlobalRenderOptions {
+  enableStaticFileServing: boolean;
   version: string;
   buildDir: string;
   publicDir: string;
@@ -69,8 +75,9 @@ export interface DirectoryOptions {
 }
 
 export interface PathOptions {
-  api?: string;
+  cdn?: string;
   public?: string;
+  assets?: string;
 }
 
 export interface BuildContext {
@@ -84,6 +91,8 @@ export interface BabelBuildOptions {
 }
 
 export interface BuildOptions {
+  env?: 'production' | 'development';
+  adapter?: AdapterType;
   ssrMode?: SSRMode;
   paths?: PathOptions;
   directories?: DirectoryOptions;
@@ -96,4 +105,10 @@ export type BundleType = 'server' | 'client';
 export interface TagDescription {
   tag: string;
   props: Record<string, unknown>;
+}
+
+export interface Adapter<T> {
+  enableStaticFileServing: boolean;
+  generateScript: (config: string) => string;
+  create: (fn: ServerFunction) => T;
 }

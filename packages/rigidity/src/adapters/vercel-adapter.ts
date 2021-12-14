@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { Readable } from 'stream';
-import { ServerFunction } from '../types';
+import { Adapter, ServerFunction } from '../types';
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
   return new Promise((resolve, reject) => {
@@ -54,11 +54,16 @@ async function handle(
   }
 }
 
-export default function createVercelAdapter(
-  func: ServerFunction,
-): (request: VercelRequest, response: VercelResponse) => Promise<void> {
-  return async (request, response) => {
+const ADAPTER: Adapter<(request: VercelRequest, response: VercelResponse) => Promise<void>> = {
+  enableStaticFileServing: false,
+  generateScript: (config) => `
+import { createServer, adapters } from 'rigidity';
+export default adapters.vercel.create(createServer(${config}));
+  `,
+  create: (fn) => async (request, response) => {
     // eslint-disable-next-line no-void
-    await handle(func, request, response);
-  };
-}
+    await handle(fn, request, response);
+  },
+};
+
+export default ADAPTER;

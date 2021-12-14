@@ -45,5 +45,6 @@ export {
   BuildContext,
   BuildOptions,
 } from './types';
-export { default as createHTTPAdapter } from './adapters/http-adapter';
-export { default as createVercelAdapter } from './adapters/vercel-adapter';
+export {
+  default as adapters,
+} from './adapters';

@@ -13,7 +13,6 @@ import {
 import {
   DOCUMENT_DATA,
   DOCUMENT_MAIN_ROOT,
-  STATIC_URL,
 } from '../constants';
 import {
   renderTags,
@@ -89,7 +88,7 @@ export function DocumentScript(): JSX.Element {
       component: 'script',
       type: 'module',
       async: true,
-      src: `/${STATIC_URL}/index.js`,
+      src: `${context?.assets ?? ''}/index.js`,
     }),
   ];
 }
@@ -109,18 +108,19 @@ export function DefaultDocument(): JSX.Element {
       get children() {
         return [
           createComponent(DocumentHead, {
-            get children() {
-              return (
-                createComponent(DocumentScript, {})
-              );
-            },
+            // get children() {
+            //   return (
+            //     createComponent(DocumentScript, {})
+            //   );
+            // },
           }),
           createComponent(Dynamic, {
             component: 'body',
             get children() {
-              return (
-                createComponent(DocumentMain, {})
-              );
+              return [
+                createComponent(DocumentMain, {}),
+                createComponent(DocumentScript, {}),
+              ];
             },
           }),
         ];

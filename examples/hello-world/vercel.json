@@ -1,0 +1,18 @@
+{
+  "builds": [
+    {
+      "src": ".rigidity/client",
+      "use": "@vercel/static"
+    },
+    {
+      "src": ".rigidity/server/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}

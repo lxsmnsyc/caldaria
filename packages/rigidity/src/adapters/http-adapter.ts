@@ -1,6 +1,6 @@
 import { IncomingMessage, RequestListener, ServerResponse } from 'http';
 import { Readable } from 'stream';
-import { ServerFunction } from '../types';
+import { Adapter, ServerFunction } from '../types';
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
   return new Promise((resolve, reject) => {
@@ -54,11 +54,21 @@ async function handle(
   }
 }
 
-export default function createHTTPAdapter(
-  func: ServerFunction,
-): RequestListener {
-  return (request, response) => {
+const ADAPTER: Adapter<RequestListener> = {
+  enableStaticFileServing: true,
+  generateScript: (config) => `
+import http from 'http';
+import { createServer, adapters } from 'rigidity';
+const server = createServer(${config});
+const listener = adapters.http.create(server);
+http.createServer(listener).listen(3000).on('listening', () => {
+  console.log('Listening at http://localhost:3000')
+});
+  `,
+  create: (fn) => (request, response) => {
     // eslint-disable-next-line no-void
-    void handle(func, request, response);
-  };
-}
+    void handle(fn, request, response);
+  },
+};
+
+export default ADAPTER;

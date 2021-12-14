@@ -87,6 +87,7 @@ export async function renderServerError(
   renderOptions: ErrorProps,
 ): Promise<string | Readable | ReadableStream> {
   return renderCore(globalOptions, {
+    assets: `${globalOptions.cdn ?? ''}/${globalOptions.assetsUrl}`,
     App: renderError(
       globalOptions,
       renderOptions,
@@ -102,6 +103,7 @@ export async function renderServer<T>(
   response?: T,
 ): Promise<string | Readable | ReadableStream> {
   return renderCore(globalOptions, {
+    assets: `${globalOptions.cdn ?? ''}/${globalOptions.assetsUrl}`,
     App: renderApp(
       globalOptions,
       renderOptions,
