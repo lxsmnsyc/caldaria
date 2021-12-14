@@ -18,6 +18,10 @@
     {
       "source": "/(.*)",
       "destination": ".rigidity/server/index.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "server/index.js"
     }
   ]
 }
