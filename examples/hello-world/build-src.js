@@ -1,7 +1,7 @@
 const rigidity = require('rigidity');
 
 rigidity.createBuild({
-  env: 'development',
+  env: 'production',
   adapter: 'vercel',
   ssrMode: 'async',
   esbuild: {
