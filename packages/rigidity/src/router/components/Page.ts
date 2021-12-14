@@ -1,6 +1,5 @@
 import {
   createComponent,
-  createMemo,
   createResource,
   lazy,
   useContext,
@@ -36,6 +35,7 @@ export default function createPage<T>(
       get data() {
         return data();
       },
+      params: router.params,
     });
   }
 

@@ -62,6 +62,7 @@ export default function renderApp<T>(
                               error: err,
                               statusCode: 500,
                             },
+                            params: {},
                           })
                         ),
                         get children() {
@@ -80,6 +81,7 @@ export default function renderApp<T>(
                                           statusCode: 404,
                                           error: new StatusCode(404),
                                         },
+                                        params: {},
                                       })
                                     );
                                   },

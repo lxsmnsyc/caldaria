@@ -44,6 +44,7 @@ export default function renderError(
                           error: err,
                           statusCode: 500,
                         },
+                        params: {},
                       })
                     ),
                     get children() {
@@ -55,6 +56,7 @@ export default function renderError(
                                 statusCode: options.statusCode,
                                 error: options.error,
                               },
+                              params: {},
                             })
                           ),
                         })

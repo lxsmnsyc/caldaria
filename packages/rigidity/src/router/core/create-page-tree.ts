@@ -5,15 +5,17 @@ import {
   addRoute,
   createRouterNode,
   RouterNode,
+  RouterParams,
 } from './router';
 
-export interface PageProps<T> {
+export interface PageProps<T, P extends RouterParams = RouterParams> {
   data?: T;
+  params: P;
 }
 
-export interface Page<T> {
-  (props: PageProps<T>): JSX.Element;
-  getData?: (request: Request) => T | Promise<T>;
+export interface Page<T, P extends RouterParams = RouterParams> {
+  (props: PageProps<T, P>): JSX.Element;
+  getData?: (request: Request, params: P) => T | Promise<T>;
 }
 
 export interface LazyPage<T> {

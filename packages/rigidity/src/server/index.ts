@@ -108,11 +108,11 @@ export default function createServer(
 
           if (matchedNode && matchedNode.value) {
             const page = await matchedNode.value.preload();
-            const data = page.getData ? await page.getData(request) : null;
+            const data = page.getData ? await page.getData(request, matchedNode.params) : null;
             if (request.headers.get('x-rigidity-method')) {
               console.log(`[${green('200')}][${yellow('DATA')}] ${request.url ?? ''}`);
               return new Response(
-                data,
+                JSON.stringify(data),
                 {
                   headers: new Headers({
                     'Content-Type': 'application/json',
