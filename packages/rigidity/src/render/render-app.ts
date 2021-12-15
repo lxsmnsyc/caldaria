@@ -46,7 +46,10 @@ export default function renderApp<T>(
     const context = useContext(DocumentContext);
     return (
       createComponent(DataContext.Provider, {
-        value: response,
+        value: {
+          data: response,
+          initial: true,
+        },
         get children() {
           return createComponent(Suspense, {
             get children() {

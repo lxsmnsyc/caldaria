@@ -2,6 +2,11 @@ import {
   createContext,
 } from 'solid-js';
 
-const DataContext = createContext<any>();
+interface DataContext<T> {
+  initial: boolean;
+  data: T;
+}
+
+const DataContext = createContext<DataContext<any>>();
 
 export default DataContext;

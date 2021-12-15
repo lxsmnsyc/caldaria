@@ -1,5 +1,6 @@
 import {
   createComponent,
+  createEffect,
   createResource,
   createUniqueId,
   lazy,
@@ -19,11 +20,15 @@ export function createServerPage<T>(
   }
 
   function Component() {
-    const originalData = useContext(DataContext);
+    const ctx = useContext(DataContext);
     const router = useRouter();
-    const [data] = createResource(async () => Promise.resolve(originalData), {
-      initialValue: originalData,
-    });
+    const [data] = createResource(
+      () => !ctx?.initial,
+      async () => Promise.resolve(ctx?.data),
+      {
+        initialValue: ctx?.data,
+      },
+    );
 
     return createComponent(MockLazy, {
       get data() {
@@ -47,12 +52,21 @@ export function createClientPage<T>(
   const PageComponent = lazy(lazyComponent);
 
   function Component() {
-    const originalData = useContext(DataContext);
+    const ctx = useContext(DataContext);
     const router = useRouter();
-    const [data] = createResource(async () => (
-      loadData(router.pathname, router.search)
-    ), {
-      initialValue: originalData,
+    const [data] = createResource(
+      () => !ctx?.initial,
+      async () => (
+        loadData(router.pathname, router.search)
+      ), {
+        initialValue: ctx?.data,
+      },
+    );
+
+    createEffect(() => {
+      if (ctx) {
+        ctx.initial = false;
+      }
     });
 
     return createComponent(PageComponent, {

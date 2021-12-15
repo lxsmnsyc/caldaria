@@ -199,7 +199,7 @@ export default function useLocation(
         const matchedNode = matchRoute(routes(), normalizeURL(url));
         if (matchedNode?.value) {
           await matchedNode.value.preload?.();
-          await loadData(url, '');
+          // await loadData(url, '');
         }
       }
       return prefetch(url, isPriority);
