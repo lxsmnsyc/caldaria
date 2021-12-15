@@ -3,7 +3,8 @@
   "name": "hello-world",
   "version": "0.0.12",
   "scripts": {
-    "build": "node build-src"
+    "build": "node build-src",
+    "dev": "NODE_ENV=development node build-src && node .rigidity/server"
   },
   "dependencies": {
     "@vercel/node": "1.12.1",

@@ -6,6 +6,7 @@ import {
 import {
   isServer,
 } from 'solid-js/web';
+import loadData from '../utils/load-data';
 import {
   isLocalURL,
   normalizeURL,
@@ -198,7 +199,7 @@ export default function useLocation(
         const matchedNode = matchRoute(routes(), normalizeURL(url));
         if (matchedNode?.value) {
           await matchedNode.value.preload?.();
-          // TODO Should prefetch data?
+          await loadData(url, '');
         }
       }
       return prefetch(url, isPriority);

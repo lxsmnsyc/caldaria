@@ -6,6 +6,7 @@ import {
   useContext,
 } from 'solid-js';
 import { LazyPage, Page, PageProps } from '../core/create-page-tree';
+import loadData from '../utils/load-data';
 import DataContext from './Data';
 import { useRouter } from './Router';
 
@@ -48,14 +49,9 @@ export function createClientPage<T>(
   function Component() {
     const originalData = useContext(DataContext);
     const router = useRouter();
-    const [data] = createResource(async () => {
-      const response = await fetch(`${router.pathname}${router.search}`, {
-        headers: {
-          'X-Rigidity-Method': 'GET',
-        },
-      });
-      return response.json();
-    }, {
+    const [data] = createResource(async () => (
+      loadData(router.pathname, router.search)
+    ), {
       initialValue: originalData,
     });
 

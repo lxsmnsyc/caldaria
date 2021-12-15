@@ -63,3 +63,9 @@ export const BUILD_OUTPUT = {
     temp: 'tmp.server',
   },
 };
+
+// Special search query for data-only fetching
+export const RIGIDITY_SEARCH = '.rigidity';
+
+// Search query value for data-only
+export const RIGIDITY_GET = 'get';

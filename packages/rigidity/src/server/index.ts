@@ -1,4 +1,4 @@
-import { API_URL } from '../constants';
+import { API_URL, RIGIDITY_GET, RIGIDITY_SEARCH } from '../constants';
 import StatusCode from '../errors/StatusCode';
 import {
   renderServer,
@@ -108,9 +108,10 @@ export default function createServer(
           const matchedNode = matchRoute(pagesTree, url.pathname);
 
           if (matchedNode && matchedNode.value) {
+            const search = new URLSearchParams(url.search);
             const page = await matchedNode.value.preload();
             const data = page.getData ? await page.getData(request, matchedNode.params) : null;
-            if (request.headers.get('x-rigidity-method')) {
+            if (search.get(RIGIDITY_SEARCH)?.toLowerCase() === RIGIDITY_GET) {
               console.log(`[${green('200')}][${yellow('DATA')}] ${request.url ?? ''}`);
               return new Response(
                 JSON.stringify(data),
