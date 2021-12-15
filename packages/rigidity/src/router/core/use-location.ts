@@ -25,13 +25,13 @@ function hasPrefetch(): boolean {
 
 function viaDOM(url: string): Promise<void> {
   return new Promise<void>((res, rej) => {
-    if (!document.querySelector(`link[rel="prefetch"][href="${url}"]`)) {
+    if (!document.querySelector(`link[rel="prefetch"][href="${url}"][as="fetch"]`)) {
       const link = document.createElement('link');
       link.rel = 'prefetch';
-      link.href = url;
-
+      link.as = 'document';
       link.onload = () => res();
       link.onerror = rej;
+      link.href = url;
 
       document.head.appendChild(link);
     } else {
@@ -74,13 +74,22 @@ async function priority(url: string): Promise<void> {
   }
 }
 
+const links = new Set<string>();
+
 async function prefetch(url: string, isPriority = false): Promise<void> {
-  if (isPriority) {
-    await priority(url);
-  } else if (hasPrefetch()) {
-    await viaDOM(url);
-  } else {
-    await viaXHR(url);
+  if (!links.has(url)) {
+    links.add(url);
+    if (isPriority) {
+      await priority(url);
+    } else if (hasPrefetch()) {
+      try {
+        await viaDOM(url);
+      } catch (error) {
+        await viaXHR(url);
+      }
+    } else {
+      await viaXHR(url);
+    }
   }
 }
 
