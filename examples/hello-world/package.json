@@ -11,7 +11,7 @@
     "@vercel/static-build": "^0.18.0",
     "rigidity": "0.0.12",
     "solid-headless": "^0.10.5",
-    "solid-js": "^1.1.1"
+    "solid-js": "^1.3.0-beta.4"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
