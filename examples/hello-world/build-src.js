@@ -1,8 +1,8 @@
 const rigidity = require('rigidity');
 
 rigidity.createBuild({
-  env: 'production',
-  adapter: 'vercel',
+  env: process.env.NODE_ENV,
+  adapter: process.env.NODE_ENV === 'production' ? 'vercel' : 'http',
   ssrMode: 'async',
   esbuild: {
     tsconfig: './tsconfig.json',
