@@ -1,7 +1,6 @@
 import {
   createComponent,
-  pipeToNodeWritable,
-  pipeToWritable,
+  renderToStream,
   renderToString,
   renderToStringAsync,
 } from 'solid-js/web';
@@ -40,32 +39,22 @@ async function renderCore<T>(
           callback();
         },
       });
-      pipeToNodeWritable(() => (
+      renderToStream(() => (
         createComponent(Root, {
           ...pageResult,
           document: globalOptions.document,
         })
-      ), writable, {
-        onReady({ write, startWriting }) {
-          write('<!DOCTYPE html>');
-          startWriting();
-        },
-      });
+      )).pipe(writable);
       return writable;
     }
     case 'web-stream': {
       const stream = new TransformStream();
-      pipeToWritable(() => (
+      renderToStream(() => (
         createComponent(Root, {
           ...pageResult,
           document: globalOptions.document,
         })
-      ), stream.writable, {
-        onReady({ write, startWriting }) {
-          write('<!DOCTYPE html>');
-          startWriting();
-        },
-      });
+      )).pipeTo(stream.writable);
       return stream.readable;
     }
     case 'sync':
