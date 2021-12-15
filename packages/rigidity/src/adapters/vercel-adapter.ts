@@ -54,7 +54,8 @@ async function handle(
   }
 }
 
-const ADAPTER: Adapter<(request: VercelRequest, response: VercelResponse) => Promise<void>> = {
+type VercelFunction = (request: VercelRequest, response: VercelResponse) => Promise<void>;
+const ADAPTER: Adapter<VercelFunction> = /* @__PURE__ */ {
   enableStaticFileServing: false,
   generateScript: (config) => `
 import { createServer, adapters } from 'rigidity';

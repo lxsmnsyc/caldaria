@@ -2,7 +2,7 @@ import { RequestListener } from 'http';
 import HTTPAdapter from './http-adapter';
 import { Adapter } from '../types';
 
-const ADAPTER: Adapter<RequestListener> = {
+const ADAPTER: Adapter<RequestListener> = /* @__PURE__ */ {
   enableStaticFileServing: true,
   generateScript: (config) => `
 import { createServer, adapters } from 'rigidity';

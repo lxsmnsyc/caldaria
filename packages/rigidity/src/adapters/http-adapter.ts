@@ -54,7 +54,7 @@ async function handle(
   }
 }
 
-const ADAPTER: Adapter<RequestListener> = {
+const ADAPTER: Adapter<RequestListener> = /* @__PURE__ */ {
   enableStaticFileServing: true,
   generateScript: (config) => `
 import http from 'http';

@@ -1,6 +1,6 @@
 import { Adapter, ServerFunction } from '../types';
 
-const ADAPTER: Adapter<ServerFunction> = {
+const ADAPTER: Adapter<ServerFunction> = /* @__PURE__ */{
   enableStaticFileServing: false,
   generateScript: (config) => `
 import { createServer, adapters } from 'rigidity';
