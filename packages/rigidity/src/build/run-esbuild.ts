@@ -10,7 +10,11 @@ import {
 import {
   ASSETS_URL,
 } from '../constants';
-import { RecurseBuild } from '../plugins/postcss';
+import solidPlugin from '../plugins/solid';
+import solidSFCPlugin from '../plugins/solid-sfc';
+import postcssPlugin, { RecurseBuild } from '../plugins/postcss';
+import rawPlugin from '../plugins/raw';
+import urlPlugin from '../plugins/url';
 
 function createOption(opt: ESBuildOption): ESBuildOption {
   return opt;
@@ -22,11 +26,6 @@ export default async function runESBuild(
   options: BuildOptions,
 ): Promise<BuildResult> {
   const esbuild = await import('esbuild');
-  const solidPlugin = (await import('../plugins/solid')).default;
-  const solidSFCPlugin = (await import('../plugins/solid-sfc')).default;
-  const rawPlugin = (await import('../plugins/raw')).default;
-  const urlPlugin = (await import('../plugins/url')).default;
-  const postcssPlugin = (await import('../plugins/postcss')).default;
 
   const esbuildConfig = typeof options.esbuild === 'function'
     ? options.esbuild(context)

@@ -1,6 +1,6 @@
 import { RequestListener } from 'http';
-import HTTPAdapter from './http-adapter';
 import { Adapter } from '../types';
+import { handleHTTP } from './utils';
 
 const ADAPTER: Adapter<RequestListener> = /* @__PURE__ */ {
   enableStaticFileServing: true,
@@ -8,7 +8,10 @@ const ADAPTER: Adapter<RequestListener> = /* @__PURE__ */ {
 import { createServer, adapters } from 'rigidity';
 export default adapters.vanilla.create(createServer(${config}));
   `,
-  create: HTTPAdapter.create,
+  create: (fn) => async (request, response) => {
+    // eslint-disable-next-line no-void
+    await handleHTTP(fn, request, response);
+  },
 };
 
 export default ADAPTER;
