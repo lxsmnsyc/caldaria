@@ -30,7 +30,9 @@ export default function solidPlugin(options: SolidOptions): Plugin {
       const ts = (await import('@babel/preset-typescript')).default;
       const solidLabels = (await import('babel-plugin-solid-labels')).default;
 
-      build.onLoad({ filter: /\.(t|j)sx$/ }, async (args) => {
+      build.onLoad({
+        filter: /\.(t|j)sx$/,
+      }, async (args) => {
         const source = await fs.readFile(args.path, { encoding: 'utf-8' });
 
         const { name, ext } = path.parse(args.path);

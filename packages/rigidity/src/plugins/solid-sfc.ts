@@ -13,12 +13,17 @@ export default function solidSFCPlugin(options?: Options): Plugin {
       const fs = await import('fs/promises');
       const solidSFC = (await import('solid-sfc')).default;
 
-      build.onResolve({ filter: /.solid$/ }, (args) => ({
+      build.onResolve({
+        filter: /.solid$/,
+      }, (args) => ({
         namespace: 'solid-sfc',
         path: path.join(args.resolveDir, args.path),
       }));
 
-      build.onLoad({ filter: /.*/, namespace: 'solid-sfc' }, async (args) => {
+      build.onLoad({
+        filter: /.*/,
+        namespace: 'solid-sfc',
+      }, async (args) => {
         const result = await solidSFC(await fs.readFile(args.path, { encoding: 'utf-8' }), {
           filename: args.path,
           target: options?.target,
