@@ -4,7 +4,7 @@ import {
 
 export default function rawPlugin(): Plugin {
   return {
-    name: 'esbuild:raw',
+    name: 'rigidity:raw',
 
     async setup(build) {
       const path = await import('path');

@@ -18,7 +18,7 @@ interface SolidOptions {
 
 export default function solidPlugin(options: SolidOptions): Plugin {
   return {
-    name: 'esbuild:solid',
+    name: 'rigidity:solid',
 
     async setup(build) {
       const path = await import('path');

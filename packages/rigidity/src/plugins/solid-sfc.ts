@@ -7,7 +7,7 @@ export interface Options extends Omit<TransformOptions, 'filename' | 'sourcemap'
 
 export default function solidSFCPlugin(options?: Options): Plugin {
   return {
-    name: 'esbuild:solid-sfc',
+    name: 'rigidity:solid-sfc',
     async setup(build) {
       const path = await import('path');
       const fs = await import('fs/promises');

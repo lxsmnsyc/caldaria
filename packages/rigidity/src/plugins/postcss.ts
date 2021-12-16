@@ -46,7 +46,7 @@ export default function postcssPlugin(
   options: PostCSSOptions,
 ): Plugin {
   return {
-    name: 'esbuild:postcss',
+    name: 'rigidity:postcss',
 
     async setup(build) {
       const path = await import('path');
