@@ -6,7 +6,6 @@ import {
 import {
   isServer,
 } from 'solid-js/web';
-import loadData from '../utils/load-data';
 import {
   isLocalURL,
   normalizeURL,
@@ -83,11 +82,7 @@ async function prefetch(url: string, isPriority = false): Promise<void> {
     if (isPriority) {
       await priority(url);
     } else if (hasPrefetch()) {
-      try {
-        await viaDOM(url);
-      } catch (error) {
-        await viaXHR(url);
-      }
+      await viaDOM(url);
     } else {
       await viaXHR(url);
     }
