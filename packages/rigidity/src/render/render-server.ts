@@ -39,6 +39,7 @@ async function renderCore<T>(
           callback();
         },
       });
+      writable.write('<!DOCTYPE html>');
       renderToStream(() => (
         createComponent(Root, {
           ...pageResult,
@@ -49,6 +50,7 @@ async function renderCore<T>(
     }
     case 'web-stream': {
       const stream = new TransformStream();
+      await stream.writable.getWriter().write('<!DOCTYPE html>');
       renderToStream(() => (
         createComponent(Root, {
           ...pageResult,
