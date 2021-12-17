@@ -1,6 +1,6 @@
 /* @jsxImportSource solid-js */
 import { Meta, RouterLink, Title } from 'rigidity';
-import { JSX } from 'solid-js';
+import { createResource, JSX } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 interface Params {
@@ -12,7 +12,17 @@ interface HelloProps {
   params: Params;
 }
 
+async function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms, true);
+  });
+}
+
 function Parametized(props: HelloProps): JSX.Element {
+  const [data] = createResource(() => props.data, async (value) => {
+    await sleep(1000);
+    return value;
+  });
   return (
     <div class="p-4 rounded-lg bg-indigo-900 bg-opacity-25 flex flex-col space-y-4">
       <Title>{`Welcome to Page ${props.params.id}!`}</Title>
@@ -23,7 +33,7 @@ function Parametized(props: HelloProps): JSX.Element {
         !
       </span>
       <span class="text-2xl text-white font-sans">
-        {props.data}
+        {data()}
       </span>
       <div class="flex flex-col space-y-1">
         <RouterLink href="/" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to home</RouterLink>
