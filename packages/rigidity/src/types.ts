@@ -15,7 +15,7 @@ import {
 } from './router/core/create-api-tree';
 
 export type SSRMode = 'sync' | 'async' | 'node-stream' | 'web-stream';
-export type AdapterType = 'vanilla' | 'http' | 'vercel' | 'worker';
+export type AdapterType = 'vanilla' | 'http' | 'http2' | 'vercel' | 'worker';
 
 export type ServerFunction = (request: Request) => Promise<Response>;
 
