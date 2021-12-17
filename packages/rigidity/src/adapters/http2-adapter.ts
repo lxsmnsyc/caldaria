@@ -8,10 +8,16 @@ const ADAPTER: Adapter<HTTP2Listener> = /* @__PURE__ */ {
   enableStaticFileServing: true,
   generateScript: (config) => `
   import http2 from 'http2';
+  import fs from 'fs';
   import { createServer, adapters } from 'rigidity';
   const server = createServer(${config});
   const listener = adapters.http2.create(server);
-  http2.createServer(listener).listen(3000).on('listening', () => {
+  const options = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem'),
+    allowHTTP1: true,
+  };
+  http2.createSecureServer(options, listener).listen(3000).on('listening', () => {
     console.log('Listening at http://localhost:3000')
   });
   `,

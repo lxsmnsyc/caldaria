@@ -82,7 +82,11 @@ async function prefetch(url: string, isPriority = false): Promise<void> {
     if (isPriority) {
       await priority(url);
     } else if (hasPrefetch()) {
-      await viaDOM(url);
+      try {
+        await viaDOM(url);
+      } catch (error) {
+        await viaXHR(url);
+      }
     } else {
       await viaXHR(url);
     }

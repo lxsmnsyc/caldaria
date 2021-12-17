@@ -38,7 +38,6 @@ export async function convertHTTP2RequestToWebRequest(
     ':path': path,
     ...headers
   } = request.headers;
-  console.log(scheme, authority);
   if (!path) {
     throw new Error('Unexpected url');
   }
@@ -47,6 +46,7 @@ export async function convertHTTP2RequestToWebRequest(
     headers: {
       ...(headers as HeadersInit),
       ...(authority ? { host: authority } : {}),
+      ...(scheme ? { scheme } : {}),
     },
     body: (request.method !== 'GET' && request.method !== 'HEAD')
       ? await nodeStreamToBuffer(request)
