@@ -43,6 +43,7 @@ export interface RenderResult<T> {
   App: () => JSX.Element;
   tags: TagDescription[];
   data: T;
+  isError: boolean;
 }
 
 export interface GlobalRenderOptions {

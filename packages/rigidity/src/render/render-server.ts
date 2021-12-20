@@ -85,6 +85,7 @@ export async function renderServerError(
     ),
     tags: [],
     data: renderOptions,
+    isError: true,
   });
 }
 
@@ -102,5 +103,6 @@ export async function renderServer<T>(
     ),
     tags: [],
     data: response,
+    isError: false,
   });
 }

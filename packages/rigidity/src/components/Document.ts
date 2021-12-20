@@ -82,7 +82,10 @@ export function DocumentScript(): JSX.Element {
       component: 'script',
       type: 'application/json',
       id: DOCUMENT_DATA,
-      children: JSON.stringify(context?.data),
+      children: JSON.stringify({
+        data: context?.data,
+        isError: context?.isError,
+      }),
     }),
     createComponent(Dynamic, {
       component: 'script',

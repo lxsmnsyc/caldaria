@@ -17,13 +17,19 @@ import {
 } from '../constants';
 import createPageTree from '../router/core/create-page-tree';
 import {
-  GlobalRenderOptions,
+  GlobalRenderOptions, RenderResult,
 } from '../types';
 import DefaultApp from '../components/App';
 import {
   Root,
 } from '../components/Document';
 import renderApp from './render-app';
+import renderError from './render-error';
+
+interface HydrationData {
+  data: any;
+  isError: boolean;
+}
 
 export default function hydrateClient(
   options: GlobalRenderOptions,
@@ -40,19 +46,28 @@ export default function hydrateClient(
   }
 
   const dataNode = document.getElementById(DOCUMENT_DATA);
-  const data = dataNode?.textContent ? JSON.parse(dataNode?.textContent) : null;
+  const data = dataNode?.textContent ? JSON.parse(dataNode?.textContent) as HydrationData : null;
 
   const routerTree = createPageTree(options.pages);
-  const pageResult = {
-    assets: options.assetsUrl,
-    App: renderApp(options, {
-      pathname: window.location.pathname,
-      search: window.location.search,
-      routes: routerTree,
-    }, data),
-    tags: [],
-    data,
-  };
+  const pageResult: RenderResult<any> = data && data.isError
+    ? {
+      assets: options.assetsUrl,
+      App: renderError(options, data.data),
+      tags: [],
+      data,
+      isError: true,
+    }
+    : {
+      assets: options.assetsUrl,
+      App: renderApp(options, {
+        pathname: window.location.pathname,
+        search: window.location.search,
+        routes: routerTree,
+      }, data),
+      tags: [],
+      data,
+      isError: false,
+    };
 
   hydrate(
     () => (
