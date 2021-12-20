@@ -110,14 +110,17 @@ export default async function createServerBuild(
     CUSTOM_ERROR,
   );
 
-  const adapter = adapters[options.adapter ?? 'http'];
-  lines.push(adapter.generateScript(`{
+  const adapter = options.adapter ?? 'http';
+  const selectedAdapter = typeof adapter === 'string'
+    ? adapters[adapter]
+    : adapter;
+  lines.push(selectedAdapter.generateScript(`{
     ssrMode: ${JSON.stringify(options.ssrMode ?? 'sync')},
     version: ${JSON.stringify(Date.now())},
     buildDir: ${JSON.stringify(path.join(buildDirectory, BUILD_OUTPUT.client.output))},
     publicDir: ${JSON.stringify(publicDirectory)},
     apiDir: ${JSON.stringify(apiDirectory)},
-    enableStaticFileServing: ${JSON.stringify(adapter.enableStaticFileServing)},
+    enableStaticFileServing: ${JSON.stringify(selectedAdapter.enableStaticFileServing)},
     cdn: ${options.paths?.cdn ? JSON.stringify(options.paths.cdn) : 'undefined'},
     assetsUrl: ${JSON.stringify(options.paths?.assets ?? ASSETS_URL)},
     publicUrl: ${JSON.stringify(options.paths?.public ?? PUBLIC_URL)},

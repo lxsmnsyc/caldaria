@@ -92,7 +92,7 @@ export interface BabelBuildOptions {
 
 export interface BuildOptions {
   env?: 'production' | 'development';
-  adapter?: AdapterType;
+  adapter?: AdapterType | Adapter<any>;
   ssrMode?: SSRMode;
   paths?: PathOptions;
   directories?: DirectoryOptions;
