@@ -3,6 +3,8 @@
 // sfc
 
 declare module '.solid' {
+  import { JSX } from 'solid-js';
+
   const Comp: (props: any) => JSX.Element;
   export default Comp;
 }
@@ -41,7 +43,6 @@ declare module '*.avif' {
   export default src;
 }
 
-
 // media
 declare module '*.mp4' {
   const src: string;
@@ -72,7 +73,6 @@ declare module '*.aac' {
   export default src;
 }
 
-
 // fonts
 declare module '*.woff' {
   const src: string;
@@ -100,7 +100,6 @@ declare module '*.otf' {
 interface CSSModule {
   [key: string]: string;
 }
-
 
 declare module '*.module.css?url-only' {
   const contents: string;
@@ -133,7 +132,7 @@ declare module '*.css?raw' {
 }
 
 declare module '*.css' {
-  //no-op
+  // no-op
 }
 
 // queries
@@ -146,7 +145,6 @@ declare module '*?url' {
   const contents: string;
   export default contents;
 }
-
 
 // JSON
 declare module '*.json' {

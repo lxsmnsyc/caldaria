@@ -1,3 +1,5 @@
+/// <reference path="env.d.ts" />
+
 import './shims';
 
 export {
