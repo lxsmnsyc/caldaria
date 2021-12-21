@@ -1,6 +1,8 @@
 import {
+  pipeToNodeWritable,
+  pipeToWritable,
   createComponent,
-  renderToStream,
+  // renderToStream,
   renderToString,
   renderToStringAsync,
 } from 'solid-js/web';
@@ -39,24 +41,54 @@ async function renderCore<T>(
           callback();
         },
       });
-      writable.write('<!DOCTYPE html>');
-      renderToStream(() => (
-        createComponent(Root, {
-          ...pageResult,
-          document: globalOptions.document,
-        })
-      )).pipe(writable);
+      // writable.write('<!DOCTYPE html>');
+      // renderToStream(() => (
+      //   createComponent(Root, {
+      //     ...pageResult,
+      //     document: globalOptions.document,
+      //   })
+      // )).pipe(writable);
+      pipeToNodeWritable(
+        () => (
+          createComponent(Root, {
+            ...pageResult,
+            document: globalOptions.document,
+          })
+        ),
+        writable,
+        {
+          onReady({ write, startWriting }) {
+            write('<!DOCTYPE html>');
+            startWriting();
+          },
+        },
+      );
       return writable;
     }
     case 'web-stream': {
       const stream = new TransformStream();
-      await stream.writable.getWriter().write('<!DOCTYPE html>');
-      renderToStream(() => (
-        createComponent(Root, {
-          ...pageResult,
-          document: globalOptions.document,
-        })
-      )).pipeTo(stream.writable);
+      // await stream.writable.getWriter().write('<!DOCTYPE html>');
+      // renderToStream(() => (
+      //   createComponent(Root, {
+      //     ...pageResult,
+      //     document: globalOptions.document,
+      //   })
+      // )).pipeTo(stream.writable);
+      pipeToWritable(
+        () => (
+          createComponent(Root, {
+            ...pageResult,
+            document: globalOptions.document,
+          })
+        ),
+        stream.writable,
+        {
+          onReady({ write, startWriting }) {
+            write('<!DOCTYPE html>');
+            startWriting();
+          },
+        },
+      );
       return stream.readable;
     }
     case 'sync':
