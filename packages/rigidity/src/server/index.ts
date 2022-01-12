@@ -115,10 +115,16 @@ export default function createServer(
             if (searchValue) {
               if (page.actions && searchValue in page.actions) {
                 const result = await page.actions[searchValue](request, matchedNode.params);
-                console.log(`[${green('200')}][${yellow(request.method)}] ${request.url ?? ''}`);
-                return result;
-              }
-              if (searchValue === '') {
+                
+                // Check for redirect
+                if (result.status >= 300 && result.status < 400) {
+                  console.log(`[${green(result.status.toString())}][${yellow(request.method)}] ${request.url ?? ''}`);
+                  // Return it immediately
+                  return result;
+                }
+                // Otherwise, parse the data
+                data = await result.json();
+              } else if (searchValue === '') {
                 const result = page.load ? await page.load(request, matchedNode.params) : null;
                 console.log(`[${green('200')}][${yellow(request.method)}] ${request.url ?? ''}`);
                 return new Response(
@@ -130,6 +136,8 @@ export default function createServer(
                     status: 200,
                   },
                 );
+              } else {
+                data = page.load ? await page.load(request, matchedNode.params) : null;
               }
             }
             const result = await renderServer(serverOptions, {
