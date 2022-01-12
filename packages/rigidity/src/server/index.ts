@@ -1,4 +1,4 @@
-import { API_URL, RIGIDITY_GET, RIGIDITY_SEARCH } from '../constants';
+import { API_URL, RIGIDITY_SEARCH } from '../constants';
 import StatusCode from '../errors/StatusCode';
 import {
   renderServer,
@@ -59,7 +59,7 @@ export default function createServer(
               if (process.env.NODE_ENV === 'production') {
                 cacheControl['Cache-Control'] = 'max-age=31536000';
               }
-              console.log(`[${green('200')}] ${request.url ?? ''}`);
+              console.log(`[${green('200')}][${yellow(request.method)}] ${request.url ?? ''}`);
 
               return new Response(
                 fs.createReadStream(targetFile) as unknown as ReadableStream,
@@ -98,7 +98,7 @@ export default function createServer(
               params: matchedNode.params,
               query: queries,
             });
-            console.log(`[${green(`${response.status}`)}] ${request.url}`);
+            console.log(`[${green(`${response.status}`)}][${yellow(request.method)}] ${request.url}`);
             return response;
           }
           throw new StatusCode(404, new Error(`"${request.url}" not found.`));
@@ -110,25 +110,34 @@ export default function createServer(
           if (matchedNode && matchedNode.value) {
             const search = new URLSearchParams(url.search);
             const page = await matchedNode.value.preload();
-            const data = page.load ? await page.load(request, matchedNode.params) : null;
-            if (search.get(RIGIDITY_SEARCH)?.toLowerCase() === RIGIDITY_GET) {
-              console.log(`[${green('200')}][${yellow('DATA')}] ${request.url ?? ''}`);
-              return new Response(
-                JSON.stringify(data),
-                {
-                  headers: new Headers({
-                    'Content-Type': 'application/json',
-                  }),
-                  status: 200,
-                },
-              );
+            let data: any;
+            const searchValue = search.get(RIGIDITY_SEARCH);
+            if (searchValue) {
+              if (page.actions && searchValue in page.actions) {
+                const result = await page.actions[searchValue](request, matchedNode.params);
+                console.log(`[${green('200')}][${yellow(request.method)}] ${request.url ?? ''}`);
+                return result;
+              }
+              if (searchValue === '') {
+                const result = page.load ? await page.load(request, matchedNode.params) : null;
+                console.log(`[${green('200')}][${yellow(request.method)}] ${request.url ?? ''}`);
+                return new Response(
+                  JSON.stringify(result),
+                  {
+                    headers: new Headers({
+                      'Content-Type': 'application/json',
+                    }),
+                    status: 200,
+                  },
+                );
+              }
             }
             const result = await renderServer(serverOptions, {
               routes: pagesTree,
               pathname: url.pathname,
               search: url.search,
             }, data);
-            console.log(`[${green('200')}] ${request.url ?? ''}`);
+            console.log(`[${green('200')}][${yellow(request.method)}] ${request.url ?? ''}`);
 
             return new Response(
               result as BodyInit,
@@ -154,7 +163,7 @@ export default function createServer(
     } catch (error: any) {
       const statusCode = (error instanceof StatusCode) ? error.value : 500;
       const reason = (error instanceof StatusCode) ? error.reason : error;
-      console.log(`[${red(`${statusCode}`)}] ${request.url ?? ''}`);
+      console.log(`[${red(`${statusCode}`)}][${yellow(request.method)}] ${request.url ?? ''}`);
       console.error(reason);
 
       return new Response(

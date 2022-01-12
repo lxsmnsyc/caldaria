@@ -16,6 +16,7 @@ export interface PageProps<T, P extends RouterParams = RouterParams> {
 export interface Page<T, P extends RouterParams = RouterParams> {
   (props: PageProps<T, P>): JSX.Element;
   load?: (request: Request, params: P) => T | Promise<T>;
+  actions?: Record<string, (request: Request, params: P) => Response | Promise<Response>>;
 }
 
 export interface LazyPage<T> {
