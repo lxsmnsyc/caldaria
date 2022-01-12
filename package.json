@@ -5,20 +5,10 @@
     "packages/*",
     "examples/*"
   ],
-  "scripts": {
-    "lint": "lerna run lint",
-    "bootstrap": "lerna bootstrap",
-    "clean": "lerna run clean",
-    "build": "lerna run build",
-    "type-check": "lerna run type-check",
-    "test": "lerna run test",
-    "test:coverage": "lerna run test -- --coverage",
-    "lerna": "lerna"
-  },
   "devDependencies": {
-    "@typescript-eslint/parser": "^4.22.0",
-    "eslint": "^7.25.0",
-    "eslint-config-lxsmnsyc": "^0.2.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "eslint": "^8.6.0",
+    "eslint-config-lxsmnsyc": "^0.4.0",
     "lerna": "^4.0.0"
   }
 }
