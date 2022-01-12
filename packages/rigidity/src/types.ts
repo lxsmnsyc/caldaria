@@ -20,7 +20,7 @@ export type AdapterType = 'vanilla' | 'http' | 'http2' | 'vercel' | 'worker';
 export type ServerFunction = (request: Request) => Promise<Response>;
 
 export interface AppProps {
-  Component: () => JSX.Element;
+  children: JSX.Element;
 }
 
 export type App = (props: AppProps) => JSX.Element;

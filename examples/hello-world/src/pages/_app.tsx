@@ -10,7 +10,7 @@ export default function App(props: AppProps): JSX.Element {
       <div className="bg-gradient-to-r from-indigo-400 to-blue-600 w-screen h-screen flex overflow-hidden">
         <div className="flex flex-col items-center justify-center w-full">
           <Suspense fallback={<h1>Loading...</h1>}>
-            <props.Component />
+            {props.children}
           </Suspense>
         </div>
       </div>
