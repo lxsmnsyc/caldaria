@@ -54,7 +54,7 @@ export default function hydrateClient(
       assets: options.assetsUrl,
       App: renderError(options, data.data),
       tags: [],
-      data,
+      data: data?.data,
       isError: true,
     }
     : {
@@ -63,9 +63,9 @@ export default function hydrateClient(
         pathname: window.location.pathname,
         search: window.location.search,
         routes: routerTree,
-      }, data),
+      }, data?.data),
       tags: [],
-      data,
+      data: data?.data,
       isError: false,
     };
 
