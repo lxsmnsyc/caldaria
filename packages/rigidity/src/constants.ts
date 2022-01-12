@@ -65,4 +65,8 @@ export const BUILD_OUTPUT = {
 };
 
 // Special search query for data-only fetching
-export const RIGIDITY_SEARCH = '.rigidity';
+export const RIGIDITY_DATA = '.rigidity-data';
+export const RIGIDITY_ACTION = '.rigidity-action';
+
+// Special headers
+export const RIGIDITY_REDIRECT_HEADER = 'X-Rigidity-Redirect';

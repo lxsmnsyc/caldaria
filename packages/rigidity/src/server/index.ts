@@ -1,4 +1,9 @@
-import { API_URL, RIGIDITY_SEARCH } from '../constants';
+import {
+  API_URL,
+  RIGIDITY_ACTION,
+  RIGIDITY_DATA,
+  RIGIDITY_REDIRECT_HEADER,
+} from '../constants';
 import StatusCode from '../errors/StatusCode';
 import {
   renderServer,
@@ -111,24 +116,36 @@ export default function createServer(
             const search = new URLSearchParams(url.search);
             const page = await matchedNode.value.preload();
             let data: any;
-            const searchValue = search.get(RIGIDITY_SEARCH);
-            if (searchValue) {
-              if (page.actions && searchValue in page.actions) {
-                const result = await page.actions[searchValue](request, matchedNode.params);
-                
-                // Check for redirect
-                if (result.status >= 300 && result.status < 400) {
-                  console.log(`[${green(result.status.toString())}][${yellow(request.method)}] ${request.url ?? ''}`);
-                  // Return it immediately
-                  return result;
+
+            // Read flags
+            const dataOnly = search.get(RIGIDITY_DATA);
+            const action = search.get(RIGIDITY_ACTION)
+            if (action && page.actions && action in page.actions) {
+              const result = await page.actions[action](request, matchedNode.params);
+              
+              // Check for redirect
+              if ((result.status >= 300 && result.status < 400) || dataOnly) {
+                console.log(`[${green(result.status.toString())}][${yellow(request.method)}] ${request.url ?? ''}`);
+                if (dataOnly) {
+                  let headers = new Headers(result.headers);
+                  headers.set(RIGIDITY_REDIRECT_HEADER, headers.get('Location')!);
+                  headers.delete('Location');
+                  return new Response(null, {
+                    status: 204,
+                    headers,
+                  });
                 }
-                // Otherwise, parse the data
-                data = await result.json();
-              } else if (searchValue === '') {
-                const result = page.load ? await page.load(request, matchedNode.params) : null;
+                // Return it immediately
+                return result;
+              }
+              // Otherwise, parse the data
+              data = await result.json();
+            } else {
+              data = page.load ? await page.load(request, matchedNode.params) : null;
+              if (dataOnly) {
                 console.log(`[${green('200')}][${yellow(request.method)}] ${request.url ?? ''}`);
                 return new Response(
-                  JSON.stringify(result),
+                  JSON.stringify(data),
                   {
                     headers: new Headers({
                       'Content-Type': 'application/json',
@@ -136,8 +153,6 @@ export default function createServer(
                     status: 200,
                   },
                 );
-              } else {
-                data = page.load ? await page.load(request, matchedNode.params) : null;
               }
             }
             const result = await renderServer(serverOptions, {
