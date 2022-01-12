@@ -4,7 +4,6 @@ import {
   createResource,
   createUniqueId,
   lazy,
-  useContext,
 } from 'solid-js';
 import { LazyPage, Page, PageProps } from '../core/create-page-tree';
 import loadData from '../utils/load-data';

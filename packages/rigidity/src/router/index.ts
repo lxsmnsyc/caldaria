@@ -16,6 +16,14 @@ export {
   createServerPage,
 } from './components/Page';
 export {
+  APICallback,
+  ServerSideContext,
+} from './core/create-api-tree';
+export {
+  PageProps,
+  Page,
+} from './core/create-page-tree';
+export {
   FormEncoding,
   FormMethod,
   FormProps,
