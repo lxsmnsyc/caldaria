@@ -15,3 +15,9 @@ export {
   createClientPage,
   createServerPage,
 } from './components/Page';
+export {
+  FormEncoding,
+  FormMethod,
+  FormProps,
+  default as Form,
+} from './components/Form';
