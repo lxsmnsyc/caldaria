@@ -6,9 +6,24 @@ import {
   JSX,
   mergeProps,
 } from 'solid-js';
-import { Dynamic } from 'solid-js/web';
-import { omitProps } from 'solid-use';
-import { useRouter } from './Router';
+import {
+  Dynamic,
+} from 'solid-js/web';
+import {
+  omitProps,
+} from 'solid-use';
+import {
+  RIGIDITY_ACTION,
+  RIGIDITY_DATA,
+  RIGIDITY_REDIRECT_HEADER,
+} from '../../constants';
+import StatusCode from '../../errors/StatusCode';
+import {
+  useDataContext,
+} from './Data';
+import {
+  useRouter,
+} from './Router';
 
 type FormBasePros = JSX.IntrinsicElements['form'];
 
@@ -23,9 +38,11 @@ export interface FormProps extends FormBasePros {
 
 export default function Form(props: FormProps): JSX.Element {
   const router = useRouter();
+  const data = useDataContext();
 
   const actionUrl = createMemo(() => {
     const search = new URLSearchParams(router.search);
+    search.set(RIGIDITY_ACTION, props.action);
     return `${router.pathname}?${search.toString()}`;
   });
 
@@ -64,15 +81,23 @@ export default function Form(props: FormProps): JSX.Element {
         };
       }
 
-      fetch(actionUrl(), {
+      // We change the url to data-only mode
+      fetch(`${actionUrl()}&${RIGIDITY_DATA}`, {
         method,
         headers,
         body,
         credentials: 'same-origin',
-      }).then((value) => {
-
-      }).catch((value) => {
-        setError(value);
+      }).then(async (response) => {
+        if (response.headers.has(RIGIDITY_REDIRECT_HEADER)) {
+          const value = response.headers.get(RIGIDITY_REDIRECT_HEADER)!;
+          router.push(value);
+        } else if (response.ok) {
+          data.setData(await response.json());
+        } else {
+          setError(new StatusCode(response.status, new Error(response.statusText)));
+        }
+      }).catch((response) => {
+        setError(response);
       });
     });
   });
