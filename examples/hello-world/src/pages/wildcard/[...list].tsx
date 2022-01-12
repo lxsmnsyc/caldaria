@@ -33,7 +33,7 @@ function Wildcard(props: HelloProps): JSX.Element {
 }
 
 if (isServer) {
-  Wildcard.getData = (_: Request, params: Params) => `Hello, ${params.list.join(', ')}`;
+  Wildcard.load = (_: Request, params: Params) => `Hello, ${params.list.join(', ')}`;
 }
 
 export default Wildcard;

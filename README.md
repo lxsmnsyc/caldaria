@@ -114,7 +114,7 @@ export default function Home() {
 
 `createResource` may be convenient for performing data fetching however there are sometimes that we might want to utilize some server-side code, for instance, performing DB queries, which `createResource` isn't suitable for. Data loaders allows pages to perform server-side data fetching.
 
-By declaring `getData` to the pages' component, `rigidity` runs the function on server-side before the app is server-rendered. `getData` receives a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object and the `params` that was parsed from the route.
+By declaring `load` to the pages' component, `rigidity` runs the function on server-side before the app is server-rendered. `load` receives a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object and the `params` that was parsed from the route.
 
 ```js
 // pages/user/[id].js
@@ -125,7 +125,7 @@ function UserProfile(props) {
 }
 
 if (isServer) {
-  UserProfile.getData = async function (request, params) {
+  UserProfile.load = async function (request, params) {
     return await Users.queryById(params.id);
   };
 }
@@ -133,7 +133,7 @@ if (isServer) {
 export default UserProfile;
 ```
 
-`getData` is only used on server-side and never on the client-side. When navigating to another page on client-side, `rigidity`'s client performs a data-only request to the page's route, that is, only `getData` is evaluated and the SSR never takes place. This way, the client never opts-out of SPA while still staying true to the benefits of on-demand SSR.
+`load` is only used on server-side and never on the client-side. When navigating to another page on client-side, `rigidity`'s client performs a data-only request to the page's route, that is, only `load` is evaluated and the SSR never takes place. This way, the client never opts-out of SPA while still staying true to the benefits of on-demand SSR.
 
 ### Custom App
 

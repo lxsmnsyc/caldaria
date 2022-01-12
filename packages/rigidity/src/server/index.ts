@@ -110,7 +110,7 @@ export default function createServer(
           if (matchedNode && matchedNode.value) {
             const search = new URLSearchParams(url.search);
             const page = await matchedNode.value.preload();
-            const data = page.getData ? await page.getData(request, matchedNode.params) : null;
+            const data = page.load ? await page.load(request, matchedNode.params) : null;
             if (search.get(RIGIDITY_SEARCH)?.toLowerCase() === RIGIDITY_GET) {
               console.log(`[${green('200')}][${yellow('DATA')}] ${request.url ?? ''}`);
               return new Response(
