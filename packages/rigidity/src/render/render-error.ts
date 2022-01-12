@@ -50,15 +50,17 @@ export default function renderError(
                     get children() {
                       return (
                         createComponent(CustomAppPage, {
-                          Component: () => (
-                            createComponent(CustomErrorPage, {
-                              data: {
-                                statusCode: options.statusCode,
-                                error: options.error,
-                              },
-                              params: {},
-                            })
-                          ),
+                          get children() {
+                            return (
+                              createComponent(CustomErrorPage, {
+                                data: {
+                                  statusCode: options.statusCode,
+                                  error: options.error,
+                                },
+                                params: {},
+                              })
+                            )
+                          },
                         })
                       );
                     },

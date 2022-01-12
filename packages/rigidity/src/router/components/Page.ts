@@ -8,7 +8,7 @@ import {
 } from 'solid-js';
 import { LazyPage, Page, PageProps } from '../core/create-page-tree';
 import loadData from '../utils/load-data';
-import DataContext from './Data';
+import { useDataContext } from './Data';
 import { useRouter } from './Router';
 
 export function createServerPage<T>(
@@ -20,19 +20,19 @@ export function createServerPage<T>(
   }
 
   function Component() {
-    const ctx = useContext(DataContext);
+    const ctx = useDataContext();
     const router = useRouter();
     const [data] = createResource(
-      () => !ctx?.initial,
-      async () => Promise.resolve(ctx?.data),
+      () => !ctx.initial,
+      async () => Promise.resolve(ctx.data),
       {
-        initialValue: ctx?.data,
+        initialValue: ctx.data,
       },
     );
 
     return createComponent(MockLazy, {
       get data() {
-        return data();
+        return data() as T;
       },
       params: router.params,
     });
@@ -52,14 +52,14 @@ export function createClientPage<T>(
   const PageComponent = lazy(lazyComponent);
 
   function Component() {
-    const ctx = useContext(DataContext);
+    const ctx = useDataContext<T>();
     const router = useRouter();
     const [data] = createResource(
-      () => !ctx?.initial,
+      () => !ctx.initial,
       async () => (
         loadData(router.pathname, router.search)
       ), {
-        initialValue: ctx?.data,
+        initialValue: ctx.data,
       },
     );
 
@@ -71,7 +71,7 @@ export function createClientPage<T>(
 
     return createComponent(PageComponent, {
       get data() {
-        return data();
+        return data() as T;
       },
       params: router.params,
     });

@@ -16,7 +16,9 @@ import {
 import {
   Router,
 } from '../router';
-import DataContext from '../router/components/Data';
+import {
+  DataProvider,
+} from '../router/components/Data';
 import {
   PageTree,
 } from '../router/core/create-page-tree';
@@ -45,11 +47,8 @@ export default function renderApp<T>(
   return () => {
     const context = useContext(DocumentContext);
     return (
-      createComponent(DataContext.Provider, {
-        value: {
-          data: response,
-          initial: true,
-        },
+      createComponent(DataProvider, {
+        data: response,
         get children() {
           return createComponent(Suspense, {
             get children() {
@@ -71,26 +70,28 @@ export default function renderApp<T>(
                         get children() {
                           return (
                             createComponent(CustomAppPage, {
-                              Component: () => (
-                                createComponent(Router, {
-                                  location: {
-                                    pathname: options.pathname,
-                                    search: options.search,
-                                  },
-                                  get fallback() {
-                                    return (
-                                      createComponent(CustomNotFound, {
-                                        data: {
-                                          statusCode: 404,
-                                          error: new StatusCode(404),
-                                        },
-                                        params: {},
-                                      })
-                                    );
-                                  },
-                                  routes: options.routes,
-                                })
-                              ),
+                              get children() {
+                                return (
+                                  createComponent(Router, {
+                                    location: {
+                                      pathname: options.pathname,
+                                      search: options.search,
+                                    },
+                                    get fallback() {
+                                      return (
+                                        createComponent(CustomNotFound, {
+                                          data: {
+                                            statusCode: 404,
+                                            error: new StatusCode(404),
+                                          },
+                                          params: {},
+                                        })
+                                      );
+                                    },
+                                    routes: options.routes,
+                                  })
+                                );
+                              },
                             })
                           );
                         },
