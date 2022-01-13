@@ -7,8 +7,8 @@ rigidity.createBuild({
   // adapter: process.env.NODE_ENV === 'production' ? 'vercel' : 'http',
   env: 'development',
   adapter: httpAdapter,
-  // ssrMode: 'node-stream',
-  ssrMode: 'async',
+  ssrMode: 'node-stream',
+  // ssrMode: 'async',
   // ssrMode: 'sync',
   esbuild: {
     tsconfig: './tsconfig.json',

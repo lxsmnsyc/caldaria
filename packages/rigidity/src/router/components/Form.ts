@@ -38,7 +38,7 @@ export interface FormProps extends FormBasePros {
 
 export default function Form(props: FormProps): JSX.Element {
   const router = useRouter();
-  const data = useDataContext();
+  const data = useDataContext<any, any>();
 
   const actionUrl = createMemo(() => {
     const search = new URLSearchParams(router.search);
