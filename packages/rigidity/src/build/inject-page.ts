@@ -1,6 +1,7 @@
 import {
   SUPPORTED_PAGE_EXT,
 } from '../constants';
+import { pathExists } from '../utils/fs';
 import getPOSIXPath from '../utils/get-posix-path';
 
 export async function getCustomPage(
@@ -8,7 +9,6 @@ export async function getCustomPage(
   page: string,
 ): Promise<string | undefined> {
   const path = await import('path');
-  const fs = await import('fs-extra');
 
   const result = await Promise.all(
     SUPPORTED_PAGE_EXT.map(async (ext) => {
@@ -17,18 +17,10 @@ export async function getCustomPage(
         `${page}${ext}`,
       );
 
-      try {
-        await fs.access(app);
-        return {
-          path: app,
-          stat: true,
-        };
-      } catch (error) {
-        return {
-          path: app,
-          stat: false,
-        };
-      }
+      return {
+        path: app,
+        stat: await pathExists(app),
+      };
     }),
   );
   for (let i = 0; i < result.length; i += 1) {

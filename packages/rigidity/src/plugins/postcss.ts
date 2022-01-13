@@ -50,7 +50,7 @@ export default function postcssPlugin(
 
     async setup(build) {
       const path = await import('path');
-      const fs = await import('fs-extra');
+      const fs = await import('fs/promises');
 
       const postcss = await import('postcss');
       const postcssLoadConfig = await import('postcss-load-config');

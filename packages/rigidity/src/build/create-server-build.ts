@@ -18,6 +18,7 @@ import {
 import {
   BuildOptions,
 } from '../types';
+import { outputFile, removeFile } from '../utils/fs';
 import {
   getArtifactBaseDirectory,
 } from './get-artifact-directory';
@@ -39,7 +40,7 @@ export default async function createServerBuild(
   options: BuildOptions,
 ): Promise<BuildResult> {
   const path = await import('path');
-  const fs = await import('fs-extra');
+  const fs = await import('fs/promises');
 
   const environment = options.env ?? 'production';
   const pagesDirectory = options.directories?.pages ?? PAGES_PATH;
@@ -55,7 +56,7 @@ export default async function createServerBuild(
     BUILD_OUTPUT.server.output,
   );
 
-  await fs.remove(outputDirectory);
+  await removeFile(outputDirectory);
 
   const artifactDirectory = await getArtifactBaseDirectory(
     options,
@@ -130,7 +131,7 @@ export default async function createServerBuild(
 
   const artifact = path.join(artifactDirectory, 'index.tsx');
 
-  await fs.outputFile(
+  await outputFile(
     artifact,
     lines.join('\n'),
   );
@@ -145,8 +146,8 @@ export default async function createServerBuild(
     options,
   );
 
-  await fs.remove(artifact);
-  await fs.remove(artifactDirectory);
+  await removeFile(artifact);
+  await removeFile(artifactDirectory);
 
   return result;
 }

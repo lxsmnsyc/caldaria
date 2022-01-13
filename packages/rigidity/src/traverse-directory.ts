@@ -2,7 +2,7 @@ export default async function traverseDirectory(
   root: string,
   directory: string = root,
 ): Promise<string[]> {
-  const fs = await import('fs-extra');
+  const fs = await import('fs/promises');
   const path = await import('path');
 
   try {

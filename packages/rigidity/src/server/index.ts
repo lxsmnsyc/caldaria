@@ -22,19 +22,8 @@ import {
   green,
   red,
   yellow,
-} from './colors';
-
-async function fileExists(path: string): Promise<boolean> {
-  const fs = await import('fs-extra');
-
-  try {
-    const stat = await fs.stat(path);
-
-    return stat.isFile();
-  } catch (error) {
-    return false;
-  }
-}
+} from '../utils/colors';
+import { fileExists } from '../utils/fs';
 
 export default function createServer(
   serverOptions: ServerRenderOptions,
@@ -43,7 +32,7 @@ export default function createServer(
   const apisTree = createAPITree(serverOptions.endpoints);
 
   return async (request) => {
-    const fs = await import('fs-extra');
+    const fs = await import('fs');
     const path = await import('path');
     const mime = await import('mime-types');
 

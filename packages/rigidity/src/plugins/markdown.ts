@@ -9,7 +9,7 @@ export default function remarkPlugin(): Plugin {
     name: 'rigidity:markdown',
     async setup(build) {
       const path = await import('path');
-      const fs = await import('fs-extra');
+      const fs = await import('fs/promises');
 
       build.onResolve({
         filter: /\.(markdown|mdown|mkdn|mkd|md)$/,
