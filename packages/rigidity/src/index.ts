@@ -1,7 +1,5 @@
 /// <reference path="env.d.ts" />
 
-import './shims';
-
 export {
   DocumentHead,
   DocumentHeadProps,
@@ -48,7 +46,6 @@ export {
 } from './server';
 export {
   Adapter,
-  AdapterType,
   App,
   AppPage,
   AppProps,
@@ -64,6 +61,3 @@ export {
   ServerFunction,
   WebVitalsMetric,
 } from './types';
-export {
-  default as adapters,
-} from './adapters';
