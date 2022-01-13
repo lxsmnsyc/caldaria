@@ -1,7 +1,6 @@
 import {
   BuildResult,
 } from 'esbuild';
-import adapters from '../adapters';
 import {
   PAGES_PATH,
   API_PATH,
@@ -110,17 +109,13 @@ export default async function createServerBuild(
     CUSTOM_ERROR,
   );
 
-  const adapter = options.adapter ?? 'http';
-  const selectedAdapter = typeof adapter === 'string'
-    ? adapters[adapter]
-    : adapter;
-  lines.push(selectedAdapter.generateScript(`{
+  lines.push(options.adapter.generateScript(`{
     ssrMode: ${JSON.stringify(options.ssrMode ?? 'sync')},
     version: ${JSON.stringify(Date.now())},
     buildDir: ${JSON.stringify(path.join(buildDirectory, BUILD_OUTPUT.client.output))},
     publicDir: ${JSON.stringify(publicDirectory)},
     apiDir: ${JSON.stringify(apiDirectory)},
-    enableStaticFileServing: ${JSON.stringify(selectedAdapter.enableStaticFileServing)},
+    enableStaticFileServing: ${JSON.stringify(options.adapter.enableStaticFileServing)},
     cdn: ${options.paths?.cdn ? JSON.stringify(options.paths.cdn) : 'undefined'},
     assetsUrl: ${JSON.stringify(options.paths?.assets ?? ASSETS_URL)},
     publicUrl: ${JSON.stringify(options.paths?.public ?? PUBLIC_URL)},
