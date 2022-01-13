@@ -8,20 +8,23 @@ import {
   RouterParams,
 } from './router';
 
-export interface PageProps<T, P extends RouterParams = RouterParams> {
-  data?: T;
+export interface PageProps<L, A = undefined, P extends RouterParams = RouterParams> {
+  data?: {
+    load: L;
+    action: A;
+  };
   params: P;
 }
 
-export interface Page<T, P extends RouterParams = RouterParams> {
-  (props: PageProps<T, P>): JSX.Element;
+export interface Page<T, A = undefined, P extends RouterParams = RouterParams> {
+  (props: PageProps<T, A, P>): JSX.Element;
   load?: (request: Request, params: P) => T | Promise<T>;
   actions?: Record<string, (request: Request, params: P) => Response | Promise<Response>>;
 }
 
-export interface LazyPage<T> {
+export interface LazyPage<T, A = undefined> {
   (): JSX.Element;
-  preload: () => Promise<Page<T>>;
+  preload: () => Promise<Page<T, A>>;
 }
 
 export interface PageRoute {

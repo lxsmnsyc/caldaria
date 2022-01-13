@@ -33,9 +33,9 @@ function FormExample(props: HelloProps): JSX.Element {
           Submit
         </button>
       </Form>
-      <Show when={props.data}>
+      <Show when={props.data.action}>
         <span class="text-2xl text-white font-sans">
-          {props.data}
+          {props.data.action}
         </span>
       </Show>
       <div class="flex flex-col space-y-1">

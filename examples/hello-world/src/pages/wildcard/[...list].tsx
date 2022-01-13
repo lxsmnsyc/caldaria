@@ -23,7 +23,7 @@ function Wildcard(props: HelloProps): JSX.Element {
         !
       </span>
       <span class="text-2xl text-white font-sans">
-        {props.data}
+        {props.data.load}
       </span>
       <div class="flex flex-col space-y-1">
         <RouterLink href="/" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to home</RouterLink>

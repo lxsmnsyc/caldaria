@@ -114,25 +114,32 @@ export async function renderServerError(
       renderOptions,
     ),
     tags: [],
-    data: renderOptions,
+    data: {
+      load: renderOptions,
+    },
     isError: true,
   });
 }
 
-export async function renderServer<T>(
+export async function renderServer<L, A = undefined>(
   globalOptions: GlobalRenderOptions,
   renderOptions: RenderAppOptions,
-  response?: T,
+  loadData?: L,
+  actionData?: A,
 ): Promise<string | Readable | ReadableStream> {
   return renderCore(globalOptions, {
     assets: `${globalOptions.cdn ?? ''}/${globalOptions.assetsUrl}`,
     App: renderApp(
       globalOptions,
       renderOptions,
-      response,
+      loadData,
+      actionData,
     ),
     tags: [],
-    data: response,
+    data: {
+      load: loadData,
+      action: actionData,
+    },
     isError: false,
   });
 }

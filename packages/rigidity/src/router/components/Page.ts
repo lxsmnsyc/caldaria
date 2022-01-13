@@ -10,28 +10,31 @@ import loadData from '../utils/load-data';
 import { useDataContext } from './Data';
 import { useRouter } from './Router';
 
-export function createServerPage<T>(
-  PageComponent: Page<T>,
-): LazyPage<T> {
-  function MockLazy(props: PageProps<T>) {
+export function createServerPage<L, A = undefined>(
+  PageComponent: Page<L, A>,
+): LazyPage<L, A> {
+  function MockLazy(props: PageProps<L, A>) {
     createUniqueId();
     return PageComponent(props);
   }
 
   function Component() {
-    const ctx = useDataContext();
+    const ctx = useDataContext<L, A>();
     const router = useRouter();
-    const [data] = createResource(
+    const [load] = createResource(
       () => !ctx.initial,
-      async () => Promise.resolve(ctx.data),
+      async () => Promise.resolve(ctx.load),
       {
-        initialValue: ctx.data,
+        initialValue: ctx.load,
       },
     );
 
     return createComponent(MockLazy, {
       get data() {
-        return data() as T;
+        return {
+          load: load() as L,
+          action: ctx.action,
+        };
       },
       params: router.params,
     });
@@ -45,20 +48,20 @@ export function createServerPage<T>(
   return Component;
 }
 
-export function createClientPage<T>(
-  lazyComponent: () => Promise<{ default: Page<T> }>,
-): LazyPage<T> {
+export function createClientPage<L, A = undefined>(
+  lazyComponent: () => Promise<{ default: Page<L, A> }>,
+): LazyPage<L, A> {
   const PageComponent = lazy(lazyComponent);
 
   function Component() {
-    const ctx = useDataContext<T>();
+    const ctx = useDataContext<L, A>();
     const router = useRouter();
-    const [data, { mutate }] = createResource(
+    const [load] = createResource(
       () => !ctx.initial,
       async () => (
         loadData(router.pathname, router.search)
       ), {
-        initialValue: ctx.data,
+        initialValue: ctx.load,
       },
     );
 
@@ -66,13 +69,12 @@ export function createClientPage<T>(
       ctx.initial = false;
     });
 
-    createEffect(() => {
-      mutate(() => ctx.data);
-    });
-
     return createComponent(PageComponent, {
       get data() {
-        return data() as T;
+        return {
+          load: load() as L,
+          action: ctx.action,
+        };
       },
       params: router.params,
     });

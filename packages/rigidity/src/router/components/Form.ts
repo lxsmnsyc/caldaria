@@ -92,7 +92,7 @@ export default function Form(props: FormProps): JSX.Element {
           const value = response.headers.get(RIGIDITY_REDIRECT_HEADER)!;
           router.push(value);
         } else if (response.ok) {
-          data.setData(await response.json());
+          data.setAction(await response.json());
         } else {
           setError(new StatusCode(response.status, new Error(response.statusText)));
         }

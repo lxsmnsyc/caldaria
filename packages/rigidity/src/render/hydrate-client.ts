@@ -63,7 +63,7 @@ export default function hydrateClient(
         pathname: window.location.pathname,
         search: window.location.search,
         routes: routerTree,
-      }, data?.data),
+      }, data?.data.load, data?.data.action),
       tags: [],
       data: data?.data,
       isError: false,

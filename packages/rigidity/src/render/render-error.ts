@@ -41,8 +41,11 @@ export default function renderError(
                     fallback: (err) => (
                       createComponent(Custom500Page, {
                         data: {
-                          error: err,
-                          statusCode: 500,
+                          load: {
+                            error: err,
+                            statusCode: 500,
+                          },
+                          action: undefined,
                         },
                         params: {},
                       })
@@ -54,12 +57,15 @@ export default function renderError(
                             return (
                               createComponent(CustomErrorPage, {
                                 data: {
-                                  statusCode: options.statusCode,
-                                  error: options.error,
+                                  load: {
+                                    statusCode: options.statusCode,
+                                    error: options.error,
+                                  },
+                                  action: undefined,
                                 },
                                 params: {},
                               })
-                            )
+                            );
                           },
                         })
                       );

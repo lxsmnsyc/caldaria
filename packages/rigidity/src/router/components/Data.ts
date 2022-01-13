@@ -6,15 +6,16 @@ import {
   useContext,
 } from 'solid-js';
 
-interface DataContext<T> {
+interface DataContext<L, A = undefined> {
   initial: boolean;
-  data: T;
-  setData: (value: T) => void;
+  load: L;
+  action: A;
+  setAction: (value: A) => void;
 }
 
-const DataContext = createContext<DataContext<any>>();
+const DataContext = createContext<DataContext<any, any>>();
 
-export function useDataContext<T>(): DataContext<T> {
+export function useDataContext<L, A = undefined>(): DataContext<L, A> {
   const ctx = useContext(DataContext);
   if (ctx) {
     return ctx;
@@ -22,23 +23,25 @@ export function useDataContext<T>(): DataContext<T> {
   throw new Error('Missing DataContext');
 }
 
-export interface DataProviderProps<T> {
-  data: T;
+export interface DataProviderProps<L, A = undefined> {
+  load: L;
+  action: A;
   children: JSX.Element;
 }
 
-export function DataProvider<T>(props: DataProviderProps<T>) {
-  const [currentData, setCurrentData] = createSignal(props.data);
+export function DataProvider<L, A = undefined>(props: DataProviderProps<L, A>) {
+  const [action, setAction] = createSignal(props.action);
   return (
     createComponent(DataContext.Provider, {
       value: {
         initial: true,
-        get data() {
-          return currentData();
+        get load() {
+          return props.load;
         },
-        setData(value) {
-          setCurrentData(value);
+        get action() {
+          return action();
         },
+        setAction,
       },
       get children() {
         return props.children;

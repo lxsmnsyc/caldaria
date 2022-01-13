@@ -20,13 +20,13 @@ async function sleep(ms: number) {
 
 function Parametized(props: HelloProps): JSX.Element {
   const [data] = createResource(
-    () => props.data,
+    () => props.data.load,
     async (value) => {
       await sleep(1000);
       return value;
     },
     {
-      initialValue: props.data,
+      initialValue: props.data.load,
     },
   );
   return (

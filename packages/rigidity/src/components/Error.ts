@@ -47,7 +47,6 @@ const DefaultErrorComponent: Page<ErrorProps> = (props): JSX.Element => (
     if (!currentData) {
       return null;
     }
-    console.log(currentData.error);
     return (
       createComponent(Dynamic, {
         component: 'div',
@@ -56,7 +55,7 @@ const DefaultErrorComponent: Page<ErrorProps> = (props): JSX.Element => (
           return [
             createComponent(Title, {
               get children() {
-                return `${currentData.statusCode}: ${getReasonPhrase(currentData.statusCode)}`;
+                return `${currentData.load.statusCode}: ${getReasonPhrase(currentData.load.statusCode)}`;
               },
             }),
             createComponent(Style, {
@@ -68,14 +67,14 @@ const DefaultErrorComponent: Page<ErrorProps> = (props): JSX.Element => (
               component: 'span',
               style: ERROR_STATUS_CODE_STYLE,
               get children() {
-                return currentData.statusCode;
+                return currentData.load.statusCode;
               },
             }),
             createComponent(Dynamic, {
               component: 'span',
               style: ERROR_REASON_STYLE,
               get children() {
-                return getReasonPhrase(currentData.statusCode);
+                return getReasonPhrase(currentData.load.statusCode);
               },
             }),
           ];

@@ -115,7 +115,7 @@ export default function createServer(
           if (matchedNode && matchedNode.value) {
             const search = new URLSearchParams(url.search);
             const page = await matchedNode.value.preload();
-            let data: any;
+            let actionData: any;
 
             // Read flags
             const dataOnly = search.has(RIGIDITY_DATA);
@@ -141,27 +141,26 @@ export default function createServer(
                 return result;
               }
               // Otherwise, parse the data
-              data = await result.json();
-            } else {
-              data = page.load ? await page.load(request, matchedNode.params) : null;
-              if (dataOnly) {
-                console.log(`[${green('200')}][${yellow(request.method)}] ${url.pathname ?? ''}`);
-                return new Response(
-                  JSON.stringify(data),
-                  {
-                    headers: new Headers({
-                      'Content-Type': 'application/json',
-                    }),
-                    status: 200,
-                  },
-                );
-              }
+              actionData = await result.json();
+            } 
+            const loadData = page.load ? await page.load(request, matchedNode.params) : null;
+            if (dataOnly) {
+              console.log(`[${green('200')}][${yellow(request.method)}] ${url.pathname ?? ''}`);
+              return new Response(
+                JSON.stringify(loadData),
+                {
+                  headers: new Headers({
+                    'Content-Type': 'application/json',
+                  }),
+                  status: 200,
+                },
+              );
             }
             const result = await renderServer(serverOptions, {
               routes: pagesTree,
               pathname: url.pathname,
               search: url.search,
-            }, data);
+            }, loadData, actionData);
             console.log(`[${green('200')}][${yellow(request.method)}] ${url.pathname ?? ''}`);
 
             return new Response(

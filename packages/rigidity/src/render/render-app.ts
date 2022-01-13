@@ -35,10 +35,11 @@ export interface RenderAppOptions {
   routes: PageTree;
 }
 
-export default function renderApp<T>(
+export default function renderApp<L, A = undefined>(
   global: GlobalRenderOptions,
   options: RenderAppOptions,
-  response?: T,
+  loadData?: L,
+  actionData?: A,
 ): () => JSX.Element {
   const CustomAppPage = global.app ?? DefaultApp;
   const Custom500Page = getErrorPage(500, global);
@@ -48,7 +49,8 @@ export default function renderApp<T>(
     const context = useContext(DocumentContext);
     return (
       createComponent(DataProvider, {
-        data: response,
+        load: loadData,
+        action: actionData,
         get children() {
           return createComponent(Suspense, {
             get children() {
@@ -61,8 +63,11 @@ export default function renderApp<T>(
                         fallback: (err) => (
                           createComponent(Custom500Page, {
                             data: {
-                              error: err,
-                              statusCode: 500,
+                              load: {
+                                error: err,
+                                statusCode: 500,
+                              },
+                              action: undefined,
                             },
                             params: {},
                           })
@@ -81,8 +86,11 @@ export default function renderApp<T>(
                                       return (
                                         createComponent(CustomNotFound, {
                                           data: {
-                                            statusCode: 404,
-                                            error: new StatusCode(404),
+                                            load: {
+                                              statusCode: 404,
+                                              error: new StatusCode(404),
+                                            },
+                                            action: undefined,
                                           },
                                           params: {},
                                         })
