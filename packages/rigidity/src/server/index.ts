@@ -43,6 +43,10 @@ export default function createServer(
   const apisTree = createAPITree(serverOptions.endpoints);
 
   return async (request) => {
+    const fs = await import('fs-extra');
+    const path = await import('path');
+    const mime = await import('mime-types');
+
     try {
       const host = request.headers.get('host');
       if (host && request.url) {
@@ -50,10 +54,6 @@ export default function createServer(
 
         if (serverOptions.enableStaticFileServing || !serverOptions.cdn) {
           const readStaticFile = async (prefix: string, basePath: string) => {
-            const fs = await import('fs-extra');
-            const path = await import('path');
-            const mime = await import('mime-types');
-
             const file = url.pathname.substring(prefix.length);
             const targetFile = path.join(basePath, file);
             const exists = await fileExists(targetFile);
@@ -119,15 +119,15 @@ export default function createServer(
 
             // Read flags
             const dataOnly = search.has(RIGIDITY_DATA);
-            const action = search.get(RIGIDITY_ACTION)
+            const action = search.get(RIGIDITY_ACTION);
             if (action && page.actions && action in page.actions) {
               const result = await page.actions[action](request, matchedNode.params);
-              
+
               // Check for redirect
               if (dataOnly) {
                 console.log(`[${green(result.status.toString())}][${yellow(request.method)}] ${url.pathname ?? ''}`);
                 if (result.status >= 300 && result.status < 400) {
-                  let headers = new Headers(result.headers);
+                  const headers = new Headers(result.headers);
                   headers.set(RIGIDITY_REDIRECT_HEADER, headers.get('Location')!);
                   headers.delete('Location');
                   return new Response(null, {
@@ -142,7 +142,7 @@ export default function createServer(
               }
               // Otherwise, parse the data
               actionData = await result.json();
-            } 
+            }
             const loadData = page.load ? await page.load(request, matchedNode.params) : null;
             if (dataOnly) {
               console.log(`[${green('200')}][${yellow(request.method)}] ${url.pathname ?? ''}`);
