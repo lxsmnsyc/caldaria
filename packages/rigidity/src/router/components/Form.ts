@@ -65,24 +65,37 @@ export default function Form(props: FormProps): JSX.Element {
       const method = props.method ?? 'get';
 
       const formData = new FormData(formEl);
-      let body: FormData | URLSearchParams = formData;
+      let url = `${actionUrl()}&${RIGIDITY_DATA}`;
+      let body: FormData | URLSearchParams | undefined = formData;
       let headers: HeadersInit | undefined;
       if (enc === 'application/x-www-form-urlencoded') {
-        body = new URLSearchParams();
+        if (method === 'post') {
+          const params = new URLSearchParams();
 
-        formData.forEach((value, key) => {
-          if (!(value instanceof File)) {
-            body.append(key, value);
-          }
-        });
-
-        headers = {
-          'Content-Type': enc,
-        };
+          formData.forEach((value, key) => {
+            if (!(value instanceof File)) {
+              params.append(key, value);
+            }
+          });
+          body = params;
+          headers = {
+            'Content-Type': enc,
+          };
+        } else {
+          body = undefined;
+          const baseURL = new URL(url, window.location.origin);
+          const originalParams = baseURL.searchParams;
+          formData.forEach((value, key) => {
+            if (!(value instanceof File)) {
+              originalParams.append(key, value);
+            }
+          });
+          url = `${baseURL.pathname}?${originalParams.toString()}`;
+        }
       }
 
       // We change the url to data-only mode
-      fetch(`${actionUrl()}&${RIGIDITY_DATA}`, {
+      fetch(url, {
         method,
         headers,
         body,
