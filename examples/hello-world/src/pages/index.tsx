@@ -18,6 +18,7 @@ export default function Index(): JSX.Element {
         <RouterLink href="/parameter/c" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to page C</RouterLink>
         <RouterLink href="/parameter/d" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to page D</RouterLink>
         <RouterLink href="/wildcard/e/f/g/h" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to page E, F, G, H</RouterLink>
+        <RouterLink href="/form" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to Form Example</RouterLink>
       </div>
     </div>
   );
