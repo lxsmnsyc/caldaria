@@ -1,5 +1,7 @@
 /* @jsxImportSource solid-js */
-import { Form, Meta, RouterLink, Title } from 'rigidity';
+import {
+  Form, Meta, RouterLink, Title,
+} from 'rigidity';
 import { JSX, Show } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
@@ -8,15 +10,17 @@ interface Params {
 }
 
 interface HelloProps {
-  data: string;
+  data: {
+    action: string;
+  };
   params: Params;
 }
 
 function FormExample(props: HelloProps): JSX.Element {
   return (
     <div class="p-4 rounded-lg bg-indigo-900 bg-opacity-25 flex flex-col space-y-4">
-      <Title>{`Welcome to Form Example!`}</Title>
-      <Meta name="description" content={`This is the page Form Example for Rigidity Demo`} />
+      <Title>Welcome to Form Example!</Title>
+      <Meta name="description" content="This is the page Form Example for Rigidity Demo" />
       <span class="text-2xl text-white font-sans">
         {'Welcome to '}
         <span class="bg-white bg-opacity-25 font-mono p-2 rounded m-1">Form Example</span>
@@ -48,7 +52,9 @@ function FormExample(props: HelloProps): JSX.Element {
 if (isServer) {
   FormExample.actions = {
     async example(request: Request) {
-      const formData = await request.formData();
+      const formData = request.method === 'GET'
+        ? new URL(request.url).searchParams
+        : await request.formData();
       formData.forEach((value, key) => {
         console.log(key, value);
       });

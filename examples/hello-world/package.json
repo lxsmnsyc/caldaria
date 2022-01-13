@@ -4,7 +4,8 @@
   "version": "0.0.15",
   "scripts": {
     "build": "node build-src",
-    "dev": "NODE_ENV=development node build-src && node .rigidity/server"
+    "dev": "NODE_ENV=development node build-src && node .rigidity/server",
+    "dev:windows": "node build-src && node .rigidity/server"
   },
   "dependencies": {
     "@vercel/node": "1.12.1",
