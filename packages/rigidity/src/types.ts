@@ -15,7 +15,6 @@ import {
 } from './router/core/create-api-tree';
 
 export type SSRMode = 'sync' | 'async' | 'node-stream' | 'web-stream';
-export type AdapterType = 'vanilla' | 'http' | 'http2' | 'vercel' | 'worker';
 
 export type ServerFunction = (request: Request) => Promise<Response>;
 
@@ -93,7 +92,7 @@ export interface BabelBuildOptions {
 
 export interface BuildOptions {
   env?: 'production' | 'development';
-  adapter?: AdapterType | Adapter<any>;
+  adapter: Adapter<any>;
   ssrMode?: SSRMode;
   paths?: PathOptions;
   directories?: DirectoryOptions;
