@@ -70,7 +70,7 @@ export default function Form(props: FormProps): JSX.Element {
       if (enc === 'application/x-www-form-urlencoded') {
         body = new URLSearchParams();
 
-        body.forEach((value, key) => {
+        formData.forEach((value, key) => {
           if (!(value instanceof File)) {
             body.append(key, value);
           }
