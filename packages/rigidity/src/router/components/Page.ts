@@ -53,7 +53,7 @@ export function createClientPage<T>(
   function Component() {
     const ctx = useDataContext<T>();
     const router = useRouter();
-    const [data] = createResource(
+    const [data, { mutate }] = createResource(
       () => !ctx.initial,
       async () => (
         loadData(router.pathname, router.search)
@@ -63,9 +63,11 @@ export function createClientPage<T>(
     );
 
     createEffect(() => {
-      if (ctx) {
-        ctx.initial = false;
-      }
+      ctx.initial = false;
+    });
+
+    createEffect(() => {
+      mutate(() => ctx.data);
     });
 
     return createComponent(PageComponent, {
