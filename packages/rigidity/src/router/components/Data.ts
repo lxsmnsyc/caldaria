@@ -29,19 +29,15 @@ export interface DataProviderProps<T> {
 
 export function DataProvider<T>(props: DataProviderProps<T>) {
   const [currentData, setCurrentData] = createSignal(props.data);
-  const [initial, setInitial] = createSignal(true);
   return (
     createComponent(DataContext.Provider, {
       value: {
-        get initial() {
-          return initial();
-        },
+        initial: true,
         get data() {
           return currentData();
         },
         setData(value) {
           setCurrentData(value);
-          setInitial(false);
         },
       },
       get children() {
