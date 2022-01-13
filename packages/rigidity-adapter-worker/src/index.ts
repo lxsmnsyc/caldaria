@@ -1,11 +1,12 @@
-import { Adapter, ServerFunction } from '../types';
+import { Adapter, ServerFunction } from 'rigidity';
 
 const ADAPTER: Adapter<ServerFunction> = /* @__PURE__ */{
   enableStaticFileServing: false,
   generateScript: (config) => `
-import { createServer, adapters } from 'rigidity';
+import { createServer } from 'rigidity';
+import adapter from 'rigidity-adapter-worker';
 const server = createServer(${config});
-const listener = adapters.worker.create(server);
+const listener = adapter.create(server);
 
 addEventListener('fetch', (event) => {
   event.respondWith(listener(event.request))
