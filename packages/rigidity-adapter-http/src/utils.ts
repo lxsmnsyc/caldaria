@@ -15,7 +15,6 @@ export function nodeStreamToBuffer(stream: Readable): Promise<Buffer> {
 export async function convertHTTPRequestToWebRequest(
   request: IncomingMessage,
 ): Promise<Request> {
-  console.log(request.url, request.headers.host);
   if (!request.url || !request.headers.host) {
     throw new Error('Unexpected url');
   }
