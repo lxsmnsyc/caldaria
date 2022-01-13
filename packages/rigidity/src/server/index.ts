@@ -64,7 +64,7 @@ export default function createServer(
               if (process.env.NODE_ENV === 'production') {
                 cacheControl['Cache-Control'] = 'max-age=31536000';
               }
-              console.log(`[${green('200')}][${yellow(request.method)}] ${request.url ?? ''}`);
+              console.log(`[${green('200')}][${yellow(request.method)}] ${url.pathname ?? ''}`);
 
               return new Response(
                 fs.createReadStream(targetFile) as unknown as ReadableStream,
@@ -80,16 +80,16 @@ export default function createServer(
             throw new StatusCode(404);
           };
           const publicPrefix = `/${serverOptions.publicUrl}/`;
-          if (request.url.startsWith(publicPrefix)) {
+          if (url.pathname.startsWith(publicPrefix)) {
             return await readStaticFile(publicPrefix, serverOptions.publicDir);
           }
           const staticPrefix = `/${serverOptions.assetsUrl}/`;
-          if (request.url.startsWith(staticPrefix)) {
+          if (url.pathname.startsWith(staticPrefix)) {
             return await readStaticFile(staticPrefix, serverOptions.buildDir);
           }
         }
         const apiPrefix = `/${API_URL}`;
-        if (request.url.startsWith(apiPrefix)) {
+        if (url.pathname.startsWith(apiPrefix)) {
           const matchedNode = matchRoute(apisTree, url.pathname.substring(apiPrefix.length));
 
           if (matchedNode && matchedNode.value) {
@@ -103,10 +103,10 @@ export default function createServer(
               params: matchedNode.params,
               query: queries,
             });
-            console.log(`[${green(`${response.status}`)}][${yellow(request.method)}] ${request.url}`);
+            console.log(`[${green(`${response.status}`)}][${yellow(request.method)}] ${url.pathname}`);
             return response;
           }
-          throw new StatusCode(404, new Error(`"${request.url}" not found.`));
+          throw new StatusCode(404, new Error(`"${url.pathname}" not found.`));
         }
 
         try {
@@ -118,15 +118,15 @@ export default function createServer(
             let data: any;
 
             // Read flags
-            const dataOnly = search.get(RIGIDITY_DATA);
+            const dataOnly = search.has(RIGIDITY_DATA);
             const action = search.get(RIGIDITY_ACTION)
             if (action && page.actions && action in page.actions) {
               const result = await page.actions[action](request, matchedNode.params);
               
               // Check for redirect
-              if ((result.status >= 300 && result.status < 400) || dataOnly) {
-                console.log(`[${green(result.status.toString())}][${yellow(request.method)}] ${request.url ?? ''}`);
-                if (dataOnly) {
+              if (dataOnly) {
+                console.log(`[${green(result.status.toString())}][${yellow(request.method)}] ${url.pathname ?? ''}`);
+                if (result.status >= 300 && result.status < 400) {
                   let headers = new Headers(result.headers);
                   headers.set(RIGIDITY_REDIRECT_HEADER, headers.get('Location')!);
                   headers.delete('Location');
@@ -135,7 +135,9 @@ export default function createServer(
                     headers,
                   });
                 }
-                // Return it immediately
+                return result;
+              }
+              if (result.status >= 300 && result.status < 400) {
                 return result;
               }
               // Otherwise, parse the data
@@ -143,7 +145,7 @@ export default function createServer(
             } else {
               data = page.load ? await page.load(request, matchedNode.params) : null;
               if (dataOnly) {
-                console.log(`[${green('200')}][${yellow(request.method)}] ${request.url ?? ''}`);
+                console.log(`[${green('200')}][${yellow(request.method)}] ${url.pathname ?? ''}`);
                 return new Response(
                   JSON.stringify(data),
                   {
@@ -160,7 +162,7 @@ export default function createServer(
               pathname: url.pathname,
               search: url.search,
             }, data);
-            console.log(`[${green('200')}][${yellow(request.method)}] ${request.url ?? ''}`);
+            console.log(`[${green('200')}][${yellow(request.method)}] ${url.pathname ?? ''}`);
 
             return new Response(
               result as BodyInit,
@@ -172,7 +174,7 @@ export default function createServer(
               },
             );
           }
-          throw new StatusCode(404, new Error(`"${request.url}" not found.`));
+          throw new StatusCode(404, new Error(`"${url.pathname}" not found.`));
         } catch (error) {
           if (error instanceof StatusCode) {
             throw error;
