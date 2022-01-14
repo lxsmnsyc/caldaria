@@ -1,4 +1,5 @@
 /// <reference types="babel-plugin-solid-labels" />
+/// <reference types="solid-marked" />
 
 // sfc
 
