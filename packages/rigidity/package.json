@@ -82,6 +82,7 @@
     "postcss": "^8.4.5",
     "postcss-load-config": "^3.1.0",
     "postcss-modules": "^4.2.2",
+    "solid-marked": "^0.1.1",
     "solid-sfc": "^0.0.12",
     "solid-use": "^0.3.3",
     "web-vitals": "^2.1.2"
