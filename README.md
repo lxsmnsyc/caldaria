@@ -121,7 +121,7 @@ By declaring `load` to the pages' component, `rigidity` runs the function on ser
 import { isServer } from 'solid-js';
 
 function UserProfile(props) {
-  return <UserDetails data={props.data.details} />;
+  return <UserDetails data={props.data.load.details} />;
 }
 
 if (isServer) {
@@ -135,6 +135,10 @@ export default UserProfile;
 
 `load` is only used on server-side and never on the client-side. When navigating to another page on client-side, `rigidity`'s client performs a data-only request to the page's route, that is, only `load` is evaluated and the SSR never takes place. This way, the client never opts-out of SPA while still staying true to the benefits of on-demand SSR.
 
+### Actions and `<Form>`
+
+TODO
+
 ### Custom App
 
 When switching between pages, old pages gets unmounted, which might not be preferrable specially if we have a state that's located in the components that we want to preserve or if the most of the page's layout is unchanging between navigations. By building a custom `App` component, this allows one to solve such problem.
@@ -144,7 +148,7 @@ When switching between pages, old pages gets unmounted, which might not be prefe
 export default function App(props) {
   return (
     <AppLayout>
-      <props.Component />;
+      {props.children}
     </AppLayout>
   );
 }
