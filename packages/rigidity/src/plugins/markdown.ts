@@ -1,18 +1,15 @@
 import { Plugin } from 'esbuild';
 
-async function compile(code: string): Promise<string> {
-  const fromMarkdown = (await import('mdast-util-from-markdown'));
-}
-
-export default function remarkPlugin(): Plugin {
+export default function markdownPlugin(): Plugin {
   return {
     name: 'rigidity:markdown',
     async setup(build) {
       const path = await import('path');
       const fs = await import('fs/promises');
+      const marked = await import('solid-marked');
 
       build.onResolve({
-        filter: /\.(markdown|mdown|mkdn|mkd|md)$/,
+        filter: /\.(md|mdx|markdown|mdown|mkdn|mkd|mkdown|ron)$/,
       }, (args) => ({
         path: path.join(args.resolveDir, args.path),
         namespace: 'markdown',
@@ -21,11 +18,15 @@ export default function remarkPlugin(): Plugin {
       build.onLoad({
         filter: /.*/,
         namespace: 'markdown',
-      }, async (args) => ({
-        contents: await compile(await fs.readFile(args.path, 'utf-8')),
-        resolveDir: path.dirname(args.path),
-        loader: 'jsx',
-      }));
+      }, async (args) => {
+        const file = await fs.readFile(args.path, 'utf-8');
+        const result = await marked.compile(args.path, file);
+        return {
+          contents: result.code,
+          resolveDir: path.dirname(args.path),
+          loader: 'jsx',
+        };
+      });
     },
   };
 }

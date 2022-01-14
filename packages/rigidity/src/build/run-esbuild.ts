@@ -15,6 +15,7 @@ import solidSFCPlugin from '../plugins/solid-sfc';
 import postcssPlugin, { RecurseBuild } from '../plugins/postcss';
 import rawPlugin from '../plugins/raw';
 import urlPlugin from '../plugins/url';
+import markdownPlugin from '../plugins/markdown';
 
 function createOption(opt: ESBuildOption): ESBuildOption {
   return opt;
@@ -109,6 +110,7 @@ export default async function runESBuild(
       }),
       rawPlugin(),
       urlPlugin(),
+      markdownPlugin(),
       ...(esbuildConfig?.plugins ?? []),
     ],
     external: esbuildConfig?.external,
