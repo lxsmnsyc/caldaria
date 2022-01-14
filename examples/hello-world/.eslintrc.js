@@ -13,6 +13,8 @@ module.exports = {
       }
     ],
     "react/no-unknown-property": "off",
-    "react/destructuring-assignment": "off"
+    "react/destructuring-assignment": "off",
+    "react/no-unstable-nested-components": "off",
+    "react/prop-types": "off"
   },
 };
