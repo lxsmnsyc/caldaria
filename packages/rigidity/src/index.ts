@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="env.d.ts" />
 
 export {
@@ -7,6 +8,10 @@ export {
   DocumentMain,
   DocumentScript,
 } from './components/Document';
+export {
+  useMDX,
+  MDXProvider,
+} from './components/Markdown';
 export {
   default as createBuild,
 } from './build/create-build';

@@ -55,7 +55,7 @@ export default function solidPlugin(options: SolidOptions): Plugin {
         if (result) {
           return { contents: result.code ?? '', loader: 'js' };
         }
-        throw new Error('[esbuild:solid] Babel Transform returned null.');
+        throw new Error('[rigidity:solid] Babel Transform returned null.');
       });
     },
   };

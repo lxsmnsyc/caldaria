@@ -18,6 +18,7 @@ importers:
 
   examples/hello-world:
     specifiers:
+      '@tailwindcss/typography': ^0.5.0
       '@vercel/node': 1.12.1
       '@vercel/static-build': ^0.18.0
       autoprefixer: ^10.4.2
@@ -36,6 +37,7 @@ importers:
       solid-headless: 0.10.12_solid-js@1.3.3
       solid-js: 1.3.3
     devDependencies:
+      '@tailwindcss/typography': 0.5.0_tailwindcss@3.0.13
       autoprefixer: 10.4.2
       tailwindcss: 3.0.13_autoprefixer@10.4.2
 
@@ -49,7 +51,6 @@ importers:
       babel-plugin-solid-labels: ^0.10.0
       babel-preset-solid: ^1.3.1
       esbuild: ^0.14.10
-      esbuild-plugin-solid-sfc: ^0.0.12
       eslint: ^8.6.0
       eslint-config-lxsmnsyc: ^0.4.0
       http-status-codes: ^2.1.4
@@ -59,8 +60,7 @@ importers:
       postcss-modules: ^4.2.2
       pridepack: ^1.0.4
       solid-js: ^1.3.3
-      solid-marked: ^0.1.1
-      solid-sfc: ^0.0.12
+      solid-marked: ^0.2.1
       solid-use: ^0.3.3
       tslib: ^2.3.1
       typescript: ^4.5.4
@@ -71,14 +71,12 @@ importers:
       babel-plugin-solid-labels: 0.10.0_a3ad21996a630a2882f242dc8d5c20d1
       babel-preset-solid: 1.3.2_@babel+core@7.16.7
       esbuild: 0.14.11
-      esbuild-plugin-solid-sfc: 0.0.12_esbuild@0.14.11+solid-sfc@0.0.12
       http-status-codes: 2.2.0
       mime-types: 2.1.34
       postcss: 8.4.5
       postcss-load-config: 3.1.1
       postcss-modules: 4.3.0_postcss@8.4.5
-      solid-marked: 0.1.1_solid-js@1.3.3
-      solid-sfc: 0.0.12_solid-js@1.3.3
+      solid-marked: 0.2.1_solid-js@1.3.3
       solid-use: 0.3.3_solid-js@1.3.3
       web-vitals: 2.1.3
     devDependencies:
@@ -417,12 +415,6 @@ packages:
       '@babel/helper-validator-identifier': 7.16.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-
-  /@babel/parser/7.16.6:
-    resolution: {integrity: sha512-Gr86ujcNuPDnNOY8mi383Hvi8IYrJVJYuf3XcuBM/Dgd+bINn/7tHqsj+tKkoreMbmGsFLsltI/JJd8fOFWGDQ==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
-    dev: false
 
   /@babel/parser/7.16.8:
     resolution: {integrity: sha512-i7jDUfrVBWc+7OKcBzEe5n7fbv3i2fWtxKzzCvOjnzSxMfWMigAhtfJ7qzZNGFNMsCCd67+uz553dYKWXPvCKw==}
@@ -1814,6 +1806,18 @@ packages:
       '@sinonjs/commons': 1.8.3
     dev: true
 
+  /@tailwindcss/typography/0.5.0_tailwindcss@3.0.13:
+    resolution: {integrity: sha512-1p/3C6C+JJziS/ghtG8ACYalbA2SyLJY27Pm33cVTlAoY6VQ7zfm2H64cPxUMBkVIlWXTtWHhZcZJPobMRmQAA==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1 || insiders'
+    dependencies:
+      lodash.castarray: 4.4.0
+      lodash.isplainobject: 4.0.6
+      lodash.merge: 4.6.2
+      lodash.uniq: 4.5.0
+      tailwindcss: 3.0.13_autoprefixer@10.4.2
+    dev: true
+
   /@tootallnate/once/1.1.2:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
     engines: {node: '>= 6'}
@@ -2484,22 +2488,6 @@ packages:
 
   /babel-plugin-solid-labels/0.10.0_a3ad21996a630a2882f242dc8d5c20d1:
     resolution: {integrity: sha512-O8GYkZzwJjrL1EneVhtwO1uv3sT6xRuTpJosZ+d0p586XxEWzVDqNXJH8bLAH1rA9sMiZP2B+dt1Ze6CHe1+YA==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      '@babel/core': ^7.16
-      solid-js: ^1.2
-    dependencies:
-      '@babel/core': 7.16.7
-      '@babel/helper-module-imports': 7.16.7
-      '@babel/traverse': 7.16.8
-      '@babel/types': 7.16.8
-      solid-js: 1.3.3
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /babel-plugin-solid-labels/0.9.6_a3ad21996a630a2882f242dc8d5c20d1:
-    resolution: {integrity: sha512-d8Y18b8BIga2HwWV6OfPLdI9qvnwzfv28O4sIRr3hKFBPA3k0QTbGemKn/m4gzxjFu+jDjrKkEwSvbit7Oi+FQ==}
     engines: {node: '>=10'}
     peerDependencies:
       '@babel/core': ^7.16
@@ -3555,17 +3543,6 @@ packages:
     os: [openbsd]
     requiresBuild: true
     optional: true
-
-  /esbuild-plugin-solid-sfc/0.0.12_esbuild@0.14.11+solid-sfc@0.0.12:
-    resolution: {integrity: sha512-0Z6zD/P2Rw/CkTZaQ2roEA2iRfN0xfvvaaI9y7MSkMdfPh+oRBQM9EPV1DZIevAC/852Sr4kZfT5guZslzJdZg==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      esbuild: ^0.14
-      solid-sfc: ^0.0
-    dependencies:
-      esbuild: 0.14.11
-      solid-sfc: 0.0.12_solid-js@1.3.3
-    dev: false
 
   /esbuild-sunos-64/0.14.11:
     resolution: {integrity: sha512-bmYzDtwASBB8c+0/HVOAiE9diR7+8zLm/i3kEojUH2z0aIs6x/S4KiTuT5/0VKJ4zk69kXel1cNWlHBMkmavQg==}
@@ -5893,8 +5870,16 @@ packages:
     resolution: {integrity: sha1-soqmKIorn8ZRA1x3EfZathkDMaY=}
     dev: false
 
+  /lodash.castarray/4.4.0:
+    resolution: {integrity: sha1-wCUTUV4wna3dTCTGDP3c9ZdtkRU=}
+    dev: true
+
   /lodash.ismatch/4.4.0:
     resolution: {integrity: sha1-dWy1FQyjum8RCFp4hJZF8Yj4Xzc=}
+    dev: true
+
+  /lodash.isplainobject/4.0.6:
+    resolution: {integrity: sha1-fFJqUtibRcRcxpC4gWO+BJf1UMs=}
     dev: true
 
   /lodash.memoize/4.1.2:
@@ -5920,6 +5905,10 @@ packages:
 
   /lodash.truncate/4.4.2:
     resolution: {integrity: sha1-WjUNoLERO4N+z//VgSy+WNbq4ZM=}
+    dev: true
+
+  /lodash.uniq/4.5.0:
+    resolution: {integrity: sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=}
     dev: true
 
   /lodash/4.17.21:
@@ -8072,8 +8061,8 @@ packages:
   /solid-js/1.3.3:
     resolution: {integrity: sha512-0pyHpLZIgQDI1Z+MgxXQRPY10dhXfKJdptb4UCJQ9ArQOLq2gtFA1acEsvSAtPMVdqQ8bqj68FOTXLpz6hm2Mg==}
 
-  /solid-marked/0.1.1_solid-js@1.3.3:
-    resolution: {integrity: sha512-21GOwU/pwgkhEXgUZswIVMJvcWQyByIWs/UXJo8A1K8yfUNbrLRNjuFSwAhCbb5M4KEr9WIhBewlp/bJO12k5A==}
+  /solid-marked/0.2.1_solid-js@1.3.3:
+    resolution: {integrity: sha512-Qdq4LczhsOxis4NZaAVQRvlOkczSHo28kajCIi7DhLOT4tN0dEt2LKBSjou/o3KqNfQhudORT4R14pEhMKtHpA==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.2.0
@@ -8083,25 +8072,6 @@ packages:
       mdast-util-mdx: 1.1.0
       micromark-extension-gfm: 2.0.1
       micromark-extension-mdxjs: 1.0.0
-      solid-js: 1.3.3
-      source-map: 0.7.3
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /solid-sfc/0.0.12_solid-js@1.3.3:
-    resolution: {integrity: sha512-yO7UT1IOzlZ10idG2B8FFuWdcvT7e7bhl3iAsfmJXEawycICpz1eAOcMDX4b44UWHqxBz9HagP48RcQOjUpEjw==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      solid-js: ^1.2
-    dependencies:
-      '@babel/core': 7.16.7
-      '@babel/generator': 7.16.8
-      '@babel/parser': 7.16.6
-      '@babel/preset-typescript': 7.16.7_@babel+core@7.16.7
-      '@babel/types': 7.16.8
-      babel-plugin-solid-labels: 0.9.6_a3ad21996a630a2882f242dc8d5c20d1
-      babel-preset-solid: 1.3.2_@babel+core@7.16.7
       solid-js: 1.3.3
       source-map: 0.7.3
     transitivePeerDependencies:

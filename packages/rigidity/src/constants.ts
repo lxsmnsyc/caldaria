@@ -51,6 +51,7 @@ export const SUPPORTED_PAGE_EXT = [
   '.ts',
   '.tsx',
   '.solid',
+  ...'md|mdx|markdown|mdown|mkdn|mkd|mkdown|ron'.split('|').map((item) => `.${item}`),
 ];
 
 export const BUILD_OUTPUT = {
