@@ -40,7 +40,6 @@ export default async function createServerBuild(
   options: BuildOptions,
 ): Promise<BuildResult> {
   const path = await import('path');
-  const fs = await import('fs/promises');
 
   const environment = options.env ?? 'production';
   const pagesDirectory = options.directories?.pages ?? PAGES_PATH;
