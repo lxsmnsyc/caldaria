@@ -32,10 +32,6 @@ export default function createServer(
   const apisTree = createAPITree(serverOptions.endpoints);
 
   return async (request) => {
-    const fs = await import('fs');
-    const path = await import('path');
-    const mime = await import('mime-types');
-
     try {
       const host = request.headers.get('host');
       if (host && request.url) {
@@ -43,6 +39,9 @@ export default function createServer(
 
         if (serverOptions.enableStaticFileServing || !serverOptions.cdn) {
           const readStaticFile = async (prefix: string, basePath: string) => {
+            const fs = await import('fs');
+            const path = await import('path');
+            const mime = await import('mime-types');
             const file = url.pathname.substring(prefix.length);
             const targetFile = path.join(basePath, file);
             const exists = await fileExists(targetFile);
