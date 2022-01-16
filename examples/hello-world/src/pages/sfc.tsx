@@ -1,3 +1,5 @@
+/* @jsxImportSource solid-js */
+
 'use solid-sfc';
 
 import { Meta, RouterLink, Title } from 'rigidity';
