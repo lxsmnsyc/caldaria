@@ -78,8 +78,8 @@ export default function App(appProps: AppProps): JSX.Element {
       }}
     >
       <Link rel="stylesheet" href={styles} />
-      <div className="bg-gradient-to-r from-indigo-400 to-blue-600 w-full min-h-screen flex">
-        <div className="flex flex-col items-center w-full overflow-x-hidden">
+      <div className="bg-gradient-to-r from-indigo-400 to-blue-600 w-full flex">
+        <div className="flex flex-col items-center w-full min-h-screen overflow-x-hidden">
           <Suspense fallback={<h1>Loading...</h1>}>
             {appProps.children}
           </Suspense>

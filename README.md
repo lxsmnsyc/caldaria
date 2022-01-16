@@ -180,13 +180,15 @@ TODO
 
 TODO
 
-### `solid-sfc`
+### `babel-plugin-solid-sfc`
 
 TODO
 
 ### `babel-plugin-solid-labels`
 
 TODO
+
+### Markdown/MDX
 
 ### Imports
 
@@ -255,7 +257,6 @@ TODO
 - Stylus support
 - Worker imports
 - WASM imports
-- MDX support
 
 ## License
 

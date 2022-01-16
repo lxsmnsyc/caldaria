@@ -11,7 +11,6 @@ import {
   ASSETS_URL,
 } from '../constants';
 import solidPlugin from '../plugins/solid';
-// import solidSFCPlugin from '../plugins/solid-sfc';
 import postcssPlugin, { RecurseBuild } from '../plugins/postcss';
 import rawPlugin from '../plugins/raw';
 import urlPlugin from '../plugins/url';
@@ -85,15 +84,6 @@ export default async function runESBuild(
     ],
     jsx: 'preserve',
     plugins: [
-      // solidSFCPlugin({
-      //   target: context.isServer ? 'ssr' : 'dom',
-      //   hydratable: true,
-      //   dev: context.isDev,
-      //   babel: {
-      //     plugins: babelPluginsConfig ?? [],
-      //     presets: babelPresetsConfig ?? [],
-      //   },
-      // }),
       solidPlugin({
         generate: context.isServer ? 'ssr' : 'dom',
         babel: {
