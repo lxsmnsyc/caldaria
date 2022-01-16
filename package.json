@@ -6,7 +6,6 @@
     "examples/*"
   ],
   "devDependencies": {
-    "@typescript-eslint/parser": "^5.9.1",
     "eslint": "^8.6.0",
     "eslint-config-lxsmnsyc": "^0.4.0",
     "lerna": "^4.0.0",
