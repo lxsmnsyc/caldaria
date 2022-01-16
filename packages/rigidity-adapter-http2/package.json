@@ -1,6 +1,6 @@
 {
   "name": "rigidity-adapter-http2",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "types": "dist/types/index.d.ts",
   "main": "dist/cjs/production/index.js",
   "module": "dist/esm/production/index.js",
@@ -52,7 +52,7 @@
     "eslint": "^8.6.0",
     "eslint-config-lxsmnsyc": "^0.4.0",
     "pridepack": "^1.0.4",
-    "rigidity": "^0.0.15",
+    "rigidity": "0.0.16",
     "tslib": "^2.3.1",
     "typescript": "^4.5.4"
   },
