@@ -82,7 +82,7 @@
     "dev": "pridepack dev"
   },
   "peerDependencies": {
-    "rigidity": "^0.0.15"
+    "rigidity": "^0.0"
   },
   "dependencies": {
     "node-fetch": "^3.1.0"

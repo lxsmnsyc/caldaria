@@ -82,7 +82,7 @@
     "dev": "pridepack dev"
   },
   "peerDependencies": {
-    "rigidity": "^0.0.15"
+    "rigidity": "^0.0"
   },
   "dependencies": {
     "@vercel/node": "^1.12.1",

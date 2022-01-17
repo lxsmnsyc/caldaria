@@ -82,6 +82,6 @@
     "dev": "pridepack dev"
   },
   "peerDependencies": {
-    "rigidity": "^0.0.15"
+    "rigidity": "^0.0"
   }
 }
