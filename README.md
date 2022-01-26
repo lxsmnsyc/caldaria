@@ -5,15 +5,18 @@
 ## Install
 
 ```bash
-npm install rigidity
+npm install rigidity solid-js
+npm install --dev postcss
 ```
 
 ```bash
-yarn add rigidity
+yarn add rigidity solid-js
+yarn add -D postcss
 ```
 
 ```bash
-pnpm add rigidity
+pnpm add rigidity solid-js
+pnpm add -D postcss
 ```
 
 ## Usage
