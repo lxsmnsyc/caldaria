@@ -1,5 +1,5 @@
 {
-  "version": "0.0.19",
+  "version": "0.0.20",
   "types": "dist/types/index.d.ts",
   "main": "dist/cjs/production/index.js",
   "module": "dist/esm/production/index.js",
@@ -61,8 +61,8 @@
     "typescript": "^4.5.4"
   },
   "peerDependencies": {
-    "solid-js": "^1.3",
-    "postcss": "^8"
+    "postcss": "^8",
+    "solid-js": "^1.3"
   },
   "scripts": {
     "prepublishOnly": "pridepack clean && pridepack build",
