@@ -86,7 +86,7 @@ export default function createServer(
             search.forEach((value, key) => {
               queries[key] = value;
             });
-            const response = await matchedNode.value.call({
+            const response = await matchedNode.value({
               request,
               params: matchedNode.params,
               query: queries,

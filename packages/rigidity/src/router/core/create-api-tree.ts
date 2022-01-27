@@ -25,20 +25,15 @@ export type APICallback = <
   Q extends Query = Query,
 >(ctx: ServerSideContext<P, Q>) => Response | Promise<Response>;
 
-interface API {
+export interface APIRoute {
   path: string;
   call: APICallback;
 }
 
-export interface APIRoute {
-  path: string;
-  call: API;
-}
-
-export type APITree = RouterNode<API>;
+export type APITree = RouterNode<APICallback>;
 
 export default function createAPITree(routes: APIRoute[]): APITree {
-  const root = createRouterNode<API>('');
+  const root = createRouterNode<APICallback>('');
 
   for (let i = 0, len = routes.length; i < len; i += 1) {
     const route = routes[i];
