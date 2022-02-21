@@ -51,14 +51,14 @@ export default function hydrateClient(
   const routerTree = createPageTree(options.pages);
   const pageResult: RenderResult<any> = data && data.isError
     ? {
-      assets: options.assetsUrl,
+      assets: `${options.cdn ?? ''}/${options.assetsUrl}`,
       App: renderError(options, data.data),
       tags: [],
       data: data?.data,
       isError: true,
     }
     : {
-      assets: options.assetsUrl,
+      assets: `${options.cdn ?? ''}/${options.assetsUrl}`,
       App: renderApp(options, {
         pathname: window.location.pathname,
         search: window.location.search,
