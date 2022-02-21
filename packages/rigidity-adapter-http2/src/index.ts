@@ -19,8 +19,9 @@ const ADAPTER: Adapter<HTTP2Listener> = /* @__PURE__ */ {
     cert: fs.readFileSync('cert.pem'),
     allowHTTP1: true,
   };
-  http2.createSecureServer(options, listener).listen(3000).on('listening', () => {
-    console.log('Listening at http://localhost:3000')
+  const port = process.env.PORT || 3000;
+  http2.createSecureServer(options, listener).listen(port).on('listening', () => {
+    console.log(\`Listening at http://localhost:\${port}\`)
   });
   `,
   create: (fn) => (request, response) => {

@@ -12,8 +12,9 @@ import { createServer } from 'rigidity';
 import adapter from 'rigidity-adapter-http';
 const server = createServer(${config});
 const listener = adapter.create(server);
-http.createServer(listener).listen(3000).on('listening', () => {
-  console.log('Listening at http://localhost:3000')
+const port = process.env.PORT || 3000;
+http.createServer(listener).listen(port).on('listening', () => {
+  console.log(\`Listening at http://localhost:\${port}\`)
 });
   `,
   create: (fn) => (request, response) => {
