@@ -1,5 +1,5 @@
 {
-  "version": "0.0.23",
+  "version": "0.0.24",
   "types": "dist/types/index.d.ts",
   "main": "dist/cjs/production/index.js",
   "module": "dist/esm/production/index.js",
@@ -62,9 +62,9 @@
     "typescript": "^4.5.4"
   },
   "peerDependencies": {
+    "babel-preset-solid": "^1.3",
     "postcss": "^8",
-    "solid-js": "^1.3",
-    "babel-preset-solid": "^1.3"
+    "solid-js": "^1.3"
   },
   "scripts": {
     "prepublishOnly": "pridepack clean && pridepack build",
