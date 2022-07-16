@@ -13,7 +13,7 @@
     "rigidity-adapter-http": "0.0.24",
     "rigidity-adapter-vercel": "0.0.24",
     "solid-headless": "^0.11.0",
-    "solid-js": "^1.4.3"
+    "solid-js": "^1.4.7"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.2",

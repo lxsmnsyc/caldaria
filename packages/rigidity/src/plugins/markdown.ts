@@ -24,7 +24,7 @@ export default function markdownPlugin(options: SolidOptions): Plugin {
 
       const solid = (await import('babel-preset-solid')).default;
       const ts = (await import('@babel/preset-typescript')).default;
-      const solidLabels = (await import('babel-plugin-solid-labels')).default;
+      const solidSFC = (await import('babel-plugin-solid-sfc')).default;
 
       build.onResolve({
         filter: /\.(md|mdx|markdown|mdown|mkdn|mkd|mkdown|ron)$/,
@@ -47,7 +47,7 @@ export default function markdownPlugin(options: SolidOptions): Plugin {
             ...options.babel.presets,
           ],
           plugins: [
-            [solidLabels, { dev: options.dev }],
+            [solidSFC, { dev: options.dev }],
             ...options.babel.plugins,
           ],
           filename: args.path,

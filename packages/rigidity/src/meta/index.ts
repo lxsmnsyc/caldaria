@@ -8,6 +8,7 @@ import {
   mergeProps,
   Show,
   JSX,
+  Component,
 } from 'solid-js';
 import {
   isServer,
@@ -35,7 +36,7 @@ const MetaContext = createContext<MetaContextType>();
 
 const cascadingTags = ['title', 'meta'];
 
-const MetaProvider: Component<{ tags?: Array<TagDescription> }> = (props) => {
+const MetaProvider: Component<{ tags?: Array<TagDescription>, children: JSX.Element }> = (props) => {
   const indices = new Map<string, number>();
   const [tags, setTags] = createSignal<{ [k: string]:(string | null)[] }>({});
 

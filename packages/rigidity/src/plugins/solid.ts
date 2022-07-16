@@ -28,7 +28,6 @@ export default function solidPlugin(options: SolidOptions): Plugin {
 
       const solid = (await import('babel-preset-solid')).default;
       const ts = (await import('@babel/preset-typescript')).default;
-      const solidLabels = (await import('babel-plugin-solid-labels')).default;
       const solidSFC = (await import('babel-plugin-solid-sfc')).default;
 
       build.onLoad({
@@ -46,8 +45,7 @@ export default function solidPlugin(options: SolidOptions): Plugin {
             ...options.babel.presets,
           ],
           plugins: [
-            [solidLabels, { dev: options.dev }],
-            [solidSFC],
+            [solidSFC, { dev: options.dev }],
             ...options.babel.plugins,
           ],
           filename,
