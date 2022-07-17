@@ -187,10 +187,6 @@ TODO
 
 TODO
 
-### `babel-plugin-solid-labels`
-
-TODO
-
 ### Markdown/MDX
 
 ### Imports
