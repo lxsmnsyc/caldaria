@@ -36,7 +36,12 @@ const MetaContext = createContext<MetaContextType>();
 
 const cascadingTags = ['title', 'meta'];
 
-const MetaProvider: Component<{ tags?: Array<TagDescription>, children: JSX.Element }> = (props) => {
+interface MetaProviderProps {
+  tags?: Array<TagDescription>;
+  children: JSX.Element;
+}
+
+function MetaProvider(props: MetaProviderProps): JSX.Element {
   const indices = new Map<string, number>();
   const [tags, setTags] = createSignal<{ [k: string]:(string | null)[] }>({});
 
@@ -110,9 +115,9 @@ const MetaProvider: Component<{ tags?: Array<TagDescription>, children: JSX.Elem
       return props.children;
     },
   });
-};
+}
 
-const MetaTag = (tag: string, props: { [k: string]: any }) => {
+const createMetaTag = (tag: string, props: { [k: string]: any }) => {
   const c = useContext(MetaContext);
   if (!c) throw new Error('<MetaProvider /> should be in the tree');
   const {
@@ -163,12 +168,12 @@ export function renderTags(tags: Array<TagDescription>): string {
     }).join('');
 }
 
-export const Title: Component<JSX.HTMLAttributes<HTMLTitleElement>> = (props) => MetaTag('title', props);
+export const Title: Component<JSX.HTMLAttributes<HTMLTitleElement>> = (props) => createMetaTag('title', props);
 
-export const Style: Component<JSX.StyleHTMLAttributes<HTMLStyleElement>> = (props) => MetaTag('style', props);
+export const Style: Component<JSX.StyleHTMLAttributes<HTMLStyleElement>> = (props) => createMetaTag('style', props);
 
-export const Meta: Component<JSX.MetaHTMLAttributes<HTMLMetaElement>> = (props) => MetaTag('meta', props);
+export const Meta: Component<JSX.MetaHTMLAttributes<HTMLMetaElement>> = (props) => createMetaTag('meta', props);
 
-export const Link: Component<JSX.LinkHTMLAttributes<HTMLLinkElement>> = (props) => MetaTag('link', props);
+export const Link: Component<JSX.LinkHTMLAttributes<HTMLLinkElement>> = (props) => createMetaTag('link', props);
 
-export const Base: Component<JSX.BaseHTMLAttributes<HTMLBaseElement>> = (props) => MetaTag('base', props);
+export const Base: Component<JSX.BaseHTMLAttributes<HTMLBaseElement>> = (props) => createMetaTag('base', props);
