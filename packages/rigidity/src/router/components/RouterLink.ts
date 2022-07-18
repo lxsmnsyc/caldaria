@@ -6,7 +6,6 @@ import {
   onCleanup,
 } from 'solid-js';
 import {
-  isServer,
   createComponent,
   Dynamic,
 } from 'solid-js/web';
@@ -36,7 +35,8 @@ export default function RouterLink(
 ): JSX.Element {
   const router = useRouterUnsafe();
 
-  if (!router || isServer) {
+  if (!router) {
+    console.log('No router');
     return createComponent(Dynamic, mergeProps(
       {
         component: 'a',

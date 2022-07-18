@@ -1,5 +1,4 @@
 import {
-  RESERVED_PAGES,
   DIRECTORY_ROOT,
 } from '../constants';
 import getPOSIXPath from '../utils/get-posix-path';
@@ -15,10 +14,6 @@ async function getPageOption(page: string, index: number): Promise<string> {
   const filename = path.basename(page, extname);
 
   const extensionless = path.join(directory, filename);
-
-  if (RESERVED_PAGES.includes(extensionless)) {
-    return '';
-  }
 
   const output = `{
 path: ${JSON.stringify(await getPOSIXPath(path.join('/', extensionless)))},

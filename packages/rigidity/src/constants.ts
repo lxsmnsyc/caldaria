@@ -23,27 +23,9 @@ export const PAGES_URL = 'pages';
 // Directory output
 export const BUILD_PATH = '.rigidity';
 
-// Custom app name
-export const CUSTOM_APP = '_app';
-
-// Custom document name
-export const CUSTOM_DOCUMENT = '_document';
-
-export const CUSTOM_404 = '_404';
-
-export const CUSTOM_500 = '_500';
-
-export const CUSTOM_ERROR = '_error';
+export const CUSTOM_ROOT = 'src/root';
 
 export const DIRECTORY_ROOT = 'index';
-
-export const RESERVED_PAGES = [
-  CUSTOM_404,
-  CUSTOM_500,
-  CUSTOM_ERROR,
-  CUSTOM_APP,
-  CUSTOM_DOCUMENT,
-];
 
 export const SUPPORTED_PAGE_EXT = [
   '.js',

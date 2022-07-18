@@ -43,24 +43,24 @@ interface MetaProviderProps {
 
 function MetaProvider(props: MetaProviderProps): JSX.Element {
   const indices = new Map<string, number>();
-  const [tags, setTags] = createSignal<{ [k: string]:(string | null)[] }>({});
+  const [getTags, setTags] = createSignal<{ [k: string]:(string | null)[] }>({});
 
   onMount(() => {
     const ssrTags = document.head.querySelectorAll('[data-sm=""]');
     // `forEach` on `NodeList` is not supported in Googlebot, so use a workaround
-    Array.prototype.forEach.call(ssrTags, (ssrTag: Node) => ssrTag.parentNode?.removeChild(ssrTag));
+    Array.prototype.forEach.call(ssrTags, (ssrTag: Node) => ssrTag.parentNode!.removeChild(ssrTag));
   });
 
   const actions: MetaContextType = {
     addClientTag: (tag: string, name: string) => {
       // consider only cascading tags
       if (cascadingTags.indexOf(tag) !== -1) {
-        setTags((currentTags) => {
-          const names = currentTags[tag] || [];
-          return { ...currentTags, [tag]: [...names, name] };
+        setTags((tags) => {
+          const names = tags[tag] || [];
+          return { ...tags, [tag]: [...names, name] };
         });
         // track indices synchronously
-        const index = indices.has(tag) ? (indices.get(tag) ?? 0) + 1 : 0;
+        const index = indices.has(tag) ? indices.get(tag)! + 1 : 0;
         indices.set(tag, index);
         return index;
       }
@@ -69,7 +69,7 @@ function MetaProvider(props: MetaProviderProps): JSX.Element {
 
     shouldRenderTag: (tag: string, index: number) => {
       if (cascadingTags.indexOf(tag) !== -1) {
-        const names = tags()[tag];
+        const names = getTags()[tag];
         // check if the tag is the last one of similar
         return names && names.lastIndexOf(names[index]) === index;
       }
@@ -77,38 +77,39 @@ function MetaProvider(props: MetaProviderProps): JSX.Element {
     },
 
     removeClientTag: (tag: string, index: number) => {
-      setTags((currentTags) => {
-        const names = currentTags[tag];
+      setTags((tags) => {
+        const names = tags[tag];
         if (names) {
           names[index] = null;
-          return { ...currentTags, [tag]: names };
+          return { ...tags, [tag]: names };
         }
-        return currentTags;
+        return tags;
       });
     },
   };
 
   if (isServer) {
     actions.addServerTag = (tagDesc: TagDescription) => {
-      const { tags: currentTags = [] } = props;
+      const { tags = [] } = props;
       // tweak only cascading tags
       if (cascadingTags.indexOf(tagDesc.tag) !== -1) {
-        const index = currentTags.findIndex((prev) => {
+        const index = tags.findIndex((prev) => {
           const prevName = prev.props.name || prev.props.property;
           const nextName = tagDesc.props.name || tagDesc.props.property;
           return prev.tag === tagDesc.tag && prevName === nextName;
         });
         if (index !== -1) {
-          currentTags.splice(index, 1);
+          tags.splice(index, 1);
         }
       }
-      currentTags.push(tagDesc);
+      tags.push(tagDesc);
     };
 
     if (Array.isArray(props.tags) === false) {
       throw Error('tags array should be passed to <MetaProvider /> in node');
     }
   }
+
   return createComponent(MetaContext.Provider, {
     value: actions,
     get children() {

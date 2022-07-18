@@ -1,9 +1,9 @@
 import { createMemo } from 'solid-js';
 import {
-  AppPage,
+  App,
 } from '../types';
 
-const DefaultApp: AppPage = (props) => createMemo(() => (
+const DefaultApp: App = (props) => createMemo(() => (
   props.children
 ));
 

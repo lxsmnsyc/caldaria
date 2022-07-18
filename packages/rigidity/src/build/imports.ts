@@ -1,7 +1,4 @@
 import {
-  RESERVED_PAGES,
-} from '../constants';
-import {
   getPageLiteral,
   getAPILiteral,
 } from './literal';
@@ -25,12 +22,6 @@ export async function getPageImports(
       .split(path.sep)
       .join(path.posix.sep);
 
-    const extensionless = path.join(dir, name);
-
-    // Do not lazy load reserved pages as they are always available
-    if (RESERVED_PAGES.includes(extensionless)) {
-      return '';
-    }
     const literal = getPageLiteral(index);
     if (isServer) {
       return `import ${literal}Default from '${targetFile}';

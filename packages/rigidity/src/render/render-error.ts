@@ -16,15 +16,13 @@ import {
   GlobalRenderOptions,
   ErrorProps,
 } from '../types';
-import {
-  getErrorPage,
-} from './error-page';
+import getErrorPage from './error-page';
 
 export default function renderError(
   global: GlobalRenderOptions,
   options: ErrorProps,
 ): () => JSX.Element {
-  const CustomAppPage = global.app ?? DefaultApp;
+  const CustomAppPage = global.root.App ?? DefaultApp;
   const CustomErrorPage = getErrorPage(options.statusCode, global);
   const Custom500Page = getErrorPage(500, global);
   return () => {

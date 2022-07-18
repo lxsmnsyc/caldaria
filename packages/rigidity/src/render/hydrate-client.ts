@@ -19,7 +19,6 @@ import createPageTree from '../router/core/create-page-tree';
 import {
   GlobalRenderOptions, RenderResult,
 } from '../types';
-import DefaultApp from '../components/App';
 import {
   Root,
 } from '../components/Document';
@@ -35,14 +34,12 @@ export default function hydrateClient(
   options: GlobalRenderOptions,
   hydrate: (fn: () => JSX.Element, node: MountableElement) => void,
 ): void {
-  const CustomAppPage = options.app ?? DefaultApp;
-
-  if (CustomAppPage.reportWebVitals) {
-    getCLS(CustomAppPage.reportWebVitals);
-    getFCP(CustomAppPage.reportWebVitals);
-    getFID(CustomAppPage.reportWebVitals);
-    getLCP(CustomAppPage.reportWebVitals);
-    getTTFB(CustomAppPage.reportWebVitals);
+  if (options.root.reportWebVitals) {
+    getCLS(options.root.reportWebVitals);
+    getFCP(options.root.reportWebVitals);
+    getFID(options.root.reportWebVitals);
+    getLCP(options.root.reportWebVitals);
+    getTTFB(options.root.reportWebVitals);
   }
 
   const dataNode = document.getElementById(DOCUMENT_DATA);
@@ -73,7 +70,7 @@ export default function hydrateClient(
     () => (
       createComponent(Root, {
         ...pageResult,
-        document: options.document,
+        document: options.root.Document,
       })
     ),
     document,

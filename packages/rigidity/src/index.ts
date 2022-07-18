@@ -1,6 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="env.d.ts" />
 
+import { RigidityRoot } from './types';
+
 export {
   DocumentHead,
   DocumentHeadProps,
@@ -52,7 +54,6 @@ export {
 export {
   Adapter,
   App,
-  AppPage,
   AppProps,
   BabelBuildOptions,
   BuildContext,
@@ -65,4 +66,9 @@ export {
   SSRMode,
   ServerFunction,
   WebVitalsMetric,
+  RigidityRoot,
 } from './types';
+
+export function createRigidityRoot(options: RigidityRoot): RigidityRoot {
+  return options;
+}

@@ -26,10 +26,6 @@ export type App = (props: AppProps) => JSX.Element;
 
 export type WebVitalsMetric = Metric;
 
-export interface AppPage extends App {
-  reportWebVitals?: (metric: WebVitalsMetric) => void;
-}
-
 export interface ErrorProps {
   statusCode: number;
   error?: Error;
@@ -45,16 +41,21 @@ export interface RenderResult<T> {
   isError: boolean;
 }
 
+export interface RigidityRoot {
+  App?: App;
+  Document?: () => JSX.Element;
+  Error404?: ErrorPage;
+  Error500?: ErrorPage;
+  Error?: ErrorPage;
+  reportWebVitals?: (metric: WebVitalsMetric) => void;
+}
+
 export interface GlobalRenderOptions {
   cdn?: string;
   assetsUrl: string;
   publicUrl: string;
   ssrMode: SSRMode;
-  app?: AppPage;
-  document?: () => JSX.Element;
-  error404?: ErrorPage;
-  error500?: ErrorPage;
-  error?: ErrorPage;
+  root: RigidityRoot;
   pages: PageRoute[];
 }
 
@@ -78,6 +79,7 @@ export interface PathOptions {
   cdn?: string;
   public?: string;
   assets?: string;
+  root?: string;
 }
 
 export interface BuildContext {

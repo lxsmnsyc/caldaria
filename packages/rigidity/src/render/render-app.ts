@@ -25,9 +25,7 @@ import {
 import {
   GlobalRenderOptions,
 } from '../types';
-import {
-  getErrorPage,
-} from './error-page';
+import getErrorPage from './error-page';
 
 export interface RenderAppOptions {
   pathname: string;
@@ -41,7 +39,7 @@ export default function renderApp<L, A = undefined>(
   loadData?: L,
   actionData?: A,
 ): () => JSX.Element {
-  const CustomAppPage = global.app ?? DefaultApp;
+  const CustomAppPage = global.root.App ?? DefaultApp;
   const Custom500Page = getErrorPage(500, global);
   const CustomNotFound = getErrorPage(404, global);
 

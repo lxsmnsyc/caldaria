@@ -7,13 +7,9 @@ import {
   BUILD_PATH,
   PUBLIC_PATH,
   BUILD_OUTPUT,
-  CUSTOM_APP,
-  CUSTOM_DOCUMENT,
-  CUSTOM_404,
-  CUSTOM_500,
-  CUSTOM_ERROR,
   ASSETS_URL,
   PUBLIC_URL,
+  CUSTOM_ROOT,
 } from '../constants';
 import {
   BuildOptions,
@@ -28,7 +24,7 @@ import {
   getPageImports,
 } from './imports';
 import {
-  injectCustomPageImport,
+  getCustomRoot,
 } from './inject-page';
 import {
   getAPIOptions,
@@ -78,35 +74,10 @@ export default async function createServerBuild(
     ),
   ];
 
-  const appPage = await injectCustomPageImport(
-    pagesDirectory,
+  const customRoot = await getCustomRoot(
     artifactDirectory,
     lines,
-    CUSTOM_APP,
-  );
-  const documentPage = await injectCustomPageImport(
-    pagesDirectory,
-    artifactDirectory,
-    lines,
-    CUSTOM_DOCUMENT,
-  );
-  const error404 = await injectCustomPageImport(
-    pagesDirectory,
-    artifactDirectory,
-    lines,
-    CUSTOM_404,
-  );
-  const error500 = await injectCustomPageImport(
-    pagesDirectory,
-    artifactDirectory,
-    lines,
-    CUSTOM_500,
-  );
-  const errorPage = await injectCustomPageImport(
-    pagesDirectory,
-    artifactDirectory,
-    lines,
-    CUSTOM_ERROR,
+    options.paths?.root ?? CUSTOM_ROOT,
   );
 
   lines.push(options.adapter.generateScript(`{
@@ -119,11 +90,7 @@ export default async function createServerBuild(
     cdn: ${options.paths?.cdn ? JSON.stringify(options.paths.cdn) : 'undefined'},
     assetsUrl: ${JSON.stringify(options.paths?.assets ?? ASSETS_URL)},
     publicUrl: ${JSON.stringify(options.paths?.public ?? PUBLIC_URL)},
-    app: ${appPage ?? 'undefined'},
-    document: ${documentPage ?? 'undefined'},
-    error: ${errorPage ?? 'undefined'},
-    error500: ${error500 ?? 'undefined'},
-    error404: ${error404 ?? 'undefined'},
+    root: ${customRoot ?? 'undefined'},
     pages: ${await getPagesOptions(pages)},
     endpoints: ${await getAPIOptions(apis)},
   }`));

@@ -25,7 +25,7 @@ async function renderCore<T>(
       const documentResult = await renderToStringAsync(() => (
         createComponent(Root, {
           ...pageResult,
-          document: globalOptions.document,
+          document: globalOptions.root.Document,
         })
       ));
 
@@ -43,7 +43,7 @@ async function renderCore<T>(
       renderToStream(() => (
         createComponent(Root, {
           ...pageResult,
-          document: globalOptions.document,
+          document: globalOptions.root.Document,
         })
       )).pipe(writable);
       // pipeToNodeWritable(
@@ -69,7 +69,7 @@ async function renderCore<T>(
       renderToStream(() => (
         createComponent(Root, {
           ...pageResult,
-          document: globalOptions.document,
+          document: globalOptions.root.Document,
         })
       )).pipeTo(stream.writable);
       // pipeToWritable(
@@ -94,7 +94,7 @@ async function renderCore<T>(
       const documentResult = renderToString(() => (
         createComponent(Root, {
           ...pageResult,
-          document: globalOptions.document,
+          document: globalOptions.root.Document,
         })
       ));
 
