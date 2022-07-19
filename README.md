@@ -43,6 +43,32 @@ rigidity.createBuild({});
 
 You can run this file (e.g. `node build.js`) and this must be located on the root of the working directory. This will build the files from `src` and output it to `.rigidity`. `createBuild` can accept options to customize your build.
 
+If you want to run a dev server with hot reload, you can use `createDevBuild`. `createDevBuild` requires the HTTP adapter to serve.
+
+```js
+const rigidity = require('rigidity');
+const httpAdapter = require('rigidity-adapter-http').default;
+
+rigidity.createDevBuild({
+  adapter: httpAdapter,
+});
+```
+
+You can possibly combine them
+
+```js
+const rigidity = require('rigidity');
+const httpAdapter = require('rigidity-adapter-http').default;
+
+if (process.env.NODE_ENV === 'development') {
+  rigidity.createDevBuild({
+    adapter: httpAdapter,
+  });
+} else {
+  rigidity.createBuild({});
+}
+```
+
 ## Features
 
 ### SPA + SSR
@@ -142,28 +168,46 @@ export default UserProfile;
 
 TODO
 
-### Custom App
+### Custom Root
+
+A custom root allows lower-level override for building the app. This is useful when you want to provide your error pages, manage your document structure or implement your own app shell.
+
+To create a custom root, you need to create a `src/root` file.
+
+```js
+// src/root.tsx
+import { createRigidityRoot } from 'rigidity';
+
+export default createRigidityRoot({});
+```
+
+#### `App`
 
 When switching between pages, old pages gets unmounted, which might not be preferrable specially if we have a state that's located in the components that we want to preserve or if the most of the page's layout is unchanging between navigations. By building a custom `App` component, this allows one to solve such problem.
 
 ```js
-// pages/_app.js
-export default function App(props) {
-  return (
-    <AppLayout>
-      {props.children}
-    </AppLayout>
-  );
-}
+import { createRigidityRoot } from 'rigidity';
+
+export default createRigidityRoot({
+  App(props) {
+    return (
+      <AppLayout>
+        {props.children}
+      </AppLayout>
+    );
+  }
+});
 ```
 
-`_app` must only be located in the root of `pages`.
-
-### Custom Document
+#### `Document`
 
 TODO
 
-### Custom Error Pages
+#### `Error`, `Error404` and `Error500`
+
+TODO
+
+#### `reportWebVitals`
 
 TODO
 
