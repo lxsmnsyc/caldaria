@@ -18,6 +18,9 @@ export {
   default as createBuild,
 } from './build/create-build';
 export {
+  createDevBuild,
+} from './build/create-dev-build';
+export {
   RouterInstance,
   useRouter,
   RouterLink,

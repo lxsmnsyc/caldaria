@@ -51,6 +51,7 @@ export interface RigidityRoot {
 }
 
 export interface GlobalRenderOptions {
+  env?: 'production' | 'development';
   cdn?: string;
   assetsUrl: string;
   publicUrl: string;

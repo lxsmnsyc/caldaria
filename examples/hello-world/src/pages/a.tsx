@@ -2,7 +2,7 @@
 import { Meta, RouterLink, Title } from 'rigidity';
 import { JSX } from 'solid-js';
 
-export default function B(): JSX.Element {
+export default function A(): JSX.Element {
   return (
     <div class="flex w-full h-screen items-center justify-center">
       <div class="p-4 rounded-lg bg-indigo-900 bg-opacity-25 flex flex-col space-y-4">

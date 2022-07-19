@@ -81,6 +81,7 @@ export default async function createServerBuild(
   );
 
   lines.push(options.adapter.generateScript(`{
+    env: '${options.env ?? 'production'}',
     ssrMode: ${JSON.stringify(options.ssrMode ?? 'sync')},
     version: ${JSON.stringify(Date.now())},
     buildDir: ${JSON.stringify(path.join(buildDirectory, BUILD_OUTPUT.client.output))},

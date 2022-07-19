@@ -73,6 +73,7 @@ export default async function createClientBuild(
 import { hydrate } from 'solid-js/web';
 import { hydrateClient } from 'rigidity';
 hydrateClient({
+  env: '${options.env ?? 'production'}',
   cdn: ${options.paths?.cdn ? JSON.stringify(options.paths.cdn) : 'undefined'},
   assetsUrl: ${JSON.stringify(options.paths?.assets ?? ASSETS_URL)},
   publicUrl: ${JSON.stringify(options.paths?.public ?? PUBLIC_URL)},

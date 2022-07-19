@@ -24,6 +24,7 @@ import {
 } from '../components/Document';
 import renderApp from './render-app';
 import renderError from './render-error';
+import { useHotReload } from '../build/create-dev-build';
 
 interface HydrationData {
   data: any;
@@ -34,6 +35,13 @@ export default function hydrateClient(
   options: GlobalRenderOptions,
   hydrate: (fn: () => JSX.Element, node: MountableElement) => void,
 ): void {
+  if (options.env === 'development') {
+    useHotReload(
+      window.location.protocol === 'https' ? 'wss' : 'ws',
+      window.location.hostname,
+    );
+  }
+
   if (options.root.reportWebVitals) {
     getCLS(options.root.reportWebVitals);
     getFCP(options.root.reportWebVitals);
