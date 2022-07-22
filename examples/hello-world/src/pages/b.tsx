@@ -1,5 +1,6 @@
 /* @jsxImportSource solid-js */
-import { Meta, RouterLink, Title } from 'rigidity';
+import { Meta, Title } from 'rigidity/meta';
+import { RouterLink } from 'rigidity/router';
 import { JSX } from 'solid-js';
 
 export default function B(): JSX.Element {

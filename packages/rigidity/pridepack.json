@@ -2,5 +2,15 @@
   "target": [
     "es2017",
     "node12"
-  ]
+  ],
+  "entrypoints": {
+    "./build": "src/build/index.ts",
+    "./meta": "src/meta/index.ts",
+    "./render": "src/render/index.ts",
+    "./root": "src/root/index.ts",
+    "./router": "src/router/index.ts",
+    "./server": "src/server/index.ts",
+    "./constants": "src/constants.ts",
+    "./types": "src/types.ts"
+  }
 }

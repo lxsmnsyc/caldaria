@@ -16,7 +16,7 @@ import {
   RIGIDITY_ACTION,
   RIGIDITY_DATA,
   RIGIDITY_REDIRECT_HEADER,
-} from '../../constants';
+} from 'rigidity/constants';
 import StatusCode from '../../errors/StatusCode';
 import {
   useDataContext,

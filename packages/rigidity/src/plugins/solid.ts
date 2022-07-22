@@ -1,13 +1,15 @@
-import {
-  Plugin,
-} from 'esbuild';
-import {
-  PluginItem,
-} from '@babel/core';
+import * as babel from '@babel/core';
+import { Plugin } from 'esbuild';
+import path from 'path';
+import fs from 'fs/promises';
+
+import solid from 'babel-preset-solid';
+import ts from '@babel/preset-typescript';
+import solidSFC from 'babel-plugin-solid-sfc';
 
 interface SolidBabelOption {
-  plugins: PluginItem[];
-  presets: PluginItem[];
+  plugins: babel.PluginItem[];
+  presets: babel.PluginItem[];
 }
 
 interface SolidOptions {
@@ -20,16 +22,7 @@ export default function solidPlugin(options: SolidOptions): Plugin {
   return {
     name: 'rigidity:solid',
 
-    async setup(build) {
-      const path = await import('path');
-      const fs = await import('fs/promises');
-
-      const babel = await import('@babel/core');
-
-      const solid = (await import('babel-preset-solid')).default;
-      const ts = (await import('@babel/preset-typescript')).default;
-      const solidSFC = (await import('babel-plugin-solid-sfc')).default;
-
+    setup(build) {
       build.onLoad({
         filter: /\.(t|j)sx$/,
       }, async (args) => {

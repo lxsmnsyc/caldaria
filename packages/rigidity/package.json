@@ -1,19 +1,5 @@
 {
   "version": "0.0.24",
-  "types": "dist/types/index.d.ts",
-  "main": "dist/cjs/production/index.js",
-  "module": "dist/esm/production/index.js",
-  "exports": {
-    ".": {
-      "development": {
-        "require": "./dist/cjs/development/index.js",
-        "import": "./dist/esm/development/index.js"
-      },
-      "require": "./dist/cjs/production/index.js",
-      "import": "./dist/esm/production/index.js",
-      "types": "./dist/types/index.d.ts"
-    }
-  },
   "files": [
     "dist",
     "src",
@@ -87,9 +73,104 @@
   "private": false,
   "typesVersions": {
     "*": {
-      "*": [
-        "./dist/types/index.d.ts"
+      "build": [
+        "./dist/types/build/index.d.ts"
+      ],
+      "meta": [
+        "./dist/types/meta/index.d.ts"
+      ],
+      "render": [
+        "./dist/types/render/index.d.ts"
+      ],
+      "root": [
+        "./dist/types/root/index.d.ts"
+      ],
+      "router": [
+        "./dist/types/router/index.d.ts"
+      ],
+      "server": [
+        "./dist/types/server/index.d.ts"
+      ],
+      "constants": [
+        "./dist/types/constants.d.ts"
+      ],
+      "types": [
+        "./dist/types/types.d.ts"
       ]
+    }
+  },
+  "exports": {
+    "./build": {
+      "development": {
+        "require": "./dist/cjs/development/build.js",
+        "import": "./dist/esm/development/build.js"
+      },
+      "require": "./dist/cjs/production/build.js",
+      "import": "./dist/esm/production/build.js",
+      "types": "./dist/types/build/index.d.ts"
+    },
+    "./meta": {
+      "development": {
+        "require": "./dist/cjs/development/meta.js",
+        "import": "./dist/esm/development/meta.js"
+      },
+      "require": "./dist/cjs/production/meta.js",
+      "import": "./dist/esm/production/meta.js",
+      "types": "./dist/types/meta/index.d.ts"
+    },
+    "./render": {
+      "development": {
+        "require": "./dist/cjs/development/render.js",
+        "import": "./dist/esm/development/render.js"
+      },
+      "require": "./dist/cjs/production/render.js",
+      "import": "./dist/esm/production/render.js",
+      "types": "./dist/types/render/index.d.ts"
+    },
+    "./root": {
+      "development": {
+        "require": "./dist/cjs/development/root.js",
+        "import": "./dist/esm/development/root.js"
+      },
+      "require": "./dist/cjs/production/root.js",
+      "import": "./dist/esm/production/root.js",
+      "types": "./dist/types/root/index.d.ts"
+    },
+    "./router": {
+      "development": {
+        "require": "./dist/cjs/development/router.js",
+        "import": "./dist/esm/development/router.js"
+      },
+      "require": "./dist/cjs/production/router.js",
+      "import": "./dist/esm/production/router.js",
+      "types": "./dist/types/router/index.d.ts"
+    },
+    "./server": {
+      "development": {
+        "require": "./dist/cjs/development/server.js",
+        "import": "./dist/esm/development/server.js"
+      },
+      "require": "./dist/cjs/production/server.js",
+      "import": "./dist/esm/production/server.js",
+      "types": "./dist/types/server/index.d.ts"
+    },
+    "./constants": {
+      "development": {
+        "require": "./dist/cjs/development/constants.js",
+        "import": "./dist/esm/development/constants.js"
+      },
+      "require": "./dist/cjs/production/constants.js",
+      "import": "./dist/esm/production/constants.js",
+      "types": "./dist/types/constants.d.ts"
+    },
+    "./types": {
+      "development": {
+        "require": "./dist/cjs/development/types.js",
+        "import": "./dist/esm/development/types.js"
+      },
+      "require": "./dist/cjs/production/types.js",
+      "import": "./dist/esm/production/types.js",
+      "types": "./dist/types/types.d.ts"
     }
   }
 }

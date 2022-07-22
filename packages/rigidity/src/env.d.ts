@@ -160,3 +160,14 @@ declare module '*.json' {
   const data: JSON;
   export default data;
 }
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
+
+interface ImportMetaEnv {
+  [key: string]: any
+  MODE: string
+  DEV: boolean
+  PROD: boolean
+}

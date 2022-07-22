@@ -1,31 +1,30 @@
+import path from 'path';
 import {
   BUILD_OUTPUT,
   BUILD_PATH,
-} from '../constants';
+} from 'rigidity/constants';
 import {
   BuildOptions,
   BundleType,
-} from '../types';
+} from 'rigidity/types';
 
-export async function getArtifactBaseDirectory(
+export function getArtifactBaseDirectory(
   options: BuildOptions,
   bundleType: BundleType,
-): Promise<string> {
-  const path = await import('path');
+): string {
   return path.join(
     options.directories?.build ?? BUILD_PATH,
     BUILD_OUTPUT[bundleType].temp,
   );
 }
 
-export default async function getArtifactDirectory(
+export default function getArtifactDirectory(
   options: BuildOptions,
   bundleType: BundleType,
   directory: string,
-): Promise<string> {
-  const path = await import('path');
+): string {
   return path.join(
-    await getArtifactBaseDirectory(
+    getArtifactBaseDirectory(
       options,
       bundleType,
     ),

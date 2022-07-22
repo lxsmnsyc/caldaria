@@ -45,7 +45,7 @@ export function DataProvider<L, A = undefined>(props: DataProviderProps<L, A>) {
       },
       get children() {
         return props.children;
-      }
+      },
     })
   );
 }

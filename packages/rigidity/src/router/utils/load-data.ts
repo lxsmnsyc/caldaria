@@ -1,4 +1,4 @@
-import { RIGIDITY_DATA } from '../../constants';
+import { RIGIDITY_DATA } from 'rigidity/constants';
 
 export default async function loadData<T>(
   pathname: string,

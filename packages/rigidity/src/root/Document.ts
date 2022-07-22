@@ -13,13 +13,13 @@ import {
 import {
   DOCUMENT_DATA,
   DOCUMENT_MAIN_ROOT,
-} from '../constants';
+} from 'rigidity/constants';
 import {
   renderTags,
-} from '../meta';
+} from 'rigidity/meta';
 import {
   RenderResult,
-} from '../types';
+} from 'rigidity/types';
 
 export const DocumentContext = /* @__PURE__ */ (
   createContext<RenderResult<any>>()

@@ -1,10 +1,10 @@
+import path from 'path';
+import fs from 'fs/promises';
+
 export default async function traverseDirectory(
   root: string,
   directory: string = root,
 ): Promise<string[]> {
-  const fs = await import('fs/promises');
-  const path = await import('path');
-
   try {
     const files = await fs.readdir(directory);
 

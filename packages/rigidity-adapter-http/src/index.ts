@@ -1,5 +1,5 @@
 import { RequestListener } from 'http';
-import { Adapter } from 'rigidity';
+import { Adapter } from 'rigidity/types';
 import { handleHTTP } from './utils';
 
 import './shims';
@@ -8,7 +8,7 @@ const ADAPTER: Adapter<RequestListener> = /* @__PURE__ */ {
   enableStaticFileServing: true,
   generateScript: (config) => `
 import http from 'http';
-import { createServer } from 'rigidity';
+import { createServer } from 'rigidity/server';
 import adapter from 'rigidity-adapter-http';
 const server = createServer(${config});
 const listener = adapter.create(server);

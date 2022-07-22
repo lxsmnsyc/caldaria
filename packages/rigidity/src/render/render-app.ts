@@ -5,26 +5,22 @@ import {
   Suspense,
   useContext,
 } from 'solid-js';
-import DefaultApp from '../components/App';
 import {
+  DefaultApp,
   DocumentContext,
-} from '../components/Document';
-import StatusCode from '../errors/StatusCode';
+} from 'rigidity/root';
 import {
   MetaProvider,
-} from '../meta';
+} from 'rigidity/meta';
 import {
   Router,
-} from '../router';
-import {
   DataProvider,
-} from '../router/components/Data';
-import {
-  PageTree,
-} from '../router/core/create-page-tree';
+} from 'rigidity/router';
 import {
   GlobalRenderOptions,
-} from '../types';
+  PageTree,
+} from 'rigidity/types';
+import StatusCode from '../errors/StatusCode';
 import getErrorPage from './error-page';
 
 export interface RenderAppOptions {

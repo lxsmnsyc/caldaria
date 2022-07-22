@@ -1,8 +1,10 @@
-import DefaultErrorComponent from '../components/Error';
+import {
+  DefaultErrorComponent,
+} from 'rigidity/root';
 import {
   GlobalRenderOptions,
   ErrorPage,
-} from '../types';
+} from 'rigidity/types';
 
 export default function getErrorPage(
   statusCode: number,

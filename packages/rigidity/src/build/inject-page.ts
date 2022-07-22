@@ -1,14 +1,13 @@
+import path from 'path';
 import {
   SUPPORTED_PAGE_EXT,
-} from '../constants';
+} from 'rigidity/constants';
 import { pathExists } from '../utils/fs';
 import getPOSIXPath from '../utils/get-posix-path';
 
 async function getCustomRootPath(
   rootPath: string,
 ): Promise<string | undefined> {
-  const path = await import('path');
-
   const result = await Promise.all(
     SUPPORTED_PAGE_EXT.map(async (ext) => {
       const app = path.join(
@@ -35,7 +34,6 @@ export async function getCustomRoot(
   lines: string[],
   rootPath: string,
 ): Promise<string | undefined> {
-  const path = await import('path');
   const result = await getCustomRootPath(rootPath);
 
   if (result) {
@@ -58,8 +56,6 @@ export async function getCustomPage(
   pagesDirectory: string,
   page: string,
 ): Promise<string | undefined> {
-  const path = await import('path');
-
   const result = await Promise.all(
     SUPPORTED_PAGE_EXT.map(async (ext) => {
       const app = path.join(

@@ -10,10 +10,10 @@ import {
 } from 'solid-js/web';
 import {
   PageTree,
-} from '../core/create-page-tree';
+  RouterParams,
+} from 'rigidity/types';
 import {
   matchRoute,
-  RouterParams,
 } from '../core/router';
 import useLocation, {
   UseLocation,

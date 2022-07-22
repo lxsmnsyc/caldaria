@@ -1,7 +1,6 @@
 /* @jsxImportSource solid-js */
-import {
-  Form, Meta, RouterLink, Title,
-} from 'rigidity';
+import { Meta, Title } from 'rigidity/meta';
+import { RouterLink, Form } from 'rigidity/router';
 import { JSX, Show } from 'solid-js';
 import { isServer } from 'solid-js/web';
 

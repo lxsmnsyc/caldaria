@@ -2,7 +2,8 @@
 
 'use solid-sfc';
 
-import { Meta, RouterLink, Title } from 'rigidity';
+import { Meta, Title } from 'rigidity/meta';
+import { RouterLink } from 'rigidity/router';
 
 export default (
   <div class="flex w-full h-screen items-center justify-center">

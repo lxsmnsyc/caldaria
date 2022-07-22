@@ -1,1 +1,1 @@
-/// <reference types="rigidity" />
+/// <reference types="rigidity/env" />

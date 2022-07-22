@@ -3,14 +3,14 @@ import {
   OnResolveResult,
   Plugin,
 } from 'esbuild';
+import path from 'path';
+import fs from 'fs/promises';
 
 export default function urlPlugin(): Plugin {
   return {
-    name: 'esbuild:url',
+    name: 'rigidity:url',
 
-    async setup(build) {
-      const path = await import('path');
-      const fs = await import('fs/promises');
+    setup(build) {
       function normalizeResolve(args: OnResolveArgs): OnResolveResult {
         if (/^https?:\/\//.test(args.path)) {
           return {

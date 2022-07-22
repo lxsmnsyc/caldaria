@@ -1,3 +1,4 @@
+import path from 'path';
 import {
   BuildResult,
 } from 'esbuild';
@@ -10,10 +11,10 @@ import {
   ASSETS_URL,
   PUBLIC_URL,
   CUSTOM_ROOT,
-} from '../constants';
+} from 'rigidity/constants';
 import {
   BuildOptions,
-} from '../types';
+} from 'rigidity/types';
 import { outputFile, removeFile } from '../utils/fs';
 import {
   getArtifactBaseDirectory,
@@ -35,8 +36,6 @@ import runESBuild from './run-esbuild';
 export default async function createServerBuild(
   options: BuildOptions,
 ): Promise<BuildResult> {
-  const path = await import('path');
-
   const environment = options.env ?? 'production';
   const pagesDirectory = options.directories?.pages ?? PAGES_PATH;
   const apiDirectory = options.directories?.api ?? API_PATH;
@@ -53,20 +52,20 @@ export default async function createServerBuild(
 
   await removeFile(outputDirectory);
 
-  const artifactDirectory = await getArtifactBaseDirectory(
+  const artifactDirectory = getArtifactBaseDirectory(
     options,
     'server',
   );
 
   // Create import header
   const lines = [
-    'import { createServerPage } from "rigidity";',
-    ...await getAPIImports(
+    'import { createServerPage } from "rigidity/router";',
+    ...getAPIImports(
       apiDirectory,
       artifactDirectory,
       apis,
     ),
-    ...await getPageImports(
+    ...getPageImports(
       pagesDirectory,
       artifactDirectory,
       pages,
@@ -92,8 +91,8 @@ export default async function createServerBuild(
     assetsUrl: ${JSON.stringify(options.paths?.assets ?? ASSETS_URL)},
     publicUrl: ${JSON.stringify(options.paths?.public ?? PUBLIC_URL)},
     root: ${customRoot ?? 'undefined'},
-    pages: ${await getPagesOptions(pages)},
-    endpoints: ${await getAPIOptions(apis)},
+    pages: ${getPagesOptions(pages)},
+    endpoints: ${getAPIOptions(apis)},
   }`));
 
   const artifact = path.join(artifactDirectory, 'index.tsx');

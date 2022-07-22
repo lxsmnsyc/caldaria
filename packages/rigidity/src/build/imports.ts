@@ -1,17 +1,16 @@
+import path from 'path';
 import {
   getPageLiteral,
   getAPILiteral,
 } from './literal';
 
 // Generates import declarations
-export async function getPageImports(
+export function getPageImports(
   targetDirectory: string,
   artifactDirectory: string,
   pages: string[],
   isServer: boolean,
-): Promise<string[]> {
-  const path = await import('path');
-
+): string[] {
   return pages.map((page, index) => {
     const { name, dir, ext } = path.parse(page);
 
@@ -32,13 +31,11 @@ const ${literal} = createServerPage(${literal}Default);`;
   });
 }
 
-export async function getAPIImports(
+export function getAPIImports(
   targetDirectory: string,
   artifactDirectory: string,
   endpoints: string[],
-): Promise<string[]> {
-  const path = await import('path');
-
+): string[] {
   return endpoints.map((endpoint, index) => {
     const { name, dir } = path.parse(endpoint);
 

@@ -1,19 +1,8 @@
 /* eslint-disable no-param-reassign */
+import { RouterNode, RouterParams, RouterResult } from 'rigidity/types';
 import DuplicateRouterPathError from '../errors/DuplicateRouterPathError';
 import InvalidRouterPathError from '../errors/InvalidRouterPathError';
 import SharedRouterPathError from '../errors/SharedRouterPathError';
-
-export interface RouterParams {
-  [key: string]: string | string[];
-}
-
-export interface RouterNode<T> {
-  key: string;
-  value?: T;
-  normal: RouterNode<T>[];
-  glob?: RouterNode<T>;
-  named?: RouterNode<T>;
-}
 
 export function createRouterNode<T>(key: string, value?: T): RouterNode<T> {
   return {
@@ -93,11 +82,6 @@ export function addRoute<T>(
     throw new InvalidRouterPathError(lead);
   }
   addRouteToChildren(parent.normal);
-}
-
-export interface RouterResult<T, P extends RouterParams = RouterParams> {
-  value?: T;
-  params: P;
 }
 
 function matchRouteInternal<T, P extends RouterParams = RouterParams>(

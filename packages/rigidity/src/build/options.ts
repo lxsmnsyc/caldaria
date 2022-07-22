@@ -1,14 +1,14 @@
+import path from 'path';
 import {
   DIRECTORY_ROOT,
-} from '../constants';
+} from 'rigidity/constants';
 import getPOSIXPath from '../utils/get-posix-path';
 import {
   getPageLiteral,
   getAPILiteral,
 } from './literal';
 
-async function getPageOption(page: string, index: number): Promise<string> {
-  const path = await import('path');
+function getPageOption(page: string, index: number): string {
   const extname = path.extname(page);
   const directory = path.dirname(page);
   const filename = path.basename(page, extname);
@@ -16,12 +16,12 @@ async function getPageOption(page: string, index: number): Promise<string> {
   const extensionless = path.join(directory, filename);
 
   const output = `{
-path: ${JSON.stringify(await getPOSIXPath(path.join('/', extensionless)))},
+path: ${JSON.stringify(getPOSIXPath(path.join('/', extensionless)))},
 component: ${getPageLiteral(index)},
 }`;
   if (filename === DIRECTORY_ROOT) {
     return `{
-path: ${JSON.stringify(await getPOSIXPath(path.join('/', directory)))},
+path: ${JSON.stringify(getPOSIXPath(path.join('/', directory)))},
 component: ${getPageLiteral(index)},
 }, ${output}`;
   }
@@ -29,25 +29,23 @@ component: ${getPageLiteral(index)},
   return output;
 }
 
-async function getAPIOption(
+function getAPIOption(
   page: string,
   index: number,
-): Promise<string> {
-  const path = await import('path');
-
+): string {
   const { name, dir } = path.parse(page);
 
   const extensionless = path.join(dir, name);
 
   const output = `{
-path: ${JSON.stringify(await getPOSIXPath(path.join('/', extensionless)))},
+path: ${JSON.stringify(getPOSIXPath(path.join('/', extensionless)))},
 call: ${getAPILiteral(index)},
 }`;
 
   // If the file is named "index", make sure to support trailing slash
   if (name === DIRECTORY_ROOT) {
     return `{
-path: ${JSON.stringify(await getPOSIXPath(path.join('/', dir)))},
+path: ${JSON.stringify(getPOSIXPath(path.join('/', dir)))},
 call: API${getAPILiteral(index)},
 }, ${output}`;
   }
@@ -55,20 +53,18 @@ call: API${getAPILiteral(index)},
   return output;
 }
 
-export async function getPagesOptions(
+export function getPagesOptions(
   pages: string[],
-): Promise<string> {
-  const pagesOptions: string[] = await Promise.all(pages.map(getPageOption));
+): string {
+  const pagesOptions = pages.map(getPageOption);
 
   return `[${pagesOptions.filter(Boolean).join(',\n')}]`;
 }
 
-export async function getAPIOptions(
+export function getAPIOptions(
   endpoints: string[],
-): Promise<string> {
-  const endpointOptions: string[] = await Promise.all(
-    endpoints.map(getAPIOption),
-  );
+): string {
+  const endpointOptions = endpoints.map(getAPIOption);
 
   return `[${endpointOptions.join(',\n')}]`;
 }

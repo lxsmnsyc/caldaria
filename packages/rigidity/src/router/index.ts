@@ -9,19 +9,17 @@ export {
   RouterLinkProps,
 } from './components/RouterLink';
 export {
-  RouterParams,
+  matchRoute,
 } from './core/router';
 export {
   createClientPage,
   createServerPage,
 } from './components/Page';
 export {
-  APICallback,
-  ServerSideContext,
+  default as createAPITree,
 } from './core/create-api-tree';
 export {
-  PageProps,
-  Page,
+  default as createPageTree,
 } from './core/create-page-tree';
 export {
   FormEncoding,
@@ -29,3 +27,8 @@ export {
   FormProps,
   default as Form,
 } from './components/Form';
+export {
+  DataProvider,
+  DataProviderProps,
+  useDataContext,
+} from './components/Data';

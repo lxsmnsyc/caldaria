@@ -1,4 +1,4 @@
-import { ServerSideContext } from 'rigidity';
+import { ServerSideContext } from 'rigidity/types';
 
 export default function getMessage(ctx: ServerSideContext): Response {
   console.log(ctx);

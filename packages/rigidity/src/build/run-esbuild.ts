@@ -1,15 +1,16 @@
 import {
   BuildOptions as ESBuildOption,
   BuildResult,
+  build,
 } from 'esbuild';
-import resolveTSConfig from './resolve-tsconfig';
 import {
   BuildContext,
   BuildOptions,
-} from '../types';
+} from 'rigidity/types';
 import {
   ASSETS_URL,
-} from '../constants';
+} from 'rigidity/constants';
+import resolveTSConfig from './resolve-tsconfig';
 import solidPlugin from '../plugins/solid';
 import postcssPlugin, { RecurseBuild } from '../plugins/postcss';
 import rawPlugin from '../plugins/raw';
@@ -25,8 +26,6 @@ export default async function runESBuild(
   context: BuildContext,
   options: BuildOptions,
 ): Promise<BuildResult> {
-  const esbuild = await import('esbuild');
-
   const esbuildConfig = typeof options.esbuild === 'function'
     ? options.esbuild(context)
     : options.esbuild;
@@ -62,7 +61,7 @@ export default async function runESBuild(
     }
   }
 
-  return esbuild.build({
+  return build({
     ...entry,
     outdir: input.outputDirectory,
     bundle: true,
@@ -76,6 +75,9 @@ export default async function runESBuild(
     define: {
       ...(esbuildConfig?.define ?? {}),
       'process.env.NODE_ENV': JSON.stringify(context.isDev ? 'development' : 'production'),
+      'import.meta.env.MODE': JSON.stringify(context.isDev ? 'development' : 'production'),
+      'import.meta.env.DEV': JSON.stringify(context.isDev),
+      'import.meta.env.PROD': JSON.stringify(!context.isDev),
     },
     publicPath: `${options.paths?.cdn ?? ''}/${options.paths?.assets ?? ASSETS_URL}`,
     conditions: [
@@ -112,7 +114,7 @@ export default async function runESBuild(
       ...(esbuildConfig?.plugins ?? []),
     ],
     external: esbuildConfig?.external,
-    tsconfig: await resolveTSConfig(esbuildConfig?.tsconfig),
+    tsconfig: resolveTSConfig(esbuildConfig?.tsconfig),
     legalComments: 'none',
   });
 }

@@ -2,10 +2,10 @@
 import { Show, Suspense } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import {
-  Link,
-  MDXProvider,
   createRigidityRoot,
-} from 'rigidity';
+  MDXProvider,
+} from 'rigidity/root';
+import { Link } from 'rigidity/meta';
 import styles from './styles/main.css?url';
 
 export default createRigidityRoot({

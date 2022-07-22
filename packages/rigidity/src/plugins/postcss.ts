@@ -5,6 +5,11 @@ import {
   OnResolveResult,
   Plugin,
 } from 'esbuild';
+import path from 'path';
+import fs from 'fs/promises';
+import postcss from 'postcss';
+import postcssrc from 'postcss-load-config';
+import PostcssModulesPlugin from 'postcss-modules';
 
 export interface RecurseBuild {
   filename?: string;
@@ -22,7 +27,7 @@ interface PostCSSOptions {
 
 function createLazyCSS(id: string, content: string, json: Record<string, string>) {
   return `
-import { renderStyle } from 'rigidity';
+import { renderStyle } from 'rigidity/render';
 renderStyle(${JSON.stringify(id)}, ${JSON.stringify(content)});
 export default ${JSON.stringify(json)};
 `;
@@ -35,10 +40,10 @@ export const sheet = ${JSON.stringify(css)};
 `;
 }
 
-function createURLCSSModule(path: string, json: Record<string, string>) {
+function createURLCSSModule(p: string, json: Record<string, string>) {
   return `
 export const styles = ${JSON.stringify(json)};
-export { default as source } from ${JSON.stringify(`${path}?url-only`)};
+export { default as source } from ${JSON.stringify(`${p}?url-only`)};
 `;
 }
 
@@ -48,14 +53,7 @@ export default function postcssPlugin(
   return {
     name: 'rigidity:postcss',
 
-    async setup(build) {
-      const path = await import('path');
-      const fs = await import('fs/promises');
-
-      const postcss = await import('postcss');
-      const postcssLoadConfig = await import('postcss-load-config');
-      const postcssModules = await import('postcss-modules');
-
+    setup(build) {
       const paths = new Map<string, string>();
 
       let styleIds = 0;
@@ -141,11 +139,11 @@ export default function postcssPlugin(
       async function processPostCSS(args: OnLoadArgs): Promise<string> {
         const source = await fs.readFile(args.path, 'utf8');
 
-        const config = await postcssLoadConfig.default({
+        const config = await postcssrc({
           env: options.dev ? 'development' : 'production',
         });
 
-        const processor = postcss.default(config.plugins);
+        const processor = postcss(config.plugins);
         const result = await processor.process(source, {
           ...config.options,
           from: args.path,
@@ -210,13 +208,13 @@ export default function postcssPlugin(
       async function processPostCSSModules(args: OnLoadArgs) {
         const source = await fs.readFile(args.path, 'utf8');
 
-        const config = await postcssLoadConfig.default({
+        const config = await postcssrc({
           env: options.dev ? 'development' : 'production',
         });
 
-        const processor = postcss.default(config.plugins);
+        const processor = postcss(config.plugins);
         let resultJSON: Record<string, string> = {};
-        processor.use(postcssModules.default({
+        processor.use(PostcssModulesPlugin({
           getJSON(_filename, json) {
             resultJSON = json;
           },

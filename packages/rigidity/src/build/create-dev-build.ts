@@ -1,9 +1,9 @@
 import type ws from 'ws';
 import type execa from 'execa';
-import { BuildOptions } from '../types';
+import { BuildOptions } from 'rigidity/types';
+import { BUILD_OUTPUT, BUILD_PATH } from 'rigidity/constants';
 import createBuild from './create-build';
 import { green, yellow } from '../utils/colors';
-import { BUILD_OUTPUT, BUILD_PATH } from '../constants';
 
 const DEFAULT_PORT = 12321;
 

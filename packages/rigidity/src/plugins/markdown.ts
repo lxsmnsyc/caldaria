@@ -1,9 +1,16 @@
-import { PluginItem } from '@babel/core';
+import * as babel from '@babel/core';
 import { Plugin } from 'esbuild';
+import path from 'path';
+import fs from 'fs/promises';
+import marked from 'solid-marked';
+
+import solid from 'babel-preset-solid';
+import ts from '@babel/preset-typescript';
+import solidSFC from 'babel-plugin-solid-sfc';
 
 interface SolidBabelOption {
-  plugins: PluginItem[];
-  presets: PluginItem[];
+  plugins: babel.PluginItem[];
+  presets: babel.PluginItem[];
 }
 
 interface SolidOptions {
@@ -15,17 +22,7 @@ interface SolidOptions {
 export default function markdownPlugin(options: SolidOptions): Plugin {
   return {
     name: 'rigidity:markdown',
-    async setup(build) {
-      const path = await import('path');
-      const fs = await import('fs/promises');
-      const marked = await import('solid-marked');
-
-      const babel = await import('@babel/core');
-
-      const solid = (await import('babel-preset-solid')).default;
-      const ts = (await import('@babel/preset-typescript')).default;
-      const solidSFC = (await import('babel-plugin-solid-sfc')).default;
-
+    setup(build) {
       build.onResolve({
         filter: /\.(md|mdx|markdown|mdown|mkdn|mkd|mkdown|ron)$/,
       }, (args) => ({

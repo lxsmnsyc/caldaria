@@ -2,7 +2,7 @@
   "exclude": ["node_modules"],
   "include": ["src", "types"],
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "NodeNext",
     "lib": ["ESNext", "DOM"],
     "importHelpers": true,
     "declaration": true,
@@ -13,7 +13,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "esModuleInterop": true,

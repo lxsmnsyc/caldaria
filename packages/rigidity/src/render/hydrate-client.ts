@@ -11,20 +11,23 @@ import {
 } from 'solid-js/web';
 import {
   JSX,
-} from 'solid-js/jsx-runtime';
+} from 'solid-js';
 import {
   DOCUMENT_DATA,
-} from '../constants';
-import createPageTree from '../router/core/create-page-tree';
+} from 'rigidity/constants';
 import {
-  GlobalRenderOptions, RenderResult,
-} from '../types';
+  createPageTree,
+} from 'rigidity/router';
+import {
+  GlobalRenderOptions,
+  RenderResult,
+} from 'rigidity/types';
 import {
   Root,
-} from '../components/Document';
+} from 'rigidity/root';
+import { useHotReload } from 'rigidity/build';
 import renderApp from './render-app';
 import renderError from './render-error';
-import { useHotReload } from '../build/create-dev-build';
 
 interface HydrationData {
   data: any;

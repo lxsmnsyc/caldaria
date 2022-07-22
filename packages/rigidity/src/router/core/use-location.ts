@@ -6,13 +6,11 @@ import {
 import {
   isServer,
 } from 'solid-js/web';
+import { PageTree } from 'rigidity/types';
 import {
   isLocalURL,
   normalizeURL,
 } from '../utils/routing';
-import {
-  PageTree,
-} from './create-page-tree';
 import {
   matchRoute,
 } from './router';

@@ -5,17 +5,17 @@ import {
   Suspense,
   useContext,
 } from 'solid-js';
-import DefaultApp from '../components/App';
 import {
+  DefaultApp,
   DocumentContext,
-} from '../components/Document';
+} from 'rigidity/root';
 import {
   MetaProvider,
-} from '../meta';
+} from 'rigidity/meta';
 import {
   GlobalRenderOptions,
   ErrorProps,
-} from '../types';
+} from 'rigidity/types';
 import getErrorPage from './error-page';
 
 export default function renderError(

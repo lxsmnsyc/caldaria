@@ -12,11 +12,11 @@ import {
 import {
   Style,
   Title,
-} from '../meta';
-import { Page } from '../router/core/create-page-tree';
+} from 'rigidity/meta';
 import {
   ErrorProps,
-} from '../types';
+  Page,
+} from 'rigidity/types';
 
 const ERROR_ROOT_STYLE = {
   color: '#000',

@@ -36,7 +36,6 @@ export default function RouterLink(
   const router = useRouterUnsafe();
 
   if (!router) {
-    console.log('No router');
     return createComponent(Dynamic, mergeProps(
       {
         component: 'a',

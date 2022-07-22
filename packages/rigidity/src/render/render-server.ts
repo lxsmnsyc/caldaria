@@ -4,22 +4,22 @@ import {
   renderToString,
   renderToStringAsync,
 } from 'solid-js/web';
-import { Readable } from 'stream';
+import stream from 'stream';
 import {
   Root,
-} from '../components/Document';
+} from 'rigidity/root';
 import {
   RenderResult,
   ErrorProps,
   GlobalRenderOptions,
-} from '../types';
+} from 'rigidity/types';
 import renderApp, { RenderAppOptions } from './render-app';
 import renderError from './render-error';
 
 async function renderCore<T>(
   globalOptions: GlobalRenderOptions,
   pageResult: RenderResult<T>,
-): Promise<string | Readable | ReadableStream> {
+): Promise<string | stream.Readable | ReadableStream> {
   switch (globalOptions.ssrMode) {
     case 'async': {
       const documentResult = await renderToStringAsync(() => (
@@ -32,7 +32,6 @@ async function renderCore<T>(
       return `<!DOCTYPE html>${documentResult}`;
     }
     case 'node-stream': {
-      const stream = await import('stream');
       const writable = new stream.Transform({
         transform(chunk, encoding, callback) {
           this.push(chunk, encoding);
@@ -64,14 +63,14 @@ async function renderCore<T>(
       return writable;
     }
     case 'web-stream': {
-      const stream = new TransformStream();
-      await stream.writable.getWriter().write('<!DOCTYPE html>');
+      const instance = new TransformStream();
+      await instance.writable.getWriter().write('<!DOCTYPE html>');
       renderToStream(() => (
         createComponent(Root, {
           ...pageResult,
           document: globalOptions.root.Document,
         })
-      )).pipeTo(stream.writable);
+      )).pipeTo(instance.writable);
       // pipeToWritable(
       //   () => (
       //     createComponent(Root, {
@@ -87,7 +86,7 @@ async function renderCore<T>(
       //     },
       //   },
       // );
-      return stream.readable;
+      return instance.readable;
     }
     case 'sync':
     default: {
@@ -106,7 +105,7 @@ async function renderCore<T>(
 export async function renderServerError(
   globalOptions: GlobalRenderOptions,
   renderOptions: ErrorProps,
-): Promise<string | Readable | ReadableStream> {
+): Promise<string | stream.Readable | ReadableStream> {
   return renderCore(globalOptions, {
     assets: `${globalOptions.cdn ?? ''}/${globalOptions.assetsUrl}`,
     App: renderError(
@@ -126,7 +125,7 @@ export async function renderServer<L, A = undefined>(
   renderOptions: RenderAppOptions,
   loadData?: L,
   actionData?: A,
-): Promise<string | Readable | ReadableStream> {
+): Promise<string | stream.Readable | ReadableStream> {
   return renderCore(globalOptions, {
     assets: `${globalOptions.cdn ?? ''}/${globalOptions.assetsUrl}`,
     App: renderApp(

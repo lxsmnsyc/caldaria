@@ -1,3 +1,4 @@
+import path from 'path';
 import {
   BuildResult,
 } from 'esbuild';
@@ -8,10 +9,10 @@ import {
   ASSETS_URL,
   PUBLIC_URL,
   CUSTOM_ROOT,
-} from '../constants';
+} from 'rigidity/constants';
 import {
   BuildOptions,
-} from '../types';
+} from 'rigidity/types';
 import { outputFile, removeFile } from '../utils/fs';
 import {
   getArtifactBaseDirectory,
@@ -31,8 +32,6 @@ import runESBuild from './run-esbuild';
 export default async function createClientBuild(
   options: BuildOptions,
 ): Promise<BuildResult> {
-  const path = await import('path');
-
   const environment = options.env ?? 'production';
   const pagesDirectory = options.directories?.pages ?? PAGES_PATH;
   const buildDirectory = options.directories?.build ?? BUILD_PATH;
@@ -46,15 +45,15 @@ export default async function createClientBuild(
 
   await removeFile(outputDirectory);
 
-  const artifactDirectory = await getArtifactBaseDirectory(
+  const artifactDirectory = getArtifactBaseDirectory(
     options,
     'client',
   );
 
   // Create import header
   const lines = [
-    'import { createClientPage } from "rigidity";',
-    ...await getPageImports(
+    'import { createClientPage } from "rigidity/router";',
+    ...getPageImports(
       pagesDirectory,
       artifactDirectory,
       pages,
@@ -71,14 +70,14 @@ export default async function createClientBuild(
   lines.push(
     `
 import { hydrate } from 'solid-js/web';
-import { hydrateClient } from 'rigidity';
+import { hydrateClient } from 'rigidity/render';
 hydrateClient({
   env: '${options.env ?? 'production'}',
   cdn: ${options.paths?.cdn ? JSON.stringify(options.paths.cdn) : 'undefined'},
   assetsUrl: ${JSON.stringify(options.paths?.assets ?? ASSETS_URL)},
   publicUrl: ${JSON.stringify(options.paths?.public ?? PUBLIC_URL)},
   root: ${customRoot ?? 'undefined'},
-  pages: ${await getPagesOptions(pages)},
+  pages: ${getPagesOptions(pages)},
 }, hydrate);
     `,
   );

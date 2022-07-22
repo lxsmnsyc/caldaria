@@ -1,4 +1,4 @@
-const rigidity = require('rigidity');
+const rigidity = require('rigidity/build');
 const httpAdapter = require('rigidity-adapter-http').default;
 const vercelAdapter = require('rigidity-adapter-vercel').default;
 

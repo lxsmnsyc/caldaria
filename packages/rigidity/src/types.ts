@@ -6,13 +6,74 @@ import {
 import {
   Metric,
 } from 'web-vitals';
-import {
-  Page,
-  PageRoute,
-} from './router/core/create-page-tree';
-import {
-  APIRoute,
-} from './router/core/create-api-tree';
+import { ParsedUrlQuery } from 'querystring';
+
+export interface RouterParams {
+  [key: string]: string | string[];
+}
+
+export interface RouterNode<T> {
+  key: string;
+  value?: T;
+  normal: RouterNode<T>[];
+  glob?: RouterNode<T>;
+  named?: RouterNode<T>;
+}
+
+export interface RouterResult<T, P extends RouterParams = RouterParams> {
+  value?: T;
+  params: P;
+}
+
+export interface PageProps<L, A = undefined, P extends RouterParams = RouterParams> {
+  data?: {
+    load: L;
+    action: A;
+  };
+  params: P;
+}
+
+export interface Page<T, A = undefined, P extends RouterParams = RouterParams> {
+  (props: PageProps<T, A, P>): JSX.Element;
+  load?: (request: Request, params: P) => T | Promise<T>;
+  actions?: Record<string, (request: Request, params: P) => Response | Promise<Response>>;
+}
+
+export interface LazyPage<T, A = undefined> {
+  (): JSX.Element;
+  preload: () => Promise<Page<T, A>>;
+}
+
+export interface PageRoute {
+  path: string;
+  component: LazyPage<any>;
+}
+
+export type PageTree = RouterNode<LazyPage<any>>;
+
+export type Params = RouterParams;
+export type Query = ParsedUrlQuery;
+
+export interface ServerSideContext<
+  P extends Params = Params,
+  Q extends Query = Query,
+> {
+  request: Request;
+  params: P;
+  query: Q;
+}
+
+export type APICallback = <
+  P extends Params = Params,
+  Q extends Query = Query,
+>(ctx: ServerSideContext<P, Q>) => Response | Promise<Response>;
+
+export interface APIRoute {
+  path: string;
+  call: APICallback;
+}
+
+export type APITree = RouterNode<APICallback>;
 
 export type SSRMode = 'sync' | 'async' | 'node-stream' | 'web-stream';
 

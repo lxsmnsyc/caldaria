@@ -1,23 +1,26 @@
+import fs from 'fs';
+import path from 'path';
+import mime from 'mime-types';
 import {
   API_URL,
   RIGIDITY_ACTION,
   RIGIDITY_DATA,
   RIGIDITY_REDIRECT_HEADER,
-} from '../constants';
-import StatusCode from '../errors/StatusCode';
+} from 'rigidity/constants';
 import {
   renderServer,
   renderServerError,
-} from '../render/render-server';
-import createAPITree from '../router/core/create-api-tree';
-import createPageTree from '../router/core/create-page-tree';
+} from 'rigidity/render';
 import {
+  createAPITree,
+  createPageTree,
   matchRoute,
-} from '../router/core/router';
+} from 'rigidity/router';
 import {
   ServerFunction,
   ServerRenderOptions,
-} from '../types';
+} from 'rigidity/types';
+import StatusCode from '../errors/StatusCode';
 import {
   green,
   red,
@@ -39,9 +42,6 @@ export default function createServer(
 
         if (serverOptions.enableStaticFileServing || !serverOptions.cdn) {
           const readStaticFile = async (prefix: string, basePath: string) => {
-            const fs = await import('fs');
-            const path = await import('path');
-            const mime = await import('mime-types');
             const file = url.pathname.substring(prefix.length);
             const targetFile = path.join(basePath, file);
             const exists = await fileExists(targetFile);

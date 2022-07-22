@@ -1,14 +1,14 @@
 import {
   Plugin,
 } from 'esbuild';
+import path from 'path';
+import fs from 'fs/promises';
 
 export default function rawPlugin(): Plugin {
   return {
     name: 'rigidity:raw',
 
-    async setup(build) {
-      const path = await import('path');
-      const fs = await import('fs/promises');
+    setup(build) {
       build.onResolve({
         filter: /\?raw$/,
       }, (args) => ({

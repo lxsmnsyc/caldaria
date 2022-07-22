@@ -5,7 +5,11 @@ import {
   createUniqueId,
   lazy,
 } from 'solid-js';
-import { LazyPage, Page, PageProps } from '../core/create-page-tree';
+import {
+  Page,
+  LazyPage,
+  PageProps,
+} from 'rigidity/types';
 import loadData from '../utils/load-data';
 import { useDataContext } from './Data';
 import { useRouter } from './Router';
@@ -60,7 +64,8 @@ export function createClientPage<L, A = undefined>(
       () => !ctx.initial,
       async () => (
         loadData(router.pathname, router.search)
-      ), {
+      ),
+      {
         initialValue: ctx.load,
       },
     );

@@ -1,17 +1,16 @@
 import { Abortable } from 'events';
+import fs from 'fs/promises';
+import path from 'path';
 import { Mode, ObjectEncodingOptions, OpenMode } from 'fs';
 import { Stream } from 'stream';
 
 export async function removeFile(filePath: string): Promise<void> {
-  const fs = await import('fs/promises');
   return fs.rm(filePath, { recursive: true, force: true });
 }
 
-export async function fileExists(path: string): Promise<boolean> {
-  const fs = await import('fs/promises');
-
+export async function fileExists(p: string): Promise<boolean> {
   try {
-    const stat = await fs.stat(path);
+    const stat = await fs.stat(p);
 
     return stat.isFile();
   } catch (error) {
@@ -19,8 +18,7 @@ export async function fileExists(path: string): Promise<boolean> {
   }
 }
 
-export async function checkPath(pth: string) {
-  const path = await import('path');
+export function checkPath(pth: string) {
   if (process.platform === 'win32') {
     const pathHasInvalidWinCharacters = /[<>:"|?*]/.test(pth.replace(path.parse(pth).root, ''));
 
@@ -33,8 +31,7 @@ export async function checkPath(pth: string) {
 }
 
 export async function makeDir(dir: string, mode = 0o777) {
-  const fs = await import('fs/promises');
-  await checkPath(dir);
+  checkPath(dir);
   return fs.mkdir(dir, {
     mode,
     recursive: true,
@@ -43,7 +40,6 @@ export async function makeDir(dir: string, mode = 0o777) {
 
 export async function pathExists(filePath: string) {
   try {
-    const fs = await import('fs/promises');
     await fs.access(filePath);
     return true;
   } catch {
@@ -67,9 +63,6 @@ export async function outputFile(
       | BufferEncoding
       | null,
 ) {
-  const path = await import('path');
-  const fs = await import('fs/promises');
-
   const dir = path.dirname(file);
   if (!await pathExists(dir)) {
     await makeDir(dir);
