@@ -33,16 +33,15 @@ export function onMedia(id: string, query: string, callback: () => Promise<void>
 export function onVisible(id: string, callback: () => Promise<void>): void {
   const marker = getRoot(id);
 
-  let done = false;
-
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting && !done) {
-        done = true;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
         runCallback(id, callback);
         observer.disconnect();
+        break;
       }
-    });
+    }
   });
 
   let node = marker.firstChild;
