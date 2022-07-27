@@ -5,7 +5,7 @@ import Main from '../components/Main.client';
 export default function Index() {
   return (
     <Main>
-      <Counter client:idle initialValue={100} />
+      <Counter client:hover initialValue={100} />
       <p>This is a server-side paragraph.</p>
     </Main>
   );

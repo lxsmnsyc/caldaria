@@ -90,12 +90,14 @@ export function onHover(
     }
     timer = window.setTimeout(() => {
       runCallback(id, callback);
+      marker.removeEventListener('mouseover', run, {
+        capture: true,
+      });
     }, timeout ?? HOVER_TIMEOUT);
   }
 
   marker.addEventListener('mouseover', run, {
     capture: true,
-    once: true,
   });
 }
 
