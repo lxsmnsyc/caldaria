@@ -95,6 +95,8 @@ export interface ErrorProps {
 export type ErrorPage = Page<ErrorProps>;
 
 export interface RenderResult<T> {
+  isDev: boolean;
+  mode?: 'islands';
   assets: string;
   App: () => JSX.Element;
   tags: TagDescription[];
@@ -112,6 +114,7 @@ export interface RigidityRoot {
 }
 
 export interface GlobalRenderOptions {
+  mode?: 'islands';
   env?: 'production' | 'development';
   cdn?: string;
   assetsUrl: string;
@@ -155,7 +158,12 @@ export interface BabelBuildOptions {
   plugins: babel.PluginItem[] | ((context: BuildContext) => babel.PluginItem[]);
 }
 
+export interface DevOptions {
+  ws?: number;
+}
+
 export interface BuildOptions {
+  mode?: 'islands';
   env?: 'production' | 'development';
   adapter: Adapter<any>;
   ssrMode?: SSRMode;
@@ -163,6 +171,7 @@ export interface BuildOptions {
   directories?: DirectoryOptions;
   esbuild?: esbuild.BuildOptions | ((context: BuildContext) => esbuild.BuildOptions);
   babel?: BabelBuildOptions;
+  dev?: DevOptions;
 }
 
 export type BundleType = 'server' | 'client';

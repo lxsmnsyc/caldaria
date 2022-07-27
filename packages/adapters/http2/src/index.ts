@@ -10,7 +10,7 @@ const ADAPTER: Adapter<HTTP2Listener> = /* @__PURE__ */ {
   generateScript: (config) => `
   import http2 from 'http2';
   import fs from 'fs';
-  import { createServer } from 'rigidity/server';
+  import createServer from 'rigidity/server';
   import adapter from 'rigidity-adapter-http2';
   const server = createServer(${config});
   const listener = adapter.create(server);

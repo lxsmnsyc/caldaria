@@ -2,7 +2,7 @@ import * as babel from '@babel/core';
 import { Plugin } from 'esbuild';
 import path from 'path';
 import fs from 'fs/promises';
-import marked from 'solid-marked';
+import * as marked from 'solid-marked';
 
 import solid from 'babel-preset-solid';
 import ts from '@babel/preset-typescript';
@@ -35,7 +35,7 @@ export default function markdownPlugin(options: SolidOptions): Plugin {
         namespace: 'markdown',
       }, async (args) => {
         const file = await fs.readFile(args.path, 'utf-8');
-        const markdownResult = await marked.compile('rigidity', args.path, file);
+        const markdownResult = await marked.compile('rigidity/root', args.path, file);
 
         const babelResult = await babel.transformAsync(markdownResult.code, {
           presets: [

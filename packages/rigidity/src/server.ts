@@ -1,1 +1,3 @@
-export * from 'rigidity-server';
+import createServer from 'rigidity-server';
+
+export default createServer;

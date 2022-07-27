@@ -40,7 +40,7 @@ export default async function createDevBuild(
   const buildDirectory = options.directories?.build ?? BUILD_PATH;
   const outputDirectory = path.join(
     buildDirectory,
-    BUILD_OUTPUT.server.output,
+    options.mode === 'islands' ? 'islands/server' : BUILD_OUTPUT.server.output,
   );
 
   let debounced: NodeJS.Timeout | undefined;

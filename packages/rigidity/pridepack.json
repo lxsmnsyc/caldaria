@@ -5,8 +5,11 @@
   ],
   "entrypoints": {
     "./build": "./src/build.ts",
-    "./islands": "./src/islands.ts",
+    "./islands-client": "./src/islands-client.ts",
+    "./islands-server": "./src/islands-server.ts",
     "./meta": "./src/meta.ts",
+    "./render-server": "./src/render-server.ts",
+    "./render-client": "./src/render-client.ts",
     "./root": "./src/root.ts",
     "./router": "./src/router.ts",
     "./server": "./src/server.ts",

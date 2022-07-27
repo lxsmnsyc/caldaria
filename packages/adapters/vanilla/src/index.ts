@@ -6,7 +6,7 @@ import './shims';
 const ADAPTER: Adapter<RequestListener> = /* @__PURE__ */ {
   enableStaticFileServing: true,
   generateScript: (config) => `
-import { createServer } from 'rigidity/server';
+  import createServer from 'rigidity/server';
 import adapter from 'rigidity-adapter-vanilla';
 export default adapter.create(createServer(${config}));
   `,

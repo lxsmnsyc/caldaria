@@ -16,7 +16,7 @@ import {
 import {
   renderServer,
   renderServerError,
-} from 'rigidity-render';
+} from 'rigidity-render/server';
 import {
   createAPITree,
   createPageTree,

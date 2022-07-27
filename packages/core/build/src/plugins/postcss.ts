@@ -14,6 +14,7 @@ import PostcssModulesPlugin from 'postcss-modules';
 export interface RecurseBuild {
   filename?: string;
   recurse?: boolean;
+  entrypoints?: string[] | Record<string, string> | undefined;
   content: string;
   sourceDirectory: string;
   outputDirectory: string;
@@ -27,7 +28,7 @@ interface PostCSSOptions {
 
 function createLazyCSS(id: string, content: string, json: Record<string, string>) {
   return `
-import { renderStyle } from 'rigidity/render';
+import { renderStyle } from 'rigidity/render-client';
 renderStyle(${JSON.stringify(id)}, ${JSON.stringify(content)});
 export default ${JSON.stringify(json)};
 `;

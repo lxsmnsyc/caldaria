@@ -7,7 +7,7 @@ type VercelFunction = (request: VercelRequest, response: VercelResponse) => Prom
 const ADAPTER: Adapter<VercelFunction> = /* @__PURE__ */ {
   enableStaticFileServing: false,
   generateScript: (config) => `
-import { createServer } from 'rigidity/server';
+  import createServer from 'rigidity/server';
 import adapter from 'rigidity-adapter-vercel';
 export default adapter.create(createServer(${config}));
   `,

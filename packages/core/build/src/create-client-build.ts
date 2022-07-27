@@ -68,7 +68,7 @@ export default async function createClientBuild(
   lines.push(
     `
 import { hydrate } from 'solid-js/web';
-import { hydrateClient } from 'rigidity/render';
+import { hydrateClient } from 'rigidity/render-client';
 hydrateClient({
   env: '${options.env ?? 'production'}',
   cdn: ${options.paths?.cdn ? JSON.stringify(options.paths.cdn) : 'undefined'},
@@ -89,6 +89,7 @@ hydrateClient({
 
   const result = await runESBuild(
     {
+      entrypoints: [artifact],
       content: artifact,
       sourceDirectory: artifactDirectory,
       outputDirectory,

@@ -40,7 +40,7 @@
     "url": "https://github.com/lxsmnsyc/rigidity.git",
     "type": "git"
   },
-  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/rigidity-adapter-http",
+  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/rigidity-adapter-worker",
   "bugs": {
     "url": "https://github.com/lxsmnsyc/rigidity/issues"
   },

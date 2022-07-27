@@ -30,6 +30,7 @@
     "solid-marked": "^0.3"
   },
   "dependencies": {
+    "rigidity-islands": "0.0.24",
     "rigidity-meta": "0.0.24",
     "rigidity-shared": "0.0.24"
   },

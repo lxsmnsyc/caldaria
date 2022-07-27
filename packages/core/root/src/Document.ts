@@ -18,6 +18,9 @@ import {
 import {
   renderTags,
 } from 'rigidity-meta';
+import {
+  IslandStyles,
+} from 'rigidity-islands/server';
 
 export const DocumentContext = /* @__PURE__ */ (
   createContext<RenderResult<any>>()
@@ -48,6 +51,7 @@ export function DocumentHead(props: DocumentHeadProps): JSX.Element {
               return ssr(renderTags(context?.tags ?? [])) as unknown as JSX.Element;
             },
           }),
+          context?.mode === 'islands' && createComponent(IslandStyles, {}),
           props.children,
         ];
       },
@@ -74,9 +78,12 @@ export function DocumentMain(): JSX.Element {
 export function DocumentScript(): JSX.Element {
   const context = useContext(DocumentContext);
 
+  const isIslands = context?.mode === 'islands';
+  const shouldRenderScript = (isIslands && context.isDev) || !isIslands;
+
   return [
     createComponent(Dynamic, { component: HydrationScript }),
-    createComponent(Dynamic, {
+    !isIslands && createComponent(Dynamic, {
       component: 'script',
       type: 'application/json',
       id: DOCUMENT_DATA,
@@ -85,7 +92,7 @@ export function DocumentScript(): JSX.Element {
         isError: context?.isError,
       }),
     }),
-    createComponent(Dynamic, {
+    shouldRenderScript && createComponent(Dynamic, {
       component: 'script',
       type: 'module',
       async: true,

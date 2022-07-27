@@ -30,6 +30,26 @@ import {
   getPagesOptions,
 } from './options';
 import runESBuild from './run-esbuild';
+import getPOSIXPath from './get-posix-path';
+
+async function generateIsland(
+  options: BuildOptions,
+  id: string,
+  entry: string,
+) {
+  console.log(id, entry);
+  const artifactDirectory = getArtifactBaseDirectory(
+    options,
+    'client',
+  );
+
+  const artifact = path.join(artifactDirectory, `${id}.tsx`);
+
+  const relativePath = getPOSIXPath(path.relative(artifactDirectory, entry));
+
+  await outputFile(artifact, `import { createIsland } from 'rigidity/islands-client';
+  export default createIsland(() => import('${relativePath}'));`);
+}
 
 export default async function createServerBuild(
   options: BuildOptions,
@@ -45,7 +65,7 @@ export default async function createServerBuild(
 
   const outputDirectory = path.join(
     buildDirectory,
-    BUILD_OUTPUT.server.output,
+    options.mode === 'islands' ? 'islands' : BUILD_OUTPUT.server.output,
   );
 
   await removeFile(outputDirectory);
@@ -77,11 +97,14 @@ export default async function createServerBuild(
     options.paths?.root ?? CUSTOM_ROOT,
   );
 
+  const buildDir = options.mode === 'islands' ? 'islands' : BUILD_OUTPUT.client.output;
+
   lines.push(options.adapter.generateScript(`{
+    mode: ${options.mode ? `'${options.mode}'` : 'undefined'},
     env: '${options.env ?? 'production'}',
     ssrMode: ${JSON.stringify(options.ssrMode ?? 'sync')},
     version: ${JSON.stringify(Date.now())},
-    buildDir: ${JSON.stringify(path.join(buildDirectory, BUILD_OUTPUT.client.output))},
+    buildDir: ${JSON.stringify(path.join(buildDirectory, buildDir))},
     publicDir: ${JSON.stringify(publicDirectory)},
     apiDir: ${JSON.stringify(apiDirectory)},
     enableStaticFileServing: ${JSON.stringify(options.adapter.enableStaticFileServing)},
@@ -93,7 +116,10 @@ export default async function createServerBuild(
     endpoints: ${getAPIOptions(apis)},
   }`));
 
-  const artifact = path.join(artifactDirectory, 'index.tsx');
+  const artifact = path.join(
+    artifactDirectory,
+    options.mode === 'islands' ? 'server.tsx' : 'index.tsx',
+  );
 
   await outputFile(
     artifact,
@@ -102,12 +128,16 @@ export default async function createServerBuild(
 
   const result = await runESBuild(
     {
+      entrypoints: [artifact],
       content: artifact,
       sourceDirectory: artifactDirectory,
       outputDirectory,
     },
     { isDev: environment !== 'production', isServer: true },
     options,
+    options.mode === 'islands'
+      ? (id, entry) => generateIsland(options, id, entry)
+      : undefined,
   );
 
   await removeFile(artifact);

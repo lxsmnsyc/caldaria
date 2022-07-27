@@ -23,15 +23,15 @@ import {
 import {
   Root,
 } from 'rigidity-root';
-import renderApp from './render-app';
-import renderError from './render-error';
+import renderApp from '../common/render-app';
+import renderError from '../common/render-error';
 
 interface HydrationData {
   data: any;
   isError: boolean;
 }
 
-function useHotReload(
+export function useHotReload(
   protocol: string,
   host: string,
   port: number,
@@ -81,6 +81,7 @@ export default function hydrateClient(
   const routerTree = createPageTree(options.pages);
   const pageResult: RenderResult<any> = data && data.isError
     ? {
+      isDev: options.env === 'development',
       assets: `${options.cdn ?? ''}/${options.assetsUrl}`,
       App: renderError(options, data.data),
       tags: [],
@@ -88,6 +89,7 @@ export default function hydrateClient(
       isError: true,
     }
     : {
+      isDev: options.env === 'development',
       assets: `${options.cdn ?? ''}/${options.assetsUrl}`,
       App: renderApp(options, {
         pathname: window.location.pathname,

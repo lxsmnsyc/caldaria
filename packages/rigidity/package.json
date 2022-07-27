@@ -38,10 +38,12 @@
     "rigidity-build": "0.0.24",
     "rigidity-islands": "0.0.24",
     "rigidity-meta": "0.0.24",
+    "rigidity-render": "0.0.24",
     "rigidity-root": "0.0.24",
     "rigidity-router": "0.0.24",
     "rigidity-server": "0.0.24",
-    "rigidity-shared": "0.0.24"
+    "rigidity-shared": "0.0.24",
+    "solid-marked": "^0.3.0"
   },
   "description": "SSR Framework for SolidJS",
   "repository": {
@@ -62,11 +64,20 @@
       "build": [
         "./dist/types/build.d.ts"
       ],
-      "islands": [
-        "./dist/types/islands.d.ts"
+      "islands-client": [
+        "./dist/types/islands-client.d.ts"
+      ],
+      "islands-server": [
+        "./dist/types/islands-server.d.ts"
       ],
       "meta": [
         "./dist/types/meta.d.ts"
+      ],
+      "render-server": [
+        "./dist/types/render-server.d.ts"
+      ],
+      "render-client": [
+        "./dist/types/render-client.d.ts"
       ],
       "root": [
         "./dist/types/root.d.ts"
@@ -92,14 +103,23 @@
       "import": "./dist/esm/production/build.js",
       "types": "./dist/types/build.d.ts"
     },
-    "./islands": {
+    "./islands-client": {
       "development": {
-        "require": "./dist/cjs/development/islands.js",
-        "import": "./dist/esm/development/islands.js"
+        "require": "./dist/cjs/development/islands-client.js",
+        "import": "./dist/esm/development/islands-client.js"
       },
-      "require": "./dist/cjs/production/islands.js",
-      "import": "./dist/esm/production/islands.js",
-      "types": "./dist/types/islands.d.ts"
+      "require": "./dist/cjs/production/islands-client.js",
+      "import": "./dist/esm/production/islands-client.js",
+      "types": "./dist/types/islands-client.d.ts"
+    },
+    "./islands-server": {
+      "development": {
+        "require": "./dist/cjs/development/islands-server.js",
+        "import": "./dist/esm/development/islands-server.js"
+      },
+      "require": "./dist/cjs/production/islands-server.js",
+      "import": "./dist/esm/production/islands-server.js",
+      "types": "./dist/types/islands-server.d.ts"
     },
     "./meta": {
       "development": {
@@ -109,6 +129,24 @@
       "require": "./dist/cjs/production/meta.js",
       "import": "./dist/esm/production/meta.js",
       "types": "./dist/types/meta.d.ts"
+    },
+    "./render-server": {
+      "development": {
+        "require": "./dist/cjs/development/render-server.js",
+        "import": "./dist/esm/development/render-server.js"
+      },
+      "require": "./dist/cjs/production/render-server.js",
+      "import": "./dist/esm/production/render-server.js",
+      "types": "./dist/types/render-server.d.ts"
+    },
+    "./render-client": {
+      "development": {
+        "require": "./dist/cjs/development/render-client.js",
+        "import": "./dist/esm/development/render-client.js"
+      },
+      "require": "./dist/cjs/production/render-client.js",
+      "import": "./dist/esm/production/render-client.js",
+      "types": "./dist/types/render-client.d.ts"
     },
     "./root": {
       "development": {

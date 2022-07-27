@@ -10,7 +10,7 @@ import {
   ssr,
   ssrHydrationKey,
 } from 'solid-js/web';
-import { Strategy } from './create-island';
+import { Strategy } from '../client/create-island';
 
 const ROOT = ['<rigidity-island', ' data-ri="', '">', '</rigidity-island>'];
 const TEMPLATE = ['<template', ' data-ri="', '">', '</template>'];
@@ -34,9 +34,6 @@ export default function Client<P>(props: ClientProps<P>) {
   const root = createUniqueId();
 
   const propsResult = JSON.stringify(props.props);
-  if (props.strategy?.type === 'visible') {
-    props.strategy.value = root;
-  }
   const strategyResult = JSON.stringify(props.strategy);
 
   return [

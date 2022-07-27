@@ -8,7 +8,7 @@ const ADAPTER: Adapter<RequestListener> = /* @__PURE__ */ {
   enableStaticFileServing: true,
   generateScript: (config) => `
 import http from 'http';
-import { createServer } from 'rigidity/server';
+import createServer from 'rigidity/server';
 import adapter from 'rigidity-adapter-http';
 const server = createServer(${config});
 const listener = adapter.create(server);

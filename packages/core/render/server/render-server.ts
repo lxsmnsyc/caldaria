@@ -13,8 +13,8 @@ import {
   ErrorProps,
   GlobalRenderOptions,
 } from 'rigidity-shared';
-import renderApp, { RenderAppOptions } from './render-app';
-import renderError from './render-error';
+import renderApp, { RenderAppOptions } from '../common/render-app';
+import renderError from '../common/render-error';
 
 async function renderCore<T>(
   globalOptions: GlobalRenderOptions,
@@ -107,6 +107,8 @@ export async function renderServerError(
   renderOptions: ErrorProps,
 ): Promise<string | stream.Readable | ReadableStream> {
   return renderCore(globalOptions, {
+    isDev: globalOptions.env === 'development',
+    mode: globalOptions.mode,
     assets: `${globalOptions.cdn ?? ''}/${globalOptions.assetsUrl}`,
     App: renderError(
       globalOptions,
@@ -127,6 +129,8 @@ export async function renderServer<L, A = undefined>(
   actionData?: A,
 ): Promise<string | stream.Readable | ReadableStream> {
   return renderCore(globalOptions, {
+    isDev: globalOptions.env === 'development',
+    mode: globalOptions.mode,
     assets: `${globalOptions.cdn ?? ''}/${globalOptions.assetsUrl}`,
     App: renderApp(
       globalOptions,

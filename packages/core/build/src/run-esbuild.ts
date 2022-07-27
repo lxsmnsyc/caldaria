@@ -2,6 +2,7 @@ import {
   BuildOptions as ESBuildOption,
   BuildResult,
   build,
+  Plugin,
 } from 'esbuild';
 import {
   BuildContext,
@@ -14,6 +15,7 @@ import postcssPlugin, { RecurseBuild } from './plugins/postcss';
 import rawPlugin from './plugins/raw';
 import urlPlugin from './plugins/url';
 import markdownPlugin from './plugins/markdown';
+import islandsPlugin from './plugins/islands';
 
 function createOption(opt: ESBuildOption): ESBuildOption {
   return opt;
@@ -23,6 +25,7 @@ export default async function runESBuild(
   input: RecurseBuild,
   context: BuildContext,
   options: BuildOptions,
+  onEntry?: (id: string, entry: string) => Promise<void>,
 ): Promise<BuildResult> {
   const esbuildConfig = typeof options.esbuild === 'function'
     ? options.esbuild(context)
@@ -44,9 +47,7 @@ export default async function runESBuild(
       },
     })
     : createOption({
-      entryPoints: [
-        input.content,
-      ],
+      entryPoints: input.entrypoints,
     });
 
   let sourcemap: ESBuildOption['sourcemap'];
@@ -57,6 +58,34 @@ export default async function runESBuild(
     } else {
       sourcemap = true;
     }
+  }
+
+  const initialPlugins: Plugin[] = [];
+
+  if (options.mode === 'islands' && context.isServer) {
+    initialPlugins.push(
+      islandsPlugin({
+        generate: context.isServer ? 'ssr' : 'dom',
+        babel: {
+          plugins: babelPluginsConfig ?? [],
+          presets: babelPresetsConfig ?? [],
+        },
+        dev: context.isDev,
+        assets: options.paths?.assets ?? ASSETS_URL,
+        onEntry,
+      }),
+    );
+  } else {
+    initialPlugins.push(
+      solidPlugin({
+        generate: context.isServer ? 'ssr' : 'dom',
+        babel: {
+          plugins: babelPluginsConfig ?? [],
+          presets: babelPresetsConfig ?? [],
+        },
+        dev: context.isDev,
+      }),
+    );
   }
 
   return build({
@@ -84,14 +113,7 @@ export default async function runESBuild(
     ],
     jsx: 'preserve',
     plugins: [
-      solidPlugin({
-        generate: context.isServer ? 'ssr' : 'dom',
-        babel: {
-          plugins: babelPluginsConfig ?? [],
-          presets: babelPresetsConfig ?? [],
-        },
-        dev: context.isDev,
-      }),
+      ...initialPlugins,
       postcssPlugin({
         dev: context.isDev,
         artifactDirectory: input.outputDirectory,

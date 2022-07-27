@@ -4,12 +4,10 @@ import {
 import generateESBuildDiagnostics from './create-esbuild-diagnostics';
 import createClientBuild from './create-client-build';
 import createServerBuild from './create-server-build';
+import createIslandsBuild from './create-islands-build';
 
 export default async function createBuild(options: BuildOptions): Promise<void> {
-  const [server, client] = await Promise.all([
-    createServerBuild(options),
-    createClientBuild(options),
-  ]);
+  const server = await createServerBuild(options);
 
   if (server.errors.length || server.warnings.length) {
     console.log('Server Build:');
@@ -17,9 +15,19 @@ export default async function createBuild(options: BuildOptions): Promise<void> 
     generateESBuildDiagnostics(true, server.warnings);
   }
 
-  if (client.errors.length || client.warnings.length) {
-    console.log('Client Build:');
-    generateESBuildDiagnostics(false, client.errors);
-    generateESBuildDiagnostics(true, client.warnings);
+  if (options.mode === 'islands') {
+    const islands = await createIslandsBuild(options);
+    if (islands.errors.length || islands.warnings.length) {
+      console.log('Client Build:');
+      generateESBuildDiagnostics(false, islands.errors);
+      generateESBuildDiagnostics(true, islands.warnings);
+    }
+  } else {
+    const client = await createClientBuild(options);
+    if (client.errors.length || client.warnings.length) {
+      console.log('Client Build:');
+      generateESBuildDiagnostics(false, client.errors);
+      generateESBuildDiagnostics(true, client.warnings);
+    }
   }
 }
