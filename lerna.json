@@ -1,7 +1,9 @@
 {
   "useWorkspaces": true,
-  "packages": [
-    "packages/*",
+  "workspaces": [
+    "packages/adapters/*",
+    "packages/core/*",
+    "packages/rigidity",
     "examples/*"
   ],
   "command": {

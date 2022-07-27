@@ -1,0 +1,77 @@
+{
+  "name": "rigidity-adapter-vercel",
+  "version": "0.0.24",
+  "types": "dist/types/index.d.ts",
+  "main": "dist/cjs/production/index.js",
+  "module": "dist/esm/production/index.js",
+  "exports": {
+    ".": {
+      "development": {
+        "require": "./dist/cjs/development/index.js",
+        "import": "./dist/esm/development/index.js"
+      },
+      "require": "./dist/cjs/production/index.js",
+      "import": "./dist/esm/production/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "license": "MIT",
+  "keywords": [
+    "pridepack"
+  ],
+  "devDependencies": {
+    "@types/node": "^17.0.35",
+    "eslint": "^8.20.0",
+    "eslint-config-lxsmnsyc": "^0.4.8",
+    "pridepack": "^2.1.2",
+    "rigidity": "0.0.24",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4"
+  },
+  "description": "Vercel Adapter for Rigidity",
+  "repository": {
+    "url": "https://github.com/lxsmnsyc/rigidity.git",
+    "type": "git"
+  },
+  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/rigidity-adapter-http",
+  "bugs": {
+    "url": "https://github.com/lxsmnsyc/rigidity/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Alexis Munsayac",
+  "private": false,
+  "scripts": {
+    "prepublishOnly": "pridepack clean && pridepack build",
+    "build": "pridepack build",
+    "type-check": "pridepack check",
+    "lint": "pridepack lint",
+    "test": "pridepack test --passWithNoTests",
+    "clean": "pridepack clean",
+    "watch": "pridepack watch",
+    "start": "pridepack start",
+    "dev": "pridepack dev"
+  },
+  "peerDependencies": {
+    "rigidity": "^0.0"
+  },
+  "dependencies": {
+    "@vercel/node": "^1.12.1",
+    "node-fetch": "^3.1.0"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/types/index.d.ts"
+      ]
+    }
+  }
+}

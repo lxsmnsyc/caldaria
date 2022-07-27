@@ -1,0 +1,78 @@
+{
+  "name": "rigidity-server",
+  "version": "0.0.24",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "license": "MIT",
+  "keywords": [
+    "pridepack"
+  ],
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "eslint": "^8.20.0",
+    "eslint-config-lxsmnsyc": "^0.4.8",
+    "pridepack": "2.1.2",
+    "solid-js": "^1.4.8",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4",
+    "vitest": "^0.19.1"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.3"
+  },
+  "dependencies": {
+    "@types/mime-types": "^2.1.1",
+    "mime-types": "^2.1.34",
+    "rigidity-render": "0.0.24",
+    "rigidity-router": "0.0.24",
+    "rigidity-shared": "0.0.24"
+  },
+  "scripts": {
+    "prepublishOnly": "pridepack clean && pridepack build",
+    "build": "pridepack build",
+    "type-check": "pridepack check",
+    "lint": "pridepack lint",
+    "clean": "pridepack clean",
+    "watch": "pridepack watch",
+    "start": "pridepack start",
+    "dev": "pridepack dev",
+    "test": "vitest"
+  },
+  "private": false,
+  "description": "",
+  "repository": {
+    "url": "",
+    "type": "git"
+  },
+  "homepage": "",
+  "bugs": {
+    "url": ""
+  },
+  "author": "",
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "development": {
+        "require": "./dist/cjs/development/index.js",
+        "import": "./dist/esm/development/index.js"
+      },
+      "require": "./dist/cjs/production/index.js",
+      "import": "./dist/esm/production/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/types/index.d.ts"
+      ]
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "name": "rigidity-build",
+  "version": "0.0.24",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "license": "MIT",
+  "keywords": [
+    "pridepack"
+  ],
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/ws": "^8.5.3",
+    "eslint": "^8.20.0",
+    "eslint-config-lxsmnsyc": "^0.4.8",
+    "postcss": "^8.4.14",
+    "pridepack": "2.1.2",
+    "solid-js": "^1.4.8",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4",
+    "vitest": "^0.19.1"
+  },
+  "peerDependencies": {
+    "postcss": "^8.0",
+    "solid-js": "^1.3"
+  },
+  "dependencies": {
+    "@babel/core": "^7.18.9",
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/mime-types": "^2.1.1",
+    "babel-plugin-solid-sfc": "^0.2.0",
+    "babel-preset-solid": "^1.4.8",
+    "chokidar": "^3.5.3",
+    "esbuild": "^0.14.50",
+    "execa": "^5",
+    "mime-types": "^2.1.34",
+    "postcss-load-config": "^4.0.1",
+    "postcss-modules": "^4.3.1",
+    "rigidity-render": "0.0.24",
+    "rigidity-router": "0.0.24",
+    "rigidity-shared": "0.0.24",
+    "solid-marked": "^0.3.0",
+    "ws": "^8.8.1"
+  },
+  "scripts": {
+    "prepublishOnly": "pridepack clean && pridepack build",
+    "build": "pridepack build",
+    "type-check": "pridepack check",
+    "lint": "pridepack lint",
+    "clean": "pridepack clean",
+    "watch": "pridepack watch",
+    "start": "pridepack start",
+    "dev": "pridepack dev",
+    "test": "vitest"
+  },
+  "private": false,
+  "description": "",
+  "repository": {
+    "url": "",
+    "type": "git"
+  },
+  "homepage": "",
+  "bugs": {
+    "url": ""
+  },
+  "author": "",
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "development": {
+        "require": "./dist/cjs/development/index.js",
+        "import": "./dist/esm/development/index.js"
+      },
+      "require": "./dist/cjs/production/index.js",
+      "import": "./dist/esm/production/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/types/index.d.ts"
+      ]
+    }
+  }
+}

@@ -3,7 +3,9 @@
   "parserOptions": {
     "project": [
       "./tsconfig.eslint.json",
-      "./packages/*/tsconfig.json"
+      "./packages/rigidity/tsconfig.eslint.json",
+      "./packages/core/*/tsconfig.json",
+      "./packages/adapters/*/tsconfig.json"
     ]
   },
   "extends": [

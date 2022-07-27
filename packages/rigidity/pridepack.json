@@ -4,13 +4,12 @@
     "node12"
   ],
   "entrypoints": {
-    "./build": "src/build/index.ts",
-    "./meta": "src/meta/index.ts",
-    "./render": "src/render/index.ts",
-    "./root": "src/root/index.ts",
-    "./router": "src/router/index.ts",
-    "./server": "src/server/index.ts",
-    "./constants": "src/constants.ts",
-    "./types": "src/types.ts"
+    "./build": "./src/build.ts",
+    "./islands": "./src/islands.ts",
+    "./meta": "./src/meta.ts",
+    "./root": "./src/root.ts",
+    "./router": "./src/router.ts",
+    "./server": "./src/server.ts",
+    "./types": "./src/types.ts"
   }
 }
