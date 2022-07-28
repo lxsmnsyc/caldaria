@@ -32,10 +32,10 @@ interface HydrationData {
 }
 
 export function useHotReload(
-  protocol: string,
-  host: string,
   port: number,
 ): void {
+  const protocol = window.location.protocol === 'https' ? 'wss' : 'ws';
+  const host = window.location.hostname;
   const socket = new WebSocket(`${protocol}://${host}:${port}`);
 
   socket.addEventListener('open', () => {
@@ -60,11 +60,7 @@ export default function hydrateClient(
   hydrate: (fn: () => JSX.Element, node: MountableElement) => void,
 ): void {
   if (options.env === 'development') {
-    useHotReload(
-      window.location.protocol === 'https' ? 'wss' : 'ws',
-      window.location.hostname,
-      options.ws,
-    );
+    useHotReload(options.ws);
   }
 
   if (options.root.reportWebVitals) {

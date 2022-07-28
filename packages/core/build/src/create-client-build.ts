@@ -10,6 +10,7 @@ import {
   PUBLIC_URL,
   CUSTOM_ROOT,
   BuildOptions,
+  DEFAULT_WS_PORT,
 } from 'rigidity-shared';
 import { outputFile, removeFile } from './fs';
 import {
@@ -70,6 +71,7 @@ export default async function createClientBuild(
 import { hydrate } from 'solid-js/web';
 import { hydrateClient } from 'rigidity/render-client';
 hydrateClient({
+  ws: ${options.dev?.ws ?? DEFAULT_WS_PORT},
   env: '${options.env ?? 'production'}',
   cdn: ${options.paths?.cdn ? JSON.stringify(options.paths.cdn) : 'undefined'},
   assetsUrl: ${JSON.stringify(options.paths?.assets ?? ASSETS_URL)},

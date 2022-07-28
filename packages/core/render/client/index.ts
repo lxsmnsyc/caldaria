@@ -1,7 +1,7 @@
 export {
   useHotReload,
   default as hydrateClient,
-} from '../client/hydrate-client';
+} from './hydrate-client';
 export {
   default as renderStyle,
 } from './render-style';

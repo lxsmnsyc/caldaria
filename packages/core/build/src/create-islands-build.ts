@@ -37,7 +37,7 @@ export default async function createIslandsBuild(
     const mainEntry = path.join(artifactDirectory, 'index.tsx');
 
     await outputFile(mainEntry, `import { useHotReload } from 'rigidity/render-client';
-  useHotReload(window.location.protocol === 'https' ? 'wss' : 'ws', window.location.hostname, '${options.dev?.ws ?? DEFAULT_WS_PORT}')`);
+  useHotReload('${options.dev?.ws ?? DEFAULT_WS_PORT}')`);
     artifacts.push(mainEntry);
   }
 
