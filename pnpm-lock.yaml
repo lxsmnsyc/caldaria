@@ -84,6 +84,41 @@ importers:
       tailwindcss: 3.0.24
       typescript: 4.7.4
 
+  examples/minimal:
+    specifiers:
+      '@tailwindcss/typography': ^0.5.2
+      '@vercel/node': 1.12.1
+      '@vercel/static-build': ^0.18.0
+      autoprefixer: ^10.4.7
+      cross-env: ^7.0.3
+      eslint: ^8.20.0
+      eslint-config-lxsmnsyc: ^0.4.8
+      postcss: ^8.4.14
+      rigidity: 0.0.24
+      rigidity-adapter-http: 0.0.24
+      rigidity-adapter-vercel: 0.0.24
+      solid-headless: ^0.11.0
+      solid-js: ^1.4.8
+      tailwindcss: ^3.0.24
+      typescript: ^4.7.4
+    dependencies:
+      '@vercel/node': 1.12.1
+      '@vercel/static-build': 0.18.0
+      rigidity: link:../../packages/rigidity
+      rigidity-adapter-http: link:../../packages/adapters/http
+      rigidity-adapter-vercel: link:../../packages/adapters/vercel
+      solid-headless: 0.11.0_solid-js@1.4.8
+      solid-js: 1.4.8
+    devDependencies:
+      '@tailwindcss/typography': 0.5.2_tailwindcss@3.0.24
+      autoprefixer: 10.4.7_postcss@8.4.14
+      cross-env: 7.0.3
+      eslint: 8.20.0
+      eslint-config-lxsmnsyc: 0.4.8_he2ccbldppg44uulnyq4rwocfa
+      postcss: 8.4.14
+      tailwindcss: 3.0.24
+      typescript: 4.7.4
+
   packages/adapters/http:
     specifiers:
       '@types/node': ^17.0.35
