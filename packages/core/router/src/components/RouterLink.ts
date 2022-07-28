@@ -43,7 +43,6 @@ export default function RouterLink(
       omitProps(props, [
         'prefetch',
         'scroll',
-        'ref',
         'replace',
       ]),
     ));
