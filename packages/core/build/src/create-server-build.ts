@@ -37,7 +37,6 @@ async function generateIsland(
   id: string,
   entry: string,
 ) {
-  console.log(id, entry);
   const artifactDirectory = getArtifactBaseDirectory(
     options,
     'client',

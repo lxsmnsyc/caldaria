@@ -41,8 +41,6 @@ export default async function createIslandsBuild(
     artifacts.push(mainEntry);
   }
 
-  console.log(artifacts);
-
   const result = await runESBuild(
     {
       entrypoints: artifacts,
