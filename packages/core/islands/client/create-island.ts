@@ -70,7 +70,7 @@ export type IslandComponent<P> = P & {
   'client:animation-frame'?: boolean;
   'client:delay'?: number;
   'client:hover'?: number | boolean;
-  'client:ready-state': DocumentReadyState;
+  'client:ready-state'?: DocumentReadyState;
 };
 
 export default function createIsland<P>(
