@@ -1,6 +1,5 @@
 import { createComponent, JSX, mergeProps } from 'solid-js';
 import { render, hydrate } from 'solid-js/web';
-import type { OnInteractionOptions } from 'rigidity-scheduler/interaction';
 import { getRoot, getFragment } from './nodes';
 import processScript from './process-script';
 
@@ -44,7 +43,7 @@ interface DelayStrategy {
 
 interface InteractionStrategy {
   type: 'interaction';
-  value: OnInteractionOptions;
+  value: string[] | boolean;
 }
 
 interface ReadyStateStrategy {
@@ -70,7 +69,7 @@ export type IslandComponent<P> = P & {
   'client:idle'?: boolean;
   'client:animation-frame'?: boolean;
   'client:delay'?: number;
-  'client:interaction'?: OnInteractionOptions | boolean;
+  'client:interaction'?: string[] | boolean;
   'client:ready-state'?: DocumentReadyState;
 };
 
