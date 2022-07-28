@@ -1,5 +1,6 @@
 import { createComponent, JSX, mergeProps } from 'solid-js';
 import { render, hydrate } from 'solid-js/web';
+import type { OnInteractionOptions } from 'rigidity-scheduler/interaction';
 import { getRoot, getFragment } from './nodes';
 import processScript from './process-script';
 
@@ -41,9 +42,9 @@ interface DelayStrategy {
   value: number;
 }
 
-interface HoverStrategy {
-  type: 'hover';
-  value: number;
+interface InteractionStrategy {
+  type: 'interaction';
+  value: OnInteractionOptions;
 }
 
 interface ReadyStateStrategy {
@@ -58,7 +59,7 @@ export type Strategy =
   | IdleStrategy
   | AnimationFrameStrategy
   | DelayStrategy
-  | HoverStrategy
+  | InteractionStrategy
   | ReadyStateStrategy;
 
 export type IslandComponent<P> = P & {
@@ -69,7 +70,7 @@ export type IslandComponent<P> = P & {
   'client:idle'?: boolean;
   'client:animation-frame'?: boolean;
   'client:delay'?: number;
-  'client:hover'?: number | boolean;
+  'client:interaction'?: OnInteractionOptions | boolean;
   'client:ready-state'?: DocumentReadyState;
 };
 
@@ -122,8 +123,8 @@ export default function createIsland<P>(
         case 'delay':
           (await import('rigidity-scheduler/delay')).default(id, strategy.value, renderCallback);
           break;
-        case 'hover':
-          (await import('rigidity-scheduler/hover')).default(id, strategy.value, marker, renderCallback);
+        case 'interaction':
+          (await import('rigidity-scheduler/interaction')).default(id, strategy.value, marker, renderCallback);
           break;
         case 'ready-state':
           (await import('rigidity-scheduler/ready-state')).default(id, strategy.value, renderCallback);

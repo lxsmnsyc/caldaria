@@ -3,7 +3,7 @@
   "entrypoints": {
     "./animation-frame": "src/on-animation-frame.ts",
     "./delay": "src/on-delay.ts",
-    "./hover": "src/on-hover.ts",
+    "./interaction": "src/on-interaction.ts",
     "./idle": "src/on-idle.ts",
     "./load": "src/on-load.ts",
     "./media": "src/on-media.ts",

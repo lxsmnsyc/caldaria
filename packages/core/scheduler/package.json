@@ -66,14 +66,14 @@
       "import": "./dist/esm/production/delay.js",
       "types": "./dist/types/on-delay.d.ts"
     },
-    "./hover": {
+    "./interaction": {
       "development": {
-        "require": "./dist/cjs/development/hover.js",
-        "import": "./dist/esm/development/hover.js"
+        "require": "./dist/cjs/development/interaction.js",
+        "import": "./dist/esm/development/interaction.js"
       },
-      "require": "./dist/cjs/production/hover.js",
-      "import": "./dist/esm/production/hover.js",
-      "types": "./dist/types/on-hover.d.ts"
+      "require": "./dist/cjs/production/interaction.js",
+      "import": "./dist/esm/production/interaction.js",
+      "types": "./dist/types/on-interaction.d.ts"
     },
     "./idle": {
       "development": {
@@ -129,8 +129,8 @@
       "delay": [
         "./dist/types/on-delay.d.ts"
       ],
-      "hover": [
-        "./dist/types/on-hover.d.ts"
+      "interaction": [
+        "./dist/types/on-interaction.d.ts"
       ],
       "idle": [
         "./dist/types/on-idle.d.ts"

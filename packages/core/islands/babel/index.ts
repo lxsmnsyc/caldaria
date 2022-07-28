@@ -85,7 +85,7 @@ function transformServerComponent(programPath: NodePath<t.Program>): void {
                       break;
                     case 'media':
                     case 'delay':
-                    case 'hover':
+                    case 'interaction':
                     case 'ready-state':
                       strategy = createStrategy(attr.name.name.name, attr);
                       break;
