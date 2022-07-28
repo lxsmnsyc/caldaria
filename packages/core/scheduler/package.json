@@ -1,0 +1,152 @@
+{
+  "name": "rigidity-scheduler",
+  "version": "0.0.24",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "license": "MIT",
+  "keywords": [
+    "pridepack"
+  ],
+  "peerDependencies": {},
+  "devDependencies": {
+    "@types/node": "^18.6.2",
+    "eslint": "^8.18.0",
+    "eslint-config-lxsmnsyc": "^0.4.8",
+    "pridepack": "2.1.2",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4",
+    "vitest": "^0.19.01"
+  },
+  "scripts": {
+    "prepublishOnly": "pridepack clean && pridepack build",
+    "build": "pridepack build",
+    "type-check": "pridepack check",
+    "lint": "pridepack lint",
+    "clean": "pridepack clean",
+    "watch": "pridepack watch",
+    "start": "pridepack start",
+    "dev": "pridepack dev",
+    "test": "vitest"
+  },
+  "private": false,
+  "description": "",
+  "repository": {
+    "url": "",
+    "type": "git"
+  },
+  "homepage": "",
+  "bugs": {
+    "url": ""
+  },
+  "author": "",
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    "./animation-frame": {
+      "development": {
+        "require": "./dist/cjs/development/animation-frame.js",
+        "import": "./dist/esm/development/animation-frame.js"
+      },
+      "require": "./dist/cjs/production/animation-frame.js",
+      "import": "./dist/esm/production/animation-frame.js",
+      "types": "./dist/types/on-animation-frame.d.ts"
+    },
+    "./delay": {
+      "development": {
+        "require": "./dist/cjs/development/delay.js",
+        "import": "./dist/esm/development/delay.js"
+      },
+      "require": "./dist/cjs/production/delay.js",
+      "import": "./dist/esm/production/delay.js",
+      "types": "./dist/types/on-delay.d.ts"
+    },
+    "./hover": {
+      "development": {
+        "require": "./dist/cjs/development/hover.js",
+        "import": "./dist/esm/development/hover.js"
+      },
+      "require": "./dist/cjs/production/hover.js",
+      "import": "./dist/esm/production/hover.js",
+      "types": "./dist/types/on-hover.d.ts"
+    },
+    "./idle": {
+      "development": {
+        "require": "./dist/cjs/development/idle.js",
+        "import": "./dist/esm/development/idle.js"
+      },
+      "require": "./dist/cjs/production/idle.js",
+      "import": "./dist/esm/production/idle.js",
+      "types": "./dist/types/on-idle.d.ts"
+    },
+    "./load": {
+      "development": {
+        "require": "./dist/cjs/development/load.js",
+        "import": "./dist/esm/development/load.js"
+      },
+      "require": "./dist/cjs/production/load.js",
+      "import": "./dist/esm/production/load.js",
+      "types": "./dist/types/on-load.d.ts"
+    },
+    "./media": {
+      "development": {
+        "require": "./dist/cjs/development/media.js",
+        "import": "./dist/esm/development/media.js"
+      },
+      "require": "./dist/cjs/production/media.js",
+      "import": "./dist/esm/production/media.js",
+      "types": "./dist/types/on-media.d.ts"
+    },
+    "./ready-state": {
+      "development": {
+        "require": "./dist/cjs/development/ready-state.js",
+        "import": "./dist/esm/development/ready-state.js"
+      },
+      "require": "./dist/cjs/production/ready-state.js",
+      "import": "./dist/esm/production/ready-state.js",
+      "types": "./dist/types/on-ready-state.d.ts"
+    },
+    "./visible": {
+      "development": {
+        "require": "./dist/cjs/development/visible.js",
+        "import": "./dist/esm/development/visible.js"
+      },
+      "require": "./dist/cjs/production/visible.js",
+      "import": "./dist/esm/production/visible.js",
+      "types": "./dist/types/on-visible.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "animation-frame": [
+        "./dist/types/on-animation-frame.d.ts"
+      ],
+      "delay": [
+        "./dist/types/on-delay.d.ts"
+      ],
+      "hover": [
+        "./dist/types/on-hover.d.ts"
+      ],
+      "idle": [
+        "./dist/types/on-idle.d.ts"
+      ],
+      "load": [
+        "./dist/types/on-load.d.ts"
+      ],
+      "media": [
+        "./dist/types/on-media.d.ts"
+      ],
+      "ready-state": [
+        "./dist/types/on-ready-state.d.ts"
+      ],
+      "visible": [
+        "./dist/types/on-visible.d.ts"
+      ]
+    }
+  }
+}

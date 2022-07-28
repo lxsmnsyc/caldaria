@@ -1,13 +1,13 @@
 {
   "exclude": ["node_modules"],
-  "include": ["server", "types", "babel", "client", "../scheduler/src/scheduler.ts"],
+  "include": ["src"],
   "compilerOptions": {
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
-    "rootDir": "./",
+    "rootDir": "./src",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

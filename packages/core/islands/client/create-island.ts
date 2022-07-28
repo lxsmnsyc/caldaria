@@ -1,14 +1,5 @@
 import { createComponent, JSX, mergeProps } from 'solid-js';
 import { render, hydrate } from 'solid-js/web';
-import {
-  onAnimationFrame,
-  onDelay,
-  onHover,
-  onIdle,
-  onLoad,
-  onMedia,
-  onVisible,
-} from './scheduler';
 import { getRoot, getFragment } from './nodes';
 import processScript from './process-script';
 
@@ -55,6 +46,11 @@ interface HoverStrategy {
   value: number;
 }
 
+interface ReadyStateStrategy {
+  type: 'ready-state';
+  value: DocumentReadyState;
+}
+
 export type Strategy =
   | LoadStrategy
   | MediaQueryStrategy
@@ -62,7 +58,8 @@ export type Strategy =
   | IdleStrategy
   | AnimationFrameStrategy
   | DelayStrategy
-  | HoverStrategy;
+  | HoverStrategy
+  | ReadyStateStrategy;
 
 export type IslandComponent<P> = P & {
   'client:load'?: boolean;
@@ -73,15 +70,16 @@ export type IslandComponent<P> = P & {
   'client:animation-frame'?: boolean;
   'client:delay'?: number;
   'client:hover'?: number | boolean;
+  'client:ready-state': DocumentReadyState;
 };
 
 export default function createIsland<P>(
   source: () => Promise<{ default: IslandComp<P> }>,
 ): Island<P> {
   return async (id, props, strategy, hydratable) => {
+    const marker = getRoot(id);
     const renderCallback = async () => {
       const Comp = (await source()).default;
-      const marker = getRoot(id);
       const fragment = getFragment(id);
       const root = (fragment
         ? () => (
@@ -107,25 +105,28 @@ export default function createIsland<P>(
     if (strategy) {
       switch (strategy.type) {
         case 'media':
-          onMedia(id, strategy.value, renderCallback);
+          (await import('rigidity-scheduler/media')).default(id, strategy.value, renderCallback);
           break;
         case 'load':
-          onLoad(id, renderCallback);
+          (await import('rigidity-scheduler/load')).default(id, renderCallback);
           break;
         case 'visible':
-          onVisible(id, renderCallback);
+          (await import('rigidity-scheduler/visible')).default(id, marker, renderCallback);
           break;
         case 'idle':
-          onIdle(id, renderCallback);
+          (await import('rigidity-scheduler/idle')).default(id, renderCallback);
           break;
         case 'animation-frame':
-          onAnimationFrame(id, renderCallback);
+          (await import('rigidity-scheduler/animation-frame')).default(id, renderCallback);
           break;
         case 'delay':
-          onDelay(id, strategy.value, renderCallback);
+          (await import('rigidity-scheduler/delay')).default(id, strategy.value, renderCallback);
           break;
         case 'hover':
-          onHover(id, strategy.value, renderCallback);
+          (await import('rigidity-scheduler/hover')).default(id, strategy.value, marker, renderCallback);
+          break;
+        case 'ready-state':
+          (await import('rigidity-scheduler/ready-state')).default(id, strategy.value, renderCallback);
           break;
         default:
           await renderCallback();

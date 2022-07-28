@@ -20,13 +20,12 @@ function getHookIdentifier(
   return newID;
 }
 
-function createStrategy(type: string) {
-  return t.objectExpression([
-    t.objectProperty(t.identifier('type'), t.stringLiteral(type)),
-  ]);
-}
-
-function createStrategyWithValue(type: string, attr: t.JSXAttribute) {
+function createStrategy(type: string, attr?: t.JSXAttribute) {
+  if (!attr) {
+    return t.objectExpression([
+      t.objectProperty(t.identifier('type'), t.stringLiteral(type)),
+    ]);
+  }
   let expression: t.Expression;
   if (t.isExpression(attr.value)) {
     expression = attr.value;
@@ -87,7 +86,8 @@ function transformServerComponent(programPath: NodePath<t.Program>): void {
                     case 'media':
                     case 'delay':
                     case 'hover':
-                      strategy = createStrategyWithValue(attr.name.name.name, attr);
+                    case 'ready-state':
+                      strategy = createStrategy(attr.name.name.name, attr);
                       break;
                     case 'only':
                       hydratable = false;
