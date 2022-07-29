@@ -1,3 +1,4 @@
+import { Link, MetaProvider, useTag } from 'rigidity-meta';
 import {
   createComponent,
   createUniqueId,
@@ -28,15 +29,22 @@ interface ClientProps<P> {
   children: JSX.Element;
   hydratable: boolean;
   strategy?: Strategy;
+  hasChildren?: boolean;
 }
 
 export default function Client<P>(props: ClientProps<P>) {
   const root = createUniqueId();
+  const tags = useTag();
 
   const propsResult = JSON.stringify(props.props);
   const strategyResult = JSON.stringify(props.strategy);
 
   return [
+    createComponent(Link, {
+      rel: 'prefetch',
+      as: 'script',
+      href: props.Comp.src,
+    }),
     ssr(
       ROOT,
       ssrHydrationKey(),
@@ -44,14 +52,22 @@ export default function Client<P>(props: ClientProps<P>) {
       props.hydratable
         ? renderToString(
           () => (
-            createComponent(
-              props.Comp,
-              mergeProps(props.props, {
-                get children() {
-                  return ssr(FRAGMENT, ssrHydrationKey(), props.children) as unknown as JSX.Element;
-                },
-              }) as P & { children: JSX.Element },
-            )
+            createComponent(MetaProvider, {
+              tags,
+              get children() {
+                if (props.hasChildren) {
+                  return createComponent(
+                    props.Comp,
+                    mergeProps(props.props, {
+                      get children() {
+                        return ssr(FRAGMENT, ssrHydrationKey(), props.children) as unknown as JSX.Element;
+                      },
+                    }) as P & { children: JSX.Element },
+                  );
+                }
+                return createComponent(props.Comp, props.props as P & { children: JSX.Element });
+              },
+            })
           ),
           {
             renderId: root,
@@ -59,7 +75,7 @@ export default function Client<P>(props: ClientProps<P>) {
         )
         : '',
     ),
-    ssr(TEMPLATE, ssrHydrationKey(), escape(root), renderToString(
+    props.hasChildren && ssr(TEMPLATE, ssrHydrationKey(), escape(root), renderToString(
       () => (
         ssr(FRAGMENT, ssrHydrationKey(), props.children)
       ),
