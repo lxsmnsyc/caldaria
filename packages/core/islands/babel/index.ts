@@ -22,8 +22,8 @@ function getHookIdentifier(
 
 function createStrategy(type: string, attr?: t.JSXAttribute) {
   if (!attr) {
-    return t.objectExpression([
-      t.objectProperty(t.identifier('type'), t.stringLiteral(type)),
+    return t.arrayExpression([
+      t.stringLiteral(type),
     ]);
   }
   let expression: t.Expression;
@@ -37,9 +37,9 @@ function createStrategy(type: string, attr?: t.JSXAttribute) {
   } else {
     expression = t.booleanLiteral(true);
   }
-  return t.objectExpression([
-    t.objectProperty(t.identifier('type'), t.stringLiteral(type)),
-    t.objectProperty(t.identifier('value'), expression),
+  return t.arrayExpression([
+    t.stringLiteral(type),
+    expression,
   ]);
 }
 
@@ -152,11 +152,15 @@ function transformServerComponent(programPath: NodePath<t.Program>): void {
                     t.jsxIdentifier('strategy'),
                     t.jsxExpressionContainer(strategy),
                   ),
+                  t.jsxAttribute(
+                    t.jsxIdentifier('hasChildren'),
+                    t.jsxExpressionContainer(t.booleanLiteral(path.node.children.length > 0)),
+                  ),
                 ],
               ),
-              path.node.closingElement = t.jsxClosingElement(
+              path.node.closingElement ? t.jsxClosingElement(
                 t.jsxIdentifier(ClientID.name),
-              ),
+              ) : null,
               path.node.children,
             ),
           );
