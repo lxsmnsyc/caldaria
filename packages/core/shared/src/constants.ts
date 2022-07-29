@@ -27,12 +27,11 @@ export const CUSTOM_ROOT = 'src/root';
 
 export const DIRECTORY_ROOT = 'index';
 
-export const SUPPORTED_PAGE_EXT = [
+export const SUPPORTED_PAGE_EXT = /* @__PURE__ */ [
   '.js',
   '.jsx',
   '.ts',
   '.tsx',
-  '.solid',
   ...'md|mdx|markdown|mdown|mkdn|mkd|mkdown|ron'.split('|').map((item) => `.${item}`),
 ];
 

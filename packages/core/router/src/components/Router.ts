@@ -24,8 +24,8 @@ export interface RouterInstance<P extends RouterParams = RouterParams> extends U
   params: P;
 }
 
-const LocationContext = createContext<UseLocation>();
-const ParamsContext = createContext<RouterParams>();
+const LocationContext = /* @__PURE__ */ createContext<UseLocation>();
+const ParamsContext = /* @__PURE__ */ createContext<RouterParams>();
 
 export interface RouterProps {
   routes: PageTree;

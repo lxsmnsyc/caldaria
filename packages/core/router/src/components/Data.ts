@@ -13,7 +13,7 @@ interface DataContext<L, A = undefined> {
   setAction: (value: A) => void;
 }
 
-const DataContext = createContext<DataContext<any, any>>();
+const DataContext = /* @__PURE__ */ createContext<DataContext<any, any>>();
 
 export function useDataContext<L, A = undefined>(): DataContext<L, A> {
   const ctx = useContext(DataContext);
