@@ -39,6 +39,8 @@ export default function Client<P>(props: ClientProps<P>) {
   const propsResult = JSON.stringify(props.props);
   const strategyResult = JSON.stringify(props.strategy);
 
+  let fragment = '';
+
   return [
     createComponent(Link, {
       rel: 'prefetch',
@@ -60,7 +62,10 @@ export default function Client<P>(props: ClientProps<P>) {
                     props.Comp,
                     mergeProps(props.props, {
                       get children() {
-                        return ssr(FRAGMENT, ssrHydrationKey(), props.children) as unknown as JSX.Element;
+                        const result = ssr(FRAGMENT, ssrHydrationKey(), props.children);
+                        fragment = result.t;
+                        console.log(fragment);
+                        return result;
                       },
                     }) as P & { children: JSX.Element },
                   );
@@ -75,14 +80,7 @@ export default function Client<P>(props: ClientProps<P>) {
         )
         : '',
     ),
-    props.hasChildren && ssr(TEMPLATE, ssrHydrationKey(), escape(root), renderToString(
-      () => (
-        ssr(FRAGMENT, ssrHydrationKey(), props.children)
-      ),
-      {
-        renderId: root,
-      },
-    )),
+    props.hasChildren && ssr(TEMPLATE, ssrHydrationKey(), escape(root), fragment),
     ssr(
       SCRIPT,
       ssrHydrationKey(),
