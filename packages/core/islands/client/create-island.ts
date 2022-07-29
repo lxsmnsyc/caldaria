@@ -7,8 +7,9 @@ import processScript from './process-script';
 type Island<P> = (
   id: string,
   props: P,
-  strategy?: Strategy,
-  hydratable?: boolean,
+  strategy: Strategy,
+  hydratable: boolean,
+  hasChildren: boolean,
 ) => Promise<void>;
 type IslandComp<P> = (props: P & { children?: JSX.Element }) => JSX.Element;
 
@@ -37,14 +38,14 @@ export type IslandComponent<P> = P & {
 export default function createIsland<P>(
   source: () => Promise<{ default: IslandComp<P> }>,
 ): Island<P> {
-  return async (id, props, strategy, hydratable) => {
+  return async (id, props, strategy, hydratable, hasChildren) => {
     const marker = getRoot(id);
     const renderCallback = async () => {
       const Comp = (await source()).default;
-      const fragment = getFragment(id);
       const root = () => createComponent(MetaProvider, {
         get children() {
-          if (fragment) {
+          if (hasChildren) {
+            const fragment = getFragment(id);
             return (
               createComponent(Comp, mergeProps(props, {
                 get children() {

@@ -1,10 +1,14 @@
 export function getRoot(id: string): Element {
-  const marker = document.querySelector(`ri-root[rid="${id}"]`);
+  const marker = document.querySelector(`ri-frame[rid="${id}"] > ri-root`);
   if (marker) {
     return marker;
   }
-  throw new Error(`Missing <ri-root> with id ${id}`);
+  throw new Error(`Missing ri-frame[rid="${id}"] > ri-root`);
 }
 export function getFragment(id: string): Element | null {
-  return document.querySelector(`template[data-ri="${id}"]`);
+  const template = document.querySelector(`ri-frame[rid="${id}"] > template`);
+  if (template) {
+    return template;
+  }
+  throw new Error(`Missing ri-frame[rid="${id}"] > template`);
 }
