@@ -28,6 +28,8 @@ export interface MetaContextType {
   removeClientTag: (tag: TagDescription, index: number) => void;
 
   addServerTag?: (tagDesc: TagDescription) => void;
+
+  tags: TagDescription[];
 }
 
 const cascadingTags = ['title', 'meta'];
@@ -65,6 +67,7 @@ const MetaProvider: ParentComponent<{ tags?: Array<TagDescription> }> = (props) 
   }
 
   const actions: MetaContextType = {
+    tags: props.tags ?? [],
     addClientTag: (tag: TagDescription) => {
       const tagType = getTagType(tag);
 
@@ -171,6 +174,15 @@ const MetaProvider: ParentComponent<{ tags?: Array<TagDescription> }> = (props) 
     },
   });
 };
+
+export function useTag() {
+  const ctx = useContext(MetaContext);
+
+  if (ctx) {
+    return ctx.tags;
+  }
+  throw new Error('Missing <MetaContext />');
+}
 
 export function useHead(tagDesc: {
   tag: string;
