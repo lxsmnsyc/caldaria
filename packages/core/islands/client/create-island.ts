@@ -1,5 +1,6 @@
 import { createComponent, JSX, mergeProps } from 'solid-js';
 import { render, hydrate } from 'solid-js/web';
+import { MetaProvider } from 'rigidity-meta';
 import { getRoot, getFragment } from './nodes';
 import processScript from './process-script';
 
@@ -11,55 +12,15 @@ type Island<P> = (
 ) => Promise<void>;
 type IslandComp<P> = (props: P & { children?: JSX.Element }) => JSX.Element;
 
-interface MediaQueryStrategy {
-  type: 'media';
-  value: string;
-}
-
-interface VisibilityStrategy {
-  type: 'visible';
-  value: string;
-}
-
-interface LoadStrategy {
-  type: 'load';
-  value?: undefined;
-}
-
-interface IdleStrategy {
-  type: 'idle';
-  value?: undefined;
-}
-
-interface AnimationFrameStrategy {
-  type: 'animation-frame';
-  value?: undefined;
-}
-
-interface DelayStrategy {
-  type: 'delay';
-  value: number;
-}
-
-interface InteractionStrategy {
-  type: 'interaction';
-  value: string[] | boolean;
-}
-
-interface ReadyStateStrategy {
-  type: 'ready-state';
-  value: DocumentReadyState;
-}
-
 export type Strategy =
-  | LoadStrategy
-  | MediaQueryStrategy
-  | VisibilityStrategy
-  | IdleStrategy
-  | AnimationFrameStrategy
-  | DelayStrategy
-  | InteractionStrategy
-  | ReadyStateStrategy;
+  | ['visible']
+  | ['load']
+  | ['idle']
+  | ['animation-frame']
+  | ['media', string]
+  | ['delay', number]
+  | ['interaction', string[] | boolean]
+  | ['ready-state', DocumentReadyState];
 
 export type IslandComponent<P> = P & {
   'client:load'?: boolean;
@@ -81,18 +42,22 @@ export default function createIsland<P>(
     const renderCallback = async () => {
       const Comp = (await source()).default;
       const fragment = getFragment(id);
-      const root = (fragment
-        ? () => (
-          createComponent(Comp, mergeProps(props, {
-            get children() {
-              const node = (fragment as HTMLTemplateElement).content.firstChild!;
-              processScript(node);
-              return node;
-            },
-          }) as P & { children?: JSX.Element })
-        )
-        : () => createComponent(Comp, props)
-      );
+      const root = () => createComponent(MetaProvider, {
+        get children() {
+          if (fragment) {
+            return (
+              createComponent(Comp, mergeProps(props, {
+                get children() {
+                  const node = (fragment as HTMLTemplateElement).content.firstChild!;
+                  processScript(node);
+                  return node;
+                },
+              }) as P & { children?: JSX.Element })
+            );
+          }
+          return createComponent(Comp, props);
+        },
+      });
       if (hydratable) {
         hydrate(root, marker, {
           renderId: id,
@@ -103,9 +68,9 @@ export default function createIsland<P>(
     };
 
     if (strategy) {
-      switch (strategy.type) {
+      switch (strategy[0]) {
         case 'media':
-          (await import('rigidity-scheduler/media')).default(id, strategy.value, renderCallback);
+          (await import('rigidity-scheduler/media')).default(id, strategy[1], renderCallback);
           break;
         case 'load':
           (await import('rigidity-scheduler/load')).default(id, renderCallback);
@@ -120,13 +85,13 @@ export default function createIsland<P>(
           (await import('rigidity-scheduler/animation-frame')).default(id, renderCallback);
           break;
         case 'delay':
-          (await import('rigidity-scheduler/delay')).default(id, strategy.value, renderCallback);
+          (await import('rigidity-scheduler/delay')).default(id, strategy[1], renderCallback);
           break;
         case 'interaction':
-          (await import('rigidity-scheduler/interaction')).default(id, strategy.value, marker, renderCallback);
+          (await import('rigidity-scheduler/interaction')).default(id, strategy[1], marker, renderCallback);
           break;
         case 'ready-state':
-          (await import('rigidity-scheduler/ready-state')).default(id, strategy.value, renderCallback);
+          (await import('rigidity-scheduler/ready-state')).default(id, strategy[1], renderCallback);
           break;
         default:
           await renderCallback();
