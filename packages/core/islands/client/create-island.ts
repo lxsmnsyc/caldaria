@@ -7,7 +7,7 @@ import processScript from './process-script';
 type Island<P> = (
   id: string,
   props: P,
-  strategy: Strategy,
+  strategy: Strategy | undefined,
   hydratable: boolean,
   hasChildren: boolean,
 ) => Promise<void>;
