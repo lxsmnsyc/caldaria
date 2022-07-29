@@ -13,10 +13,10 @@ import {
 } from 'solid-js/web';
 import { Strategy } from '../client/create-island';
 
-const ROOT = ['<rigidity-island', ' data-ri="', '">', '</rigidity-island>'];
+const ROOT = ['<ri-root', ' rid="', '">', '</ri-root>'];
 const TEMPLATE = ['<template', ' data-ri="', '">', '</template>'];
 const SCRIPT = ['<script', ' type="module">', '</script>'];
-const FRAGMENT = ['<rigidity-fragment', '>', '</rigidity-fragment>'];
+const FRAGMENT = ['<ri-fragment', '>', '</ri-fragment>'];
 
 interface ClientComp<P> {
   (props: P & { children: JSX.Element }): JSX.Element;
