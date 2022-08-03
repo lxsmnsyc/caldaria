@@ -1,6 +1,7 @@
 export default function onVisible(
   marker: Element,
   callback: () => void,
+  observeChildren?: boolean,
 ): () => void {
   const observer = new IntersectionObserver((entries) => {
     // eslint-disable-next-line no-restricted-syntax
@@ -13,13 +14,17 @@ export default function onVisible(
     }
   });
 
-  let node = marker.firstChild;
+  if (observeChildren) {
+    let node = marker.firstChild;
 
-  while (node) {
-    if (node instanceof Element) {
-      observer.observe(node);
+    while (node) {
+      if (node instanceof Element) {
+        observer.observe(node);
+      }
+      node = node.nextSibling;
     }
-    node = node.nextSibling;
+  } else {
+    observer.observe(marker);
   }
 
   return () => observer.disconnect();
