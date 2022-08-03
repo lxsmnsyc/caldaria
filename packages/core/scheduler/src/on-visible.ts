@@ -1,22 +1,12 @@
 export default function onVisible(
-  id: string,
   marker: Element,
-  callback: () => Promise<void>,
-): void {
+  callback: () => void,
+): () => void {
   const observer = new IntersectionObserver((entries) => {
     // eslint-disable-next-line no-restricted-syntax
     for (const entry of entries) {
       if (entry.isIntersecting || entry.intersectionRatio > 0) {
-        callback().then(
-          () => {
-            if (import.meta.env.DEV) {
-              console.log(`[client:visible] hydrated island: "${id}"`);
-            }
-          },
-          () => {
-            // no-op
-          },
-        );
+        callback();
         observer.disconnect();
         break;
       }
@@ -31,4 +21,6 @@ export default function onVisible(
     }
     node = node.nextSibling;
   }
+
+  return () => observer.disconnect();
 }

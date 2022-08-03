@@ -1,14 +1,4 @@
-export default function onIdle(id: string, callback: () => Promise<void>): void {
-  requestIdleCallback(() => {
-    callback().then(
-      () => {
-        if (import.meta.env.DEV) {
-          console.log(`[client:idle] hydrated island: "${id}"`);
-        }
-      },
-      () => {
-        // no-op
-      },
-    );
-  });
+export default function onIdle(callback: () => void): () => void {
+  const id = requestIdleCallback(callback);
+  return () => cancelIdleCallback(id);
 }

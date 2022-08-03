@@ -1,29 +1,20 @@
-export default function onMedia(id: string, query: string, callback: () => Promise<void>): void {
+export default function onMedia(
+  query: string,
+  callback: () => void,
+): (() => void) | undefined {
   const media = window.matchMedia(query);
-
-  function cb() {
-    callback().then(
-      () => {
-        if (import.meta.env.DEV) {
-          console.log(`[client:media="${query}"] hydrated island: "${id}"`);
-        }
-      },
-      () => {
-        // no-op
-      },
-    );
-  }
 
   const onMediaCallback = () => {
     if (media.matches) {
-      cb();
+      callback();
       media.removeEventListener('change', onMediaCallback);
     }
   };
 
   if (media.matches) {
-    cb();
-  } else {
-    media.addEventListener('change', onMediaCallback);
+    callback();
+    return undefined;
   }
+  media.addEventListener('change', onMediaCallback);
+  return () => media.removeEventListener('change', onMediaCallback);
 }

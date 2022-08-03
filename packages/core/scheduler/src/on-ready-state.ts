@@ -1,35 +1,22 @@
 export default function onReadyState(
-  id: string,
   readyState: DocumentReadyState,
-  callback: () => Promise<void>,
-): void {
-  function run() {
-    callback().then(
-      () => {
-        if (import.meta.env.DEV) {
-          console.log(`[client:ready-state="${readyState}"] hydrated island: "${id}"`);
-        }
-      },
-      () => {
-        // no-op
-      },
-    );
-  }
+  callback: () => void,
+): undefined | (() => void) {
   const cb = () => {
     switch (readyState) {
       case 'loading':
         // Call regardless
-        run();
+        callback();
         return true;
       case 'interactive':
         if (document.readyState !== 'loading') {
-          run();
+          callback();
           return true;
         }
         return false;
       case 'complete':
         if (document.readyState === 'complete') {
-          run();
+          callback();
           return true;
         }
         return false;
@@ -44,5 +31,7 @@ export default function onReadyState(
       }
     };
     document.addEventListener('readystatechange', listener);
+    return () => document.removeEventListener('readystatechange', listener);
   }
+  return undefined;
 }
