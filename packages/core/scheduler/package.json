@@ -14,7 +14,7 @@
   ],
   "peerDependencies": {},
   "devDependencies": {
-    "@types/node": "^18.6.2",
+    "@types/node": "^18.6.3",
     "eslint": "^8.18.0",
     "eslint-config-lxsmnsyc": "^0.4.8",
     "pridepack": "2.2.1",
