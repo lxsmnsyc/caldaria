@@ -28,7 +28,7 @@
   ],
   "devDependencies": {
     "@types/node": "^17.0.35",
-    "eslint": "^8.20.0",
+    "eslint": "^8.21.0",
     "eslint-config-lxsmnsyc": "^0.4.8",
     "pridepack": "^2.1.2",
     "rigidity": "0.0.24",

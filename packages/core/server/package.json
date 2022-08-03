@@ -14,9 +14,9 @@
   ],
   "devDependencies": {
     "@types/node": "^18.6.2",
-    "eslint": "^8.20.0",
+    "eslint": "^8.21.0",
     "eslint-config-lxsmnsyc": "^0.4.8",
-    "pridepack": "2.1.2",
+    "pridepack": "2.2.1",
     "solid-js": "^1.4.8",
     "tslib": "^2.4.0",
     "typescript": "^4.7.4",
