@@ -94,9 +94,16 @@ export interface ErrorProps {
 
 export type ErrorPage = Page<ErrorProps>;
 
+export interface IslandsModeOptions {
+  type: 'islands';
+  enableHybridRouting?: boolean;
+}
+
+export type BuildMode = IslandsModeOptions;
+
 export interface RenderResult<T> {
   isDev: boolean;
-  mode?: 'islands';
+  mode?: BuildMode;
   assets: string;
   App: () => JSX.Element;
   tags: TagDescription[];
@@ -114,7 +121,7 @@ export interface RigidityRoot {
 }
 
 export interface GlobalRenderOptions {
-  mode?: 'islands';
+  mode?: BuildMode;
   env?: 'production' | 'development';
   cdn?: string;
   assetsUrl: string;
@@ -163,7 +170,7 @@ export interface DevOptions {
 }
 
 export interface BuildOptions {
-  mode?: 'islands';
+  mode?: BuildMode;
   env?: 'production' | 'development';
   adapter: Adapter<any>;
   ssrMode?: SSRMode;
