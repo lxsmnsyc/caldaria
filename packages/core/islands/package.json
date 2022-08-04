@@ -17,6 +17,7 @@
     "@babel/helper-module-imports": "^7.18.6",
     "@babel/traverse": "^7.18.9",
     "@babel/types": "^7.18.9",
+    "rigidity-hybrid-router": "0.0.24",
     "rigidity-scheduler": "0.0.24",
     "rigidity-meta": "0.0.24"
   },
@@ -33,7 +34,7 @@
     "solid-js": "^1.4.8",
     "tslib": "^2.4.0",
     "typescript": "^4.7.4",
-    "vitest": "^0.19.01"
+    "vitest": "^0.20.3"
   },
   "scripts": {
     "prepublishOnly": "pridepack clean && pridepack build",

@@ -1,5 +1,6 @@
 import { createComponent, JSX, mergeProps } from 'solid-js';
 import { render, hydrate } from 'solid-js/web';
+import { on, onRemove } from 'rigidity-hybrid-router';
 import { MetaProvider } from 'rigidity-meta';
 import { getRoot, getFragment } from './nodes';
 import processScript from './process-script';
@@ -35,13 +36,47 @@ export type IslandComponent<P> = P & {
   'client:ready-state'?: DocumentReadyState;
 };
 
+async function renderRoot(
+  strategy: Strategy | undefined,
+  marker: Element,
+  renderCallback: () => void,
+): Promise<(() => void) | undefined> {
+  if (strategy) {
+    switch (strategy[0]) {
+      case 'media':
+        return (await import('rigidity-scheduler/media')).default(strategy[1], renderCallback);
+      case 'load':
+        return (await import('rigidity-scheduler/load')).default(renderCallback);
+      case 'visible':
+        return (await import('rigidity-scheduler/visible')).default(marker, renderCallback);
+      case 'idle':
+        return (await import('rigidity-scheduler/idle')).default(renderCallback);
+      case 'animation-frame':
+        return (await import('rigidity-scheduler/animation-frame')).default(renderCallback);
+      case 'delay':
+        return (await import('rigidity-scheduler/delay')).default(strategy[1], renderCallback);
+      case 'interaction':
+        return (await import('rigidity-scheduler/interaction')).default(strategy[1], marker, renderCallback);
+      case 'ready-state':
+        return (await import('rigidity-scheduler/ready-state')).default(strategy[1], renderCallback);
+      default:
+        break;
+    }
+  }
+  renderCallback();
+  return undefined;
+}
+
 export default function createIsland<P>(
   source: () => Promise<{ default: IslandComp<P> }>,
 ): Island<P> {
   return async (id, props, strategy, hydratable, hasChildren) => {
     const marker = getRoot(id);
-    const renderCallback = async () => {
-      const Comp = (await source()).default;
+    const Comp = (await source()).default;
+
+    let cleanup: (() => void) | undefined;
+
+    const result = await renderRoot(strategy, marker, () => {
       const root = () => createComponent(MetaProvider, {
         get children() {
           if (hasChildren) {
@@ -49,9 +84,14 @@ export default function createIsland<P>(
             return (
               createComponent(Comp, mergeProps(props, {
                 get children() {
-                  const node = (fragment as HTMLTemplateElement).content.firstChild!;
-                  processScript(node);
-                  return node;
+                  if (fragment) {
+                    const node = fragment.content.firstChild;
+                    if (node) {
+                      processScript(node);
+                      return node;
+                    }
+                  }
+                  return null;
                 },
               }) as P & { children?: JSX.Element })
             );
@@ -59,47 +99,23 @@ export default function createIsland<P>(
           return createComponent(Comp, props);
         },
       });
-      if (hydratable) {
-        hydrate(root, marker, {
+      cleanup = hydratable
+        ? hydrate(root, marker, {
           renderId: id,
-        });
-      } else {
-        render(root, marker);
-      }
-    };
+        })
+        : render(root, marker);
+    });
 
-    if (strategy) {
-      switch (strategy[0]) {
-        case 'media':
-          (await import('rigidity-scheduler/media')).default(id, strategy[1], renderCallback);
-          break;
-        case 'load':
-          (await import('rigidity-scheduler/load')).default(id, renderCallback);
-          break;
-        case 'visible':
-          (await import('rigidity-scheduler/visible')).default(id, marker, renderCallback);
-          break;
-        case 'idle':
-          (await import('rigidity-scheduler/idle')).default(id, renderCallback);
-          break;
-        case 'animation-frame':
-          (await import('rigidity-scheduler/animation-frame')).default(id, renderCallback);
-          break;
-        case 'delay':
-          (await import('rigidity-scheduler/delay')).default(id, strategy[1], renderCallback);
-          break;
-        case 'interaction':
-          (await import('rigidity-scheduler/interaction')).default(id, strategy[1], marker, renderCallback);
-          break;
-        case 'ready-state':
-          (await import('rigidity-scheduler/ready-state')).default(id, strategy[1], renderCallback);
-          break;
-        default:
-          await renderCallback();
-          break;
-      }
-    } else {
-      await renderCallback();
+    function clean() {
+      result?.();
+      cleanup?.();
     }
+
+    onRemove(marker, clean);
+
+    const unsub = on('unload', () => {
+      clean();
+      unsub();
+    });
   };
 }

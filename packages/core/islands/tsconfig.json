@@ -1,6 +1,6 @@
 {
   "exclude": ["node_modules"],
-  "include": ["server", "types", "babel", "client", "../scheduler/src/scheduler.ts"],
+  "include": ["server", "types", "babel", "client", "../hybrid-router/src/dom-lifecycle.ts"],
   "compilerOptions": {
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
