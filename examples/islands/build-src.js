@@ -4,7 +4,9 @@ const vercelAdapter = require('rigidity-adapter-vercel').default;
 
 if (process.env.NODE_ENV === 'development') {
   rigidity.createDevBuild({
-    mode: 'islands',
+    mode: {
+      type: 'islands',
+    },
     env: 'development',
     adapter: httpAdapter,
     // env: 'development',
@@ -18,7 +20,9 @@ if (process.env.NODE_ENV === 'development') {
   });
 } else {
   rigidity.createBuild({
-    mode: 'islands',
+    mode: {
+      type: 'islands',
+    },
     env: 'production',
     adapter: vercelAdapter,
     // env: 'development',

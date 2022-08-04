@@ -15,7 +15,7 @@ export default async function createBuild(options: BuildOptions): Promise<void> 
     generateESBuildDiagnostics(true, server.warnings);
   }
 
-  if (options.mode === 'islands') {
+  if (options.mode?.type === 'islands') {
     const islands = await createIslandsBuild(options);
     if (islands.errors.length || islands.warnings.length) {
       console.log('Client Build:');

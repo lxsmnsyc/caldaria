@@ -36,8 +36,19 @@ export default async function createIslandsBuild(
   if (environment !== 'production') {
     const mainEntry = path.join(artifactDirectory, 'index.tsx');
 
-    await outputFile(mainEntry, `import { useHotReload } from 'rigidity/render-client';
-  useHotReload('${options.dev?.ws ?? DEFAULT_WS_PORT}')`);
+    const lines = [];
+
+    if (options.mode?.type === 'islands' && (options.mode.enableHybridRouting ?? true)) {
+      lines.push('import { setupHybridRouter } from \'rigidity/islands-client\';');
+      lines.push('setupHybridRouter();');
+    }
+
+    if (options.dev) {
+      lines.push('import { useHotReload } from \'rigidity/render-client\';');
+      lines.push(`useHotReload('${options.dev?.ws ?? DEFAULT_WS_PORT}')`);
+    }
+
+    await outputFile(mainEntry, lines.join('\n'));
     artifacts.push(mainEntry);
   }
 

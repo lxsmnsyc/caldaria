@@ -32,10 +32,16 @@ import {
 import runESBuild from './run-esbuild';
 import getPOSIXPath from './get-posix-path';
 
-async function generateIsland(
+interface IslandManifest {
+  name: string;
+  content: string;
+}
+
+function generateIsland(
   options: BuildOptions,
   id: string,
   entry: string,
+  files: IslandManifest[],
 ) {
   const artifactDirectory = getArtifactBaseDirectory(
     options,
@@ -46,8 +52,10 @@ async function generateIsland(
 
   const relativePath = getPOSIXPath(path.relative(artifactDirectory, entry));
 
-  await outputFile(artifact, `import { createIsland } from 'rigidity/islands-client';
-  export default createIsland(() => import('${relativePath}'));`);
+  files.push({
+    name: artifact,
+    content: `import { createIsland } from 'rigidity/islands-client';export default createIsland(() => import('${relativePath}'));`,
+  });
 }
 
 export default async function createServerBuild(
@@ -64,7 +72,7 @@ export default async function createServerBuild(
 
   const outputDirectory = path.join(
     buildDirectory,
-    options.mode === 'islands' ? 'islands' : BUILD_OUTPUT.server.output,
+    options.mode?.type === 'islands' ? 'islands' : BUILD_OUTPUT.server.output,
   );
 
   await removeFile(outputDirectory);
@@ -96,10 +104,10 @@ export default async function createServerBuild(
     options.paths?.root ?? CUSTOM_ROOT,
   );
 
-  const buildDir = options.mode === 'islands' ? 'islands' : BUILD_OUTPUT.client.output;
+  const buildDir = options.mode?.type === 'islands' ? 'islands' : BUILD_OUTPUT.client.output;
 
   lines.push(options.adapter.generateScript(`{
-    mode: ${options.mode ? `'${options.mode}'` : 'undefined'},
+    mode: ${options.mode?.type ? `'${options.mode.type}'` : 'undefined'},
     env: '${options.env ?? 'production'}',
     ssrMode: ${JSON.stringify(options.ssrMode ?? 'sync')},
     version: ${JSON.stringify(Date.now())},
@@ -117,13 +125,15 @@ export default async function createServerBuild(
 
   const artifact = path.join(
     artifactDirectory,
-    options.mode === 'islands' ? 'server.tsx' : 'index.tsx',
+    options.mode?.type === 'islands' ? 'server.tsx' : 'index.tsx',
   );
 
   await outputFile(
     artifact,
     lines.join('\n'),
   );
+
+  const islands: IslandManifest[] = [];
 
   const result = await runESBuild(
     {
@@ -134,10 +144,14 @@ export default async function createServerBuild(
     },
     { isDev: environment !== 'production', isServer: true },
     options,
-    options.mode === 'islands'
-      ? (id, entry) => generateIsland(options, id, entry)
+    options.mode?.type === 'islands'
+      ? (id, entry) => generateIsland(options, id, entry, islands)
       : undefined,
   );
+
+  if (islands.length) {
+    await Promise.all(islands.map((item) => outputFile(item.name, item.content)));
+  }
 
   await removeFile(artifact);
   await removeFile(artifactDirectory);

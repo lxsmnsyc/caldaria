@@ -25,7 +25,7 @@ export default async function runESBuild(
   input: RecurseBuild,
   context: BuildContext,
   options: BuildOptions,
-  onEntry?: (id: string, entry: string) => Promise<void>,
+  onEntry?: (id: string, entry: string) => void,
 ): Promise<BuildResult> {
   const esbuildConfig = typeof options.esbuild === 'function'
     ? options.esbuild(context)
@@ -62,7 +62,7 @@ export default async function runESBuild(
 
   const initialPlugins: Plugin[] = [];
 
-  if (options.mode === 'islands' && context.isServer) {
+  if (options.mode?.type === 'islands' && context.isServer) {
     initialPlugins.push(
       islandsPlugin({
         generate: context.isServer ? 'ssr' : 'dom',

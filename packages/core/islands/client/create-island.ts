@@ -48,7 +48,7 @@ async function renderRoot(
       case 'load':
         return (await import('rigidity-scheduler/load')).default(renderCallback);
       case 'visible':
-        return (await import('rigidity-scheduler/visible')).default(marker, renderCallback);
+        return (await import('rigidity-scheduler/visible')).default(marker, renderCallback, true);
       case 'idle':
         return (await import('rigidity-scheduler/idle')).default(renderCallback);
       case 'animation-frame':

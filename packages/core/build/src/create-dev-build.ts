@@ -40,7 +40,7 @@ export default async function createDevBuild(
   const buildDirectory = options.directories?.build ?? BUILD_PATH;
   const outputDirectory = path.join(
     buildDirectory,
-    options.mode === 'islands' ? 'islands/server' : BUILD_OUTPUT.server.output,
+    options.mode?.type === 'islands' ? 'islands/server' : BUILD_OUTPUT.server.output,
   );
 
   let debounced: NodeJS.Timeout | undefined;
@@ -55,7 +55,10 @@ export default async function createDevBuild(
 
   let instance: execa.ExecaChildProcess<string> | undefined;
 
+  let building = false;
+
   async function runBuild(restarting: boolean) {
+    building = true;
     await createBuild(options);
     if (instance) {
       instance.cancel();
@@ -72,6 +75,7 @@ export default async function createDevBuild(
         client.send('update');
       }
     }
+    building = false;
   }
 
   function runProcess() {
@@ -82,7 +86,7 @@ export default async function createDevBuild(
       runBuild(true).catch(() => {
         // no-op
       });
-    }, 1000);
+    }, 200);
   }
 
   await runBuild(false);
@@ -91,10 +95,12 @@ export default async function createDevBuild(
   chokidar.watch(
     '.',
     {
-      ignored: /\.rigidity/,
+      ignored: new RegExp(options.directories?.build ?? BUILD_PATH),
       persistent: true,
     },
   ).on('change', () => {
-    runProcess();
+    if (!building) {
+      runProcess();
+    }
   });
 }

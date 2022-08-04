@@ -103,7 +103,7 @@ export type BuildMode = IslandsModeOptions;
 
 export interface RenderResult<T> {
   isDev: boolean;
-  mode?: BuildMode;
+  mode?: BuildMode['type'];
   assets: string;
   App: () => JSX.Element;
   tags: TagDescription[];
@@ -121,7 +121,7 @@ export interface RigidityRoot {
 }
 
 export interface GlobalRenderOptions {
-  mode?: BuildMode;
+  mode?: BuildMode['type'];
   env?: 'production' | 'development';
   cdn?: string;
   assetsUrl: string;

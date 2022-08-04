@@ -18,32 +18,32 @@ interface IslandsOptions {
   generate?: 'dom' | 'ssr';
   assets: string;
   babel: SolidBabelOption;
-  onEntry?: (id: string, entry: string) => Promise<void>;
+  onEntry?: (id: string, entry: string) => void;
 }
 
 export default function islandsPlugin(options: IslandsOptions): Plugin {
   const entries = new Map<string, string>();
   const filenames = new Map<string, string>();
 
-  async function createEntry(entry: string): Promise<string> {
+  function createEntry(entry: string): string {
     const result = entries.get(entry);
     if (result) {
       return result;
     }
     const id = `${entries.size}`;
     entries.set(entry, id);
-    await options.onEntry?.(id, entry);
+    options.onEntry?.(id, entry);
     return id;
   }
 
-  async function getFilename(pth: string) {
+  function getFilename(pth: string) {
     const filename = filenames.get(pth);
 
     if (filename) {
       return filename;
     }
 
-    const entry = await createEntry(pth);
+    const entry = createEntry(pth);
     const newFilename = `/${options.assets}/${entry}.js`;
     filenames.set(pth, newFilename);
     return newFilename;
@@ -53,14 +53,14 @@ export default function islandsPlugin(options: IslandsOptions): Plugin {
     name: 'rigidity:islands',
 
     setup(build) {
-      async function getInitialPlugins(
+      function getInitialPlugins(
         pth: string,
       ) {
         if (options.generate !== 'ssr') {
           return [];
         }
         if (/\.client\.[tj]sx?$/.test(pth)) {
-          return [[islands, { source: await getFilename(pth) }]];
+          return [[islands, { source: getFilename(pth) }]];
         }
         return [[islands]];
       }
@@ -80,7 +80,7 @@ export default function islandsPlugin(options: IslandsOptions): Plugin {
             ...options.babel.presets,
           ],
           plugins: [
-            ...await getInitialPlugins(args.path),
+            ...getInitialPlugins(args.path),
             [solidSFC, { dev: options.dev }],
             ...options.babel.plugins,
           ],

@@ -1,4 +1,4 @@
-/// <reference types="babel-plugin-solid-sfc" />
+/// <reference types="rigidity-build/env" />
 /// <reference types="solid-marked" />
 
 // images

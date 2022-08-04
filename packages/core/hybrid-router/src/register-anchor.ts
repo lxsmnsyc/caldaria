@@ -101,6 +101,9 @@ function onClick(event: MouseEvent) {
   if (!(el instanceof HTMLAnchorElement)) {
     return;
   }
+  if (import.meta.env.DEV) {
+    console.log('[rigidity:hybrid-router] Clicked', el);
+  }
   const targetHref = el.href;
   // Make sure that the click is native and
   // that the url is local

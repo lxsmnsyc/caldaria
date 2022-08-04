@@ -79,7 +79,6 @@ export function DocumentScript(): JSX.Element {
   const context = useContext(DocumentContext);
 
   const isIslands = context?.mode === 'islands';
-  const shouldRenderScript = (isIslands && context.isDev) || !isIslands;
 
   return [
     createComponent(Dynamic, { component: HydrationScript }),
@@ -92,7 +91,7 @@ export function DocumentScript(): JSX.Element {
         isError: context?.isError,
       }),
     }),
-    shouldRenderScript && createComponent(Dynamic, {
+    createComponent(Dynamic, {
       component: 'script',
       type: 'module',
       async: true,
