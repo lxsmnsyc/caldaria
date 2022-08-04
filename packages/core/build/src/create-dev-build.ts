@@ -55,10 +55,7 @@ export default async function createDevBuild(
 
   let instance: execa.ExecaChildProcess<string> | undefined;
 
-  let building = false;
-
   async function runBuild(restarting: boolean) {
-    building = true;
     await createBuild(options);
     if (instance) {
       instance.cancel();
@@ -75,7 +72,6 @@ export default async function createDevBuild(
         client.send('update');
       }
     }
-    building = false;
   }
 
   function runProcess() {
@@ -91,6 +87,8 @@ export default async function createDevBuild(
 
   await runBuild(false);
 
+  console.log(new RegExp(options.directories?.build ?? BUILD_PATH));
+
   // Add watcher
   chokidar.watch(
     '.',
@@ -99,8 +97,6 @@ export default async function createDevBuild(
       persistent: true,
     },
   ).on('change', () => {
-    if (!building) {
-      runProcess();
-    }
+    runProcess();
   });
 }

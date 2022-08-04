@@ -4,7 +4,6 @@ import {
 } from 'esbuild';
 import {
   BUILD_PATH,
-  BUILD_OUTPUT,
   BuildOptions,
   DEFAULT_WS_PORT,
 } from 'rigidity-shared';

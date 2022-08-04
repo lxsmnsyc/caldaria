@@ -47,20 +47,20 @@
     "dev": "pridepack dev",
     "test": "vitest"
   },
-  "private": false,
   "description": "",
   "repository": {
-    "url": "",
+    "url": "https://github.com/lxsmnsyc/rigidity.git",
     "type": "git"
   },
-  "homepage": "",
+  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/core/islands",
   "bugs": {
-    "url": ""
+    "url": "https://github.com/lxsmnsyc/rigidity/issues"
   },
-  "author": "",
   "publishConfig": {
     "access": "public"
   },
+  "author": "Alexis Munsayac",
+  "private": false,
   "exports": {
     "./babel": {
       "development": {

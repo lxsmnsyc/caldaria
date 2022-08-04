@@ -40,7 +40,7 @@
     "url": "https://github.com/lxsmnsyc/rigidity.git",
     "type": "git"
   },
-  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/rigidity-adapter-vercel",
+  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/adapters/vercel",
   "bugs": {
     "url": "https://github.com/lxsmnsyc/rigidity/issues"
   },
