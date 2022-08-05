@@ -12,8 +12,8 @@ import forkToCSSInJS from './utils/fork-to-css-in-js';
 import createRawCSSModule from './utils/create-raw-css-module';
 import createURLCSSModule from './utils/create-url-css-module';
 import createStyleId from './utils/create-style-id';
-import { outputFile, removeFile } from '../fs';
 import buildCSSEntrypoint from './utils/build-css-entrypoint';
+import createInlineSourceMap from './utils/create-inline-source-map';
 
 interface PostCSSOptions {
   dev: boolean;
@@ -33,7 +33,6 @@ export default function postcssPlugin(
       });
 
       const getStyleID = createStyleId('postcss');
-      const decoder = new TextDecoder();
 
       build.onResolve({
         filter: /\.module\.css\?url-only$/,
@@ -98,25 +97,18 @@ export default function postcssPlugin(
         const processor = postcss(config.plugins);
         const result = await processor.process(source, {
           ...config.options,
-          from: args.path,
+          from: path.basename(args.path),
+          map: defaultOptions.sourcemap
+            ? { inline: true }
+            : false,
         });
 
-        const output = await buildCSSEntrypoint(
+        return buildCSSEntrypoint(
           build,
           defaultOptions,
           args.path,
           result.css,
         );
-
-        const root = output.outputFiles.filter((item) => path.basename(item.path) === 'stdin.css');
-
-        await Promise.all(output.outputFiles.filter(async (item) => {
-          if (path.basename(item.path) !== 'stdin.css') {
-            await outputFile(item.path, item.contents);
-          }
-        }));
-
-        return decoder.decode(root[0].contents);
       }
 
       build.onLoad({
@@ -175,25 +167,20 @@ export default function postcssPlugin(
         const result = await processor.process(source, {
           ...config.options,
           from: args.path,
+          map: defaultOptions.sourcemap
+            ? { inline: true }
+            : false,
         });
 
-        const output = await buildCSSEntrypoint(
+        const css = await buildCSSEntrypoint(
           build,
           defaultOptions,
           args.path,
           result.css,
         );
 
-        const root = output.outputFiles.filter((item) => path.basename(item.path) === 'stdin.css');
-
-        await Promise.all(output.outputFiles.filter(async (item) => {
-          if (path.basename(item.path) !== 'stdin.css') {
-            await outputFile(item.path, item.contents);
-          }
-        }));
-
         return {
-          css: decoder.decode(root[0].contents),
+          css,
           json: resultJSON,
         };
       }

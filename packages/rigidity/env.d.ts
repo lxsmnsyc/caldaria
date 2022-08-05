@@ -142,6 +142,34 @@ declare module '*.less' {
   // no-op
 }
 
+// Sass
+declare module '*.scss?url' {
+  const contents: string;
+  export default contents;
+}
+
+declare module '*.scss?raw' {
+  const contents: string;
+  export default contents;
+}
+
+declare module '*.scss' {
+  // no-op
+}
+declare module '*.sass?url' {
+  const contents: string;
+  export default contents;
+}
+
+declare module '*.sass?raw' {
+  const contents: string;
+  export default contents;
+}
+
+declare module '*.sass' {
+  // no-op
+}
+
 // queries
 declare module '*?raw' {
   const contents: string;

@@ -17,6 +17,7 @@ import markdownPlugin from './plugins/markdown';
 import islandsPlugin from './plugins/islands';
 import progressPlugin from './plugins/progress';
 import lessPlugin from './plugins/less';
+import sassPlugin from './plugins/sass';
 
 interface BuildInput {
   prefix: string;
@@ -102,6 +103,9 @@ export default async function runESBuild(
         dev: context.isDev,
       }),
       lessPlugin({
+        dev: context.isDev,
+      }),
+      sassPlugin({
         dev: context.isDev,
       }),
       rawPlugin(),

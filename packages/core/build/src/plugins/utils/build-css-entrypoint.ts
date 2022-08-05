@@ -1,5 +1,8 @@
 import { BuildOptions, PluginBuild } from 'esbuild';
 import path from 'path';
+import { outputFile } from '../../fs';
+
+const decoder = new TextDecoder();
 
 export default async function buildCSSEntrypoint(
   instance: PluginBuild,
@@ -7,11 +10,11 @@ export default async function buildCSSEntrypoint(
   sourcefile: string,
   contents: string,
 ) {
-  return instance.esbuild.build({
+  const output = await instance.esbuild.build({
     ...defaultOptions,
     incremental: undefined,
     entryPoints: undefined,
-    sourcemap: 'inline',
+    sourcemap: defaultOptions.sourcemap ? 'inline' : undefined,
     write: false,
     stdin: {
       contents,
@@ -20,4 +23,14 @@ export default async function buildCSSEntrypoint(
       sourcefile: path.basename(sourcefile),
     },
   });
+
+  const root = output.outputFiles.filter((item) => path.basename(item.path) === 'stdin.css');
+
+  await Promise.all(output.outputFiles.filter(async (item) => {
+    if (path.basename(item.path) !== 'stdin.css') {
+      await outputFile(item.path, item.contents);
+    }
+  }));
+
+  return decoder.decode(root[0].contents);
 }

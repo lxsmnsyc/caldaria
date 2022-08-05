@@ -10,59 +10,65 @@ import createStyleId from './utils/create-style-id';
 import forkToCSSInJS from './utils/fork-to-css-in-js';
 import buildCSSEntrypoint from './utils/build-css-entrypoint';
 
-interface LessPluginOptions {
+interface SassPluginOptions {
   dev?: boolean;
 }
 
-export default function lessPlugin(options: LessPluginOptions): Plugin {
+export default function sassPlugin(options: SassPluginOptions): Plugin {
   return {
-    name: 'rigidity:less',
+    name: 'rigidity:sass',
     setup(build) {
       const defaultOptions = build.initialOptions;
-      const getStyleID = createStyleId('less');
+      const getStyleID = createStyleId('sass');
 
       build.onResolve({
-        filter: /\.less\?raw$/,
+        filter: /\.s[ac]ss\?raw$/,
       }, (args) => (
-        forkToCSSInJS('less-vanilla', args.kind, {
+        forkToCSSInJS('sass-vanilla', args.kind, {
           path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
-          namespace: 'less-raw',
+          namespace: 'sass-raw',
         })
       ));
       build.onResolve({
-        filter: /\.less\?url$/,
+        filter: /\.s[ac]ss\?url$/,
       }, (args) => (
-        forkToCSSInJS('less-vanilla', args.kind, {
+        forkToCSSInJS('sass-vanilla', args.kind, {
           path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
-          namespace: 'less-url',
+          namespace: 'sass-url',
         })
       ));
       build.onResolve({
-        filter: /\.less$/,
+        filter: /\.s[ac]ss$/,
       }, (args) => (
-        forkToCSSInJS('less-vanilla', args.kind, {
+        forkToCSSInJS('sass-vanilla', args.kind, {
           path: path.join(args.resolveDir, args.path),
-          namespace: 'less',
+          namespace: 'sass',
         })
       ));
 
-      async function processLess(args: OnLoadArgs): Promise<string> {
-        let less;
+      async function processSass(args: OnLoadArgs): Promise<string> {
+        let sass;
         try {
-          less = (await import('less')).default;
+          sass = (await import('sass')).default;
         } catch (err) {
-          log('less', red('You need to install `less` before using!'));
+          log('sass', red('You need to install `sass` before using!'));
           throw err;
         }
 
         const source = await fs.readFile(args.path, 'utf8');
-        const result = await less.render(source, {
-          filename: path.basename(args.path),
-          rootpath: path.dirname(args.path),
-          sourceMap: options.dev ? {
-            sourceMapFileInline: true,
-          } : undefined,
+        const result = await sass.compileStringAsync(source, {
+          url: new URL(args.path, 'file://'),
+          sourceMap: options.dev,
+          syntax: /\.sass/.test(path.basename(args.path)) ? 'indented' : 'scss',
         });
+
+        // TODO Fix urls
+        if (result.sourceMap) {
+          const { sources } = result.sourceMap;
+          for (let i = 0, len = sources.length; i < len; i += 1) {
+            sources[i] = path.relative(path.dirname(args.path), decodeURI(sources[i]));
+          }
+        }
 
         return buildCSSEntrypoint(
           build,
@@ -74,9 +80,9 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
 
       build.onLoad({
         filter: /.*/,
-        namespace: 'less-vanilla',
+        namespace: 'sass-vanilla',
       }, async (args) => {
-        const result = await processLess(args);
+        const result = await processSass(args);
         return {
           contents: result,
           resolveDir: path.dirname(args.path),
@@ -85,9 +91,9 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
       });
       build.onLoad({
         filter: /.*/,
-        namespace: 'less',
+        namespace: 'sass',
       }, async (args) => {
-        const result = await processLess(args);
+        const result = await processSass(args);
         return {
           contents: createLazyCSS(getStyleID(args.path), result, {}),
           resolveDir: path.dirname(args.path),
@@ -96,9 +102,9 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
       });
       build.onLoad({
         filter: /.*/,
-        namespace: 'less-raw',
+        namespace: 'sass-raw',
       }, async (args) => {
-        const result = await processLess(args);
+        const result = await processSass(args);
         return {
           contents: result,
           loader: 'text',
@@ -106,9 +112,9 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
       });
       build.onLoad({
         filter: /.*/,
-        namespace: 'less-url',
+        namespace: 'sass-url',
       }, async (args) => {
-        const result = await processLess(args);
+        const result = await processSass(args);
         return {
           contents: result,
           loader: 'file',

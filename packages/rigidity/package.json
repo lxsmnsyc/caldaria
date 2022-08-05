@@ -24,7 +24,17 @@
   },
   "peerDependencies": {
     "postcss": "^8",
-    "solid-js": "^1.3"
+    "solid-js": "^1.3",
+    "less": "^4.1",
+    "sass": "^1.54"
+  },
+  "peerDependenciesMeta": {
+    "less": {
+      "optional": true
+    },
+    "sass": {
+      "optional": true
+    }
   },
   "scripts": {
     "prepublishOnly": "pridepack clean && pridepack build",
