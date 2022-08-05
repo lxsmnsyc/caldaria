@@ -140,12 +140,12 @@ export default async function createServerBuild(
       entrypoints: [artifact],
       sourceDirectory: artifactDirectory,
       outputDirectory,
+      onEntry: options.mode?.type === 'islands'
+        ? (id, entry) => generateIsland(options, id, entry, islands)
+        : undefined,
     },
     { isDev: environment !== 'production', isServer: true },
     options,
-    options.mode?.type === 'islands'
-      ? (id, entry) => generateIsland(options, id, entry, islands)
-      : undefined,
   );
 
   if (islands.length) {

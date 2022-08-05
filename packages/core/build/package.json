@@ -60,7 +60,6 @@
     "dev": "pridepack dev",
     "test": "vitest"
   },
-  
   "description": "",
   "repository": {
     "url": "https://github.com/lxsmnsyc/rigidity.git",

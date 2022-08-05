@@ -12,6 +12,7 @@ module.exports = {
         "devDependencies": ["**/*.test.tsx"]
       }
     ],
-    "@typescript-eslint/no-unsafe-assignment": "off"
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "no-void": "off"
   },
 };

@@ -42,14 +42,16 @@ export default function postcssPlugin(
   return {
     name: 'rigidity:postcss',
 
-    setup(build) {
+    async setup(build) {
       const defaultOptions = build.initialOptions;
+
       async function runBuild(
         sourcefile: string,
         contents: string,
       ) {
         await build.esbuild.build({
           ...defaultOptions,
+          incremental: undefined,
           entryPoints: undefined,
           sourcemap: 'inline',
           stdin: {
@@ -60,6 +62,11 @@ export default function postcssPlugin(
           },
         });
       }
+
+      const config = await postcssrc({
+        env: options.dev ? 'development' : 'production',
+      });
+
       const paths = new Map<string, string>();
 
       let styleIds = 0;
@@ -145,10 +152,6 @@ export default function postcssPlugin(
       async function processPostCSS(args: OnLoadArgs): Promise<string> {
         const source = await fs.readFile(args.path, 'utf8');
 
-        const config = await postcssrc({
-          env: options.dev ? 'development' : 'production',
-        });
-
         const processor = postcss(config.plugins);
         const result = await processor.process(source, {
           ...config.options,
@@ -212,10 +215,6 @@ export default function postcssPlugin(
 
       async function processPostCSSModules(args: OnLoadArgs) {
         const source = await fs.readFile(args.path, 'utf8');
-
-        const config = await postcssrc({
-          env: options.dev ? 'development' : 'production',
-        });
 
         const processor = postcss(config.plugins);
         let resultJSON: Record<string, string> = {};

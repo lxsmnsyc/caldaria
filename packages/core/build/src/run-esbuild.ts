@@ -1,5 +1,4 @@
 import {
-  BuildOptions as ESBuildOption,
   BuildResult,
   build,
   Plugin,
@@ -11,27 +10,24 @@ import {
 } from 'rigidity-shared';
 import resolveTSConfig from './resolve-tsconfig';
 import solidPlugin from './plugins/solid';
-import postcssPlugin, { RecurseBuild } from './plugins/postcss';
+import postcssPlugin from './plugins/postcss';
 import rawPlugin from './plugins/raw';
 import urlPlugin from './plugins/url';
 import markdownPlugin from './plugins/markdown';
 import islandsPlugin from './plugins/islands';
 
-function createOption(opt: ESBuildOption): ESBuildOption {
-  return opt;
-}
-
 interface BuildInput {
   entrypoints: string[],
   sourceDirectory: string;
   outputDirectory: string;
+  onEntry?: (id: string, entry: string) => void,
+  incremental?: boolean;
 }
 
 export default async function runESBuild(
   input: BuildInput,
   context: BuildContext,
   options: BuildOptions,
-  onEntry?: (id: string, entry: string) => void,
 ): Promise<BuildResult> {
   const esbuildConfig = typeof options.esbuild === 'function'
     ? options.esbuild(context)
@@ -55,7 +51,7 @@ export default async function runESBuild(
         },
         dev: context.isDev,
         assets: options.paths?.assets ?? ASSETS_URL,
-        onEntry,
+        onEntry: input.onEntry,
       }),
     );
   } else {
@@ -115,5 +111,6 @@ export default async function runESBuild(
     external: esbuildConfig?.external,
     tsconfig: resolveTSConfig(esbuildConfig?.tsconfig),
     legalComments: 'none',
+    incremental: input.incremental,
   });
 }

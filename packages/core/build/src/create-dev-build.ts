@@ -10,6 +10,10 @@ import {
 } from 'rigidity-shared';
 import createBuild from './create-build';
 
+function escapeRegex(string: string) {
+  return string.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
 export default async function createDevBuild(
   options: BuildOptions,
 ) {
@@ -87,13 +91,13 @@ export default async function createDevBuild(
 
   await runBuild(false);
 
-  console.log(new RegExp(options.directories?.build ?? BUILD_PATH));
+  const pattern = escapeRegex(options.directories?.build ?? BUILD_PATH);
 
   // Add watcher
   chokidar.watch(
     '.',
     {
-      ignored: new RegExp(options.directories?.build ?? BUILD_PATH),
+      ignored: pattern,
       persistent: true,
     },
   ).on('change', () => {
