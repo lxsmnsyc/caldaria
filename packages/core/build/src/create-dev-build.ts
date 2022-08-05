@@ -8,36 +8,34 @@ import {
   green,
   yellow,
 } from 'rigidity-shared';
-import createBuild from './create-build';
+import {
+  buildServer,
+  generateIslands,
+  generateServerArtifact,
+  IslandManifest,
+} from './create-server-build';
+import { buildClient, generateClientArtifact } from './create-client-build';
+import createIslandsBuild from './create-islands-build';
+
+function debounce(callback: () => void, timeout = 200) {
+  let debounced: NodeJS.Timeout | undefined;
+  return () => {
+    if (debounced) {
+      clearTimeout(debounced);
+    }
+    debounced = setTimeout(callback, timeout);
+  };
+}
 
 function escapeRegex(string: string) {
   return string.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 
-export default async function createDevBuild(
+async function getProcess(
   options: BuildOptions,
+  reload: () => void,
 ) {
-  const ws = await import('ws');
-  const http = await import('http');
-  const chokidar = await import('chokidar');
   const execa = await import('execa');
-
-  const clients: Set<ws.WebSocket> = new Set();
-
-  const server = http.createServer();
-  const wss = new ws.WebSocketServer(
-    { server },
-  );
-
-  wss.on('connection', (socket) => {
-    clients.add(socket);
-
-    socket.on('close', () => {
-      clients.delete(socket);
-    });
-  });
-
-  server.listen(DEFAULT_WS_PORT);
 
   const path = await import('path');
 
@@ -46,8 +44,6 @@ export default async function createDevBuild(
     buildDirectory,
     options.mode?.type === 'islands' ? 'islands/server' : BUILD_OUTPUT.server.output,
   );
-
-  let debounced: NodeJS.Timeout | undefined;
 
   function runServer() {
     const instance = execa.node(
@@ -59,45 +55,116 @@ export default async function createDevBuild(
 
   let instance: execa.ExecaChildProcess<string> | undefined;
 
-  async function runBuild(restarting: boolean) {
-    await createBuild(options);
+  if (options.mode?.type === 'islands') {
+    const islands: IslandManifest[] = [];
+
+    await generateServerArtifact(options);
+    const server = await buildServer(options, {
+      incremental: true,
+      islands,
+    });
+
+    const runBuild = async (restarting: boolean) => {
+      islands.length = 0;
+      if (restarting) {
+        await generateServerArtifact(options);
+        await server.rebuild?.();
+      }
+      await generateIslands(islands);
+      await createIslandsBuild(options);
+      if (instance) {
+        instance.cancel();
+      }
+      if (restarting) {
+        console.log(yellow('Restarting...'));
+      }
+      instance = runServer();
+      if (restarting) {
+        console.log(green('Restarted!'));
+        reload();
+      }
+    };
+
+    const runProcess = debounce(() => void runBuild(true));
+
+    await runBuild(false);
+
+    return runProcess;
+  }
+  await generateServerArtifact(options);
+  await generateClientArtifact(options);
+  const server = await buildServer(options, {
+    incremental: true,
+  });
+  const client = await buildClient(options, true);
+
+  const runBuild = async (restarting: boolean) => {
+    if (restarting) {
+      await generateServerArtifact(options);
+      await generateClientArtifact(options);
+      await server.rebuild?.();
+      await client.rebuild?.();
+    }
     if (instance) {
       instance.cancel();
     }
     if (restarting) {
       console.log(yellow('Restarting...'));
     }
-    // eslint-disable-next-line import/no-dynamic-require, global-require
     instance = runServer();
     if (restarting) {
       console.log(green('Restarted!'));
-      // eslint-disable-next-line no-restricted-syntax
-      for (const client of clients.keys()) {
-        client.send('update');
-      }
+      reload();
     }
-  }
+  };
 
-  function runProcess() {
-    if (debounced) {
-      clearTimeout(debounced);
-    }
-    debounced = setTimeout(() => {
-      runBuild(true).catch(() => {
-        // no-op
-      });
-    }, 200);
-  }
+  const runProcess = debounce(() => void runBuild(true));
 
   await runBuild(false);
 
+  return runProcess;
+}
+
+export default async function createDevBuild(
+  options: BuildOptions,
+) {
+  const ws = await import('ws');
+  const http = await import('http');
+  const chokidar = await import('chokidar');
+
+  const clients: Set<ws.WebSocket> = new Set();
+
+  const proxy = http.createServer();
+  const wss = new ws.WebSocketServer(
+    { server: proxy },
+  );
+
+  wss.on('connection', (socket) => {
+    clients.add(socket);
+
+    socket.on('close', () => {
+      clients.delete(socket);
+    });
+  });
+
+  proxy.listen(DEFAULT_WS_PORT);
+
   const pattern = escapeRegex(options.directories?.build ?? BUILD_PATH);
+
+  console.log(pattern);
+
+  const runProcess = await getProcess(options, () => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const client of clients.keys()) {
+      client.send('update');
+    }
+  });
 
   // Add watcher
   chokidar.watch(
     '.',
     {
-      ignored: pattern,
+      ignored: new RegExp(pattern),
       persistent: true,
     },
   ).on('change', () => {

@@ -14,21 +14,26 @@ import {
 import runESBuild from './run-esbuild';
 import traverseDirectory from './traverse-directory';
 
-export default async function createIslandsBuild(
-  options: BuildOptions,
-): Promise<BuildResult> {
-  const environment = options.env ?? 'production';
+function getOutputDirectory(options: BuildOptions) {
   const buildDirectory = options.directories?.build ?? BUILD_PATH;
 
-  const outputDirectory = path.join(
+  return path.join(
     buildDirectory,
     'islands',
   );
+}
 
-  const artifactDirectory = getArtifactBaseDirectory(
+function getArtifactDirectory(options: BuildOptions) {
+  return getArtifactBaseDirectory(
     options,
     'client',
   );
+}
+
+async function generateIslandsArtifact(options: BuildOptions) {
+  const environment = options.env ?? 'production';
+
+  const artifactDirectory = getArtifactDirectory(options);
 
   const artifacts = (await traverseDirectory(artifactDirectory))
     .map((item) => path.join(artifactDirectory, item));
@@ -51,17 +56,30 @@ export default async function createIslandsBuild(
     artifacts.push(mainEntry);
   }
 
+  return artifacts;
+}
+
+async function removeIslandArtifacts(options: BuildOptions) {
+  await removeFile(getArtifactDirectory(options));
+}
+
+export default async function createIslandsBuild(
+  options: BuildOptions,
+): Promise<BuildResult> {
+  const environment = options.env ?? 'production';
+  const artifacts = await generateIslandsArtifact(options);
+  const outputDirectory = getOutputDirectory(options);
+
   const result = await runESBuild(
     {
       entrypoints: artifacts,
-      sourceDirectory: artifactDirectory,
       outputDirectory,
     },
     { isDev: environment !== 'production', isServer: false },
     options,
   );
 
-  await removeFile(artifactDirectory);
+  await removeIslandArtifacts(options);
 
   return result;
 }

@@ -18,7 +18,6 @@ import islandsPlugin from './plugins/islands';
 
 interface BuildInput {
   entrypoints: string[],
-  sourceDirectory: string;
   outputDirectory: string;
   onEntry?: (id: string, entry: string) => void,
   incremental?: boolean;

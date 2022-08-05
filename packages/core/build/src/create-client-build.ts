@@ -28,79 +28,129 @@ import {
 } from './options';
 import runESBuild from './run-esbuild';
 
-export default async function createClientBuild(
-  options: BuildOptions,
-): Promise<BuildResult> {
-  const environment = options.env ?? 'production';
-  const pagesDirectory = options.directories?.pages ?? PAGES_PATH;
+function getOutputDirectory(options: BuildOptions) {
   const buildDirectory = options.directories?.build ?? BUILD_PATH;
-
-  const pages = await getPages(pagesDirectory);
-
   const outputDirectory = path.join(
     buildDirectory,
     BUILD_OUTPUT.client.output,
   );
 
-  await removeFile(outputDirectory);
+  return outputDirectory;
+}
 
-  const artifactDirectory = getArtifactBaseDirectory(
+export function getClientArtifactDirectory(options: BuildOptions) {
+  return getArtifactBaseDirectory(
     options,
     'client',
   );
+}
+
+function getClientArtifact(options: BuildOptions) {
+  const directory = getClientArtifactDirectory(options);
+  return {
+    directory,
+    source: path.join(directory, 'index.tsx'),
+  };
+}
+
+function createHydrateScript(
+  options: BuildOptions,
+  pages: string[],
+  customRoot: string | undefined,
+) {
+  const lines: string[] = [
+    `ws: ${options.dev?.ws ?? DEFAULT_WS_PORT}`,
+    `env: '${options.env ?? 'production'}'`,
+    `assetsUrl: '${options.paths?.assets ?? ASSETS_URL}'`,
+    `publicUrl: '${options.paths?.public ?? PUBLIC_URL}'`,
+    `pages: ${getPagesOptions(pages)}`,
+  ];
+
+  if (options.paths?.cdn) {
+    lines.push(`cdn: '${options.paths?.cdn}'`);
+  }
+  if (customRoot) {
+    lines.push(`root: ${customRoot}`);
+  }
+
+  return `hydrateClient({${lines.join(', ')}}, hydrate);`;
+}
+
+export async function generateClientArtifact(
+  options: BuildOptions,
+) {
+  const pagesDirectory = options.directories?.pages ?? PAGES_PATH;
+
+  const pages = await getPages(pagesDirectory);
+
+  const outputDirectory = getOutputDirectory(options);
+
+  await removeFile(outputDirectory);
+
+  const artifact = getClientArtifact(options);
 
   // Create import header
   const lines = [
     'import { createClientPage } from "rigidity/router";',
     ...getPageImports(
       pagesDirectory,
-      artifactDirectory,
+      artifact.directory,
       pages,
       false,
     ),
   ];
 
   const customRoot = await getCustomRoot(
-    artifactDirectory,
+    artifact.directory,
     lines,
     options.paths?.root ?? CUSTOM_ROOT,
   );
 
   lines.push(
-    `
-import { hydrate } from 'solid-js/web';
-import { hydrateClient } from 'rigidity/render-client';
-hydrateClient({
-  ws: ${options.dev?.ws ?? DEFAULT_WS_PORT},
-  env: '${options.env ?? 'production'}',
-  cdn: ${options.paths?.cdn ? JSON.stringify(options.paths.cdn) : 'undefined'},
-  assetsUrl: ${JSON.stringify(options.paths?.assets ?? ASSETS_URL)},
-  publicUrl: ${JSON.stringify(options.paths?.public ?? PUBLIC_URL)},
-  root: ${customRoot ?? 'undefined'},
-  pages: ${getPagesOptions(pages)},
-}, hydrate);
-    `,
+    "import { hydrate } from 'solid-js/web';",
+    "import { hydrateClient } from 'rigidity/render-client';",
+    createHydrateScript(options, pages, customRoot),
   );
-
-  const artifact = path.join(artifactDirectory, 'index.tsx');
 
   await outputFile(
-    artifact,
+    artifact.source,
     lines.join('\n'),
   );
+}
 
+export async function removeClientArtifact(
+  options: BuildOptions,
+) {
+  const artifact = getClientArtifact(options);
+  await removeFile(artifact.source);
+  await removeFile(artifact.directory);
+}
+
+export async function buildClient(
+  options: BuildOptions,
+  incremental?: boolean,
+) {
+  const environment = options.env ?? 'production';
+  const artifact = getClientArtifact(options);
+  const outputDirectory = getOutputDirectory(options);
   const result = await runESBuild(
     {
-      entrypoints: [artifact],
-      sourceDirectory: artifactDirectory,
+      entrypoints: [artifact.source],
       outputDirectory,
+      incremental,
     },
     { isDev: environment !== 'production', isServer: false },
     options,
   );
 
-  await removeFile(artifact);
-  await removeFile(artifactDirectory);
+  return result;
+}
 
+export default async function createClientBuild(
+  options: BuildOptions,
+): Promise<BuildResult> {
+  await generateClientArtifact(options);
+  const result = await buildClient(options);
+  await removeClientArtifact(options);
   return result;
 }
