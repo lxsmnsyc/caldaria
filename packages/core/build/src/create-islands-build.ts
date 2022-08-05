@@ -37,21 +37,21 @@ async function generateIslandsArtifact(options: BuildOptions) {
 
   const artifacts = (await traverseDirectory(artifactDirectory))
     .map((item) => path.join(artifactDirectory, item));
+  const mainEntry = path.join(artifactDirectory, 'index.tsx');
+
+  const lines = [];
+
+  if (options.mode?.type === 'islands' && (options.mode.enableHybridRouting ?? true)) {
+    lines.push('import { setupHybridRouter } from \'rigidity/islands-client\';');
+    lines.push('setupHybridRouter();');
+  }
+
   if (environment !== 'production') {
-    const mainEntry = path.join(artifactDirectory, 'index.tsx');
+    lines.push('import { useHotReload } from \'rigidity/render-client\';');
+    lines.push(`useHotReload('${options.dev?.ws ?? DEFAULT_WS_PORT}')`);
+  }
 
-    const lines = [];
-
-    if (options.mode?.type === 'islands' && (options.mode.enableHybridRouting ?? true)) {
-      lines.push('import { setupHybridRouter } from \'rigidity/islands-client\';');
-      lines.push('setupHybridRouter();');
-    }
-
-    if (options.dev) {
-      lines.push('import { useHotReload } from \'rigidity/render-client\';');
-      lines.push(`useHotReload('${options.dev?.ws ?? DEFAULT_WS_PORT}')`);
-    }
-
+  if (lines.length) {
     await outputFile(mainEntry, lines.join('\n'));
     artifacts.push(mainEntry);
   }
@@ -74,12 +74,15 @@ export default async function createIslandsBuild(
     {
       entrypoints: artifacts,
       outputDirectory,
+      prefix: 'islands',
     },
     { isDev: environment !== 'production', isServer: false },
     options,
   );
 
-  await removeIslandArtifacts(options);
+  if (environment !== 'production') {
+    await removeIslandArtifacts(options);
+  }
 
   return result;
 }

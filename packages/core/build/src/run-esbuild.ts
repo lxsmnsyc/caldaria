@@ -15,8 +15,10 @@ import rawPlugin from './plugins/raw';
 import urlPlugin from './plugins/url';
 import markdownPlugin from './plugins/markdown';
 import islandsPlugin from './plugins/islands';
+import progressPlugin from './plugins/progress';
 
 interface BuildInput {
+  prefix: string;
   entrypoints: string[],
   outputDirectory: string;
   onEntry?: (id: string, entry: string) => void,
@@ -92,6 +94,9 @@ export default async function runESBuild(
     jsx: 'preserve',
     plugins: [
       ...initialPlugins,
+      progressPlugin({
+        prefix: input.prefix,
+      }),
       postcssPlugin({
         dev: context.isDev,
       }),

@@ -61,8 +61,8 @@ function createHydrateScript(
   const lines: string[] = [
     `ws: ${options.dev?.ws ?? DEFAULT_WS_PORT}`,
     `env: '${options.env ?? 'production'}'`,
-    `assetsUrl: '${options.paths?.assets ?? ASSETS_URL}'`,
-    `publicUrl: '${options.paths?.public ?? PUBLIC_URL}'`,
+    `assetsUrl: ${JSON.stringify(options.paths?.assets ?? ASSETS_URL)}`,
+    `publicUrl: ${JSON.stringify(options.paths?.public ?? PUBLIC_URL)}`,
     `pages: ${getPagesOptions(pages)}`,
   ];
 
@@ -138,6 +138,7 @@ export async function buildClient(
       entrypoints: [artifact.source],
       outputDirectory,
       incremental,
+      prefix: 'client',
     },
     { isDev: environment !== 'production', isServer: false },
     options,

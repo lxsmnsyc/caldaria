@@ -6,6 +6,7 @@ import {
   BUILD_PATH,
   DEFAULT_WS_PORT,
   green,
+  log,
   yellow,
 } from 'rigidity-shared';
 import {
@@ -55,6 +56,8 @@ async function getProcess(
 
   let instance: execa.ExecaChildProcess<string> | undefined;
 
+  let building = false;
+
   if (options.mode?.type === 'islands') {
     const islands: IslandManifest[] = [];
 
@@ -65,27 +68,32 @@ async function getProcess(
     });
 
     const runBuild = async (restarting: boolean) => {
-      islands.length = 0;
+      building = true;
+      if (instance) {
+        instance.cancel();
+      }
+      if (restarting) {
+        log('dev-server', yellow('Restarting...'));
+      }
       if (restarting) {
         await generateServerArtifact(options);
         await server.rebuild?.();
       }
       await generateIslands(islands);
       await createIslandsBuild(options);
-      if (instance) {
-        instance.cancel();
-      }
-      if (restarting) {
-        console.log(yellow('Restarting...'));
-      }
       instance = runServer();
       if (restarting) {
-        console.log(green('Restarted!'));
+        log('dev-server', green('Restarted!'));
         reload();
       }
+      building = false;
     };
 
-    const runProcess = debounce(() => void runBuild(true));
+    const runProcess = debounce(() => {
+      if (!building) {
+        void runBuild(true);
+      }
+    });
 
     await runBuild(false);
 
@@ -99,26 +107,32 @@ async function getProcess(
   const client = await buildClient(options, true);
 
   const runBuild = async (restarting: boolean) => {
+    building = true;
+    if (instance) {
+      instance.cancel();
+    }
+    if (restarting) {
+      log('dev-server', yellow('Restarting...'));
+    }
     if (restarting) {
       await generateServerArtifact(options);
       await generateClientArtifact(options);
       await server.rebuild?.();
       await client.rebuild?.();
     }
-    if (instance) {
-      instance.cancel();
-    }
-    if (restarting) {
-      console.log(yellow('Restarting...'));
-    }
     instance = runServer();
     if (restarting) {
-      console.log(green('Restarted!'));
+      log('dev-server', green('Restarted!'));
       reload();
     }
+    building = false;
   };
 
-  const runProcess = debounce(() => void runBuild(true));
+  const runProcess = debounce(() => {
+    if (!building) {
+      void runBuild(true);
+    }
+  });
 
   await runBuild(false);
 
@@ -151,14 +165,14 @@ export default async function createDevBuild(
 
   const pattern = escapeRegex(options.directories?.build ?? BUILD_PATH);
 
-  console.log(pattern);
-
   const runProcess = await getProcess(options, () => {
     // eslint-disable-next-line no-restricted-syntax
     for (const client of clients.keys()) {
       client.send('update');
     }
   });
+
+  log('dev-server', green('Started.'));
 
   // Add watcher
   chokidar.watch(

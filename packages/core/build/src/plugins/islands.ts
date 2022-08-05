@@ -49,22 +49,22 @@ export default function islandsPlugin(options: IslandsOptions): Plugin {
     return newFilename;
   }
 
+  function getInitialPlugins(
+    pth: string,
+  ) {
+    if (options.generate !== 'ssr') {
+      return [];
+    }
+    if (/\.client\.[tj]sx?$/.test(pth)) {
+      return [[islands, { source: getFilename(pth) }]];
+    }
+    return [[islands]];
+  }
+
   return {
     name: 'rigidity:islands',
 
     setup(build) {
-      function getInitialPlugins(
-        pth: string,
-      ) {
-        if (options.generate !== 'ssr') {
-          return [];
-        }
-        if (/\.client\.[tj]sx?$/.test(pth)) {
-          return [[islands, { source: getFilename(pth) }]];
-        }
-        return [[islands]];
-      }
-
       build.onLoad({
         filter: /\.[tj]sx?$/,
       }, async (args) => {
