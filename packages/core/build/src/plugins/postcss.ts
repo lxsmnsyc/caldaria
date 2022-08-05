@@ -1,5 +1,4 @@
 import {
-  BuildResult,
   OnLoadArgs,
   OnResolveArgs,
   OnResolveResult,
@@ -11,19 +10,8 @@ import postcss from 'postcss';
 import postcssrc from 'postcss-load-config';
 import PostcssModulesPlugin from 'postcss-modules';
 
-export interface RecurseBuild {
-  filename?: string;
-  recurse?: boolean;
-  entrypoints?: string[] | Record<string, string> | undefined;
-  content: string;
-  sourceDirectory: string;
-  outputDirectory: string;
-}
-
 interface PostCSSOptions {
   dev: boolean;
-  artifactDirectory: string;
-  recurseBuild: (opts: RecurseBuild) => Promise<BuildResult>
 }
 
 function createLazyCSS(id: string, content: string, json: Record<string, string>) {
@@ -55,6 +43,23 @@ export default function postcssPlugin(
     name: 'rigidity:postcss',
 
     setup(build) {
+      const defaultOptions = build.initialOptions;
+      async function runBuild(
+        sourcefile: string,
+        contents: string,
+      ) {
+        await build.esbuild.build({
+          ...defaultOptions,
+          entryPoints: undefined,
+          sourcemap: 'inline',
+          stdin: {
+            contents,
+            resolveDir: path.dirname(sourcefile),
+            loader: 'css',
+            sourcefile: path.basename(sourcefile),
+          },
+        });
+      }
       const paths = new Map<string, string>();
 
       let styleIds = 0;
@@ -150,16 +155,15 @@ export default function postcssPlugin(
           from: args.path,
         });
         const artifact = path.join(
-          options.artifactDirectory,
+          defaultOptions.outdir ?? '',
           'stdin.css',
         );
-        await options.recurseBuild({
-          recurse: true,
-          content: result.css,
-          filename: path.basename(args.path),
-          sourceDirectory: path.dirname(args.path),
-          outputDirectory: options.artifactDirectory,
-        });
+
+        await runBuild(
+          args.path,
+          result.css,
+        );
+
         return fs.readFile(artifact, 'utf8');
       }
 
@@ -225,16 +229,13 @@ export default function postcssPlugin(
           from: args.path,
         });
         const artifact = path.join(
-          options.artifactDirectory,
+          defaultOptions.outdir ?? '',
           'stdin.css',
         );
-        await options.recurseBuild({
-          recurse: true,
-          content: result.css,
-          filename: path.basename(args.path),
-          sourceDirectory: path.dirname(args.path),
-          outputDirectory: options.artifactDirectory,
-        });
+        await runBuild(
+          args.path,
+          result.css,
+        );
         return {
           css: await fs.readFile(artifact, 'utf8'),
           json: resultJSON,

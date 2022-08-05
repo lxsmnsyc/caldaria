@@ -21,8 +21,14 @@ function createOption(opt: ESBuildOption): ESBuildOption {
   return opt;
 }
 
+interface BuildInput {
+  entrypoints: string[],
+  sourceDirectory: string;
+  outputDirectory: string;
+}
+
 export default async function runESBuild(
-  input: RecurseBuild,
+  input: BuildInput,
   context: BuildContext,
   options: BuildOptions,
   onEntry?: (id: string, entry: string) => void,
@@ -36,29 +42,6 @@ export default async function runESBuild(
   const babelPresetsConfig = typeof options.babel?.presets === 'function'
     ? options.babel.presets(context)
     : options.babel?.presets;
-
-  const entry = input.recurse
-    ? createOption({
-      stdin: {
-        contents: input.content,
-        resolveDir: input.sourceDirectory,
-        loader: 'css',
-        sourcefile: input.filename,
-      },
-    })
-    : createOption({
-      entryPoints: input.entrypoints,
-    });
-
-  let sourcemap: ESBuildOption['sourcemap'];
-
-  if (context.isDev) {
-    if (input.recurse) {
-      sourcemap = 'inline';
-    } else {
-      sourcemap = true;
-    }
-  }
 
   const initialPlugins: Plugin[] = [];
 
@@ -89,11 +72,11 @@ export default async function runESBuild(
   }
 
   return build({
-    ...entry,
+    entryPoints: input.entrypoints,
     outdir: input.outputDirectory,
     bundle: true,
     minify: !context.isDev,
-    sourcemap,
+    sourcemap: context.isDev,
     format: context.isServer ? 'cjs' : 'esm',
     platform: context.isServer ? 'node' : 'browser',
     splitting: !context.isServer,
@@ -116,10 +99,6 @@ export default async function runESBuild(
       ...initialPlugins,
       postcssPlugin({
         dev: context.isDev,
-        artifactDirectory: input.outputDirectory,
-        recurseBuild(opts) {
-          return runESBuild(opts, context, options);
-        },
       }),
       rawPlugin(),
       urlPlugin(),

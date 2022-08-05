@@ -138,7 +138,6 @@ export default async function createServerBuild(
   const result = await runESBuild(
     {
       entrypoints: [artifact],
-      content: artifact,
       sourceDirectory: artifactDirectory,
       outputDirectory,
     },
