@@ -127,6 +127,21 @@ declare module '*.css' {
   // no-op
 }
 
+// Less
+declare module '*.less?url' {
+  const contents: string;
+  export default contents;
+}
+
+declare module '*.less?raw' {
+  const contents: string;
+  export default contents;
+}
+
+declare module '*.less' {
+  // no-op
+}
+
 // queries
 declare module '*?raw' {
   const contents: string;

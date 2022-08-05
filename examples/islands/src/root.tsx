@@ -7,6 +7,7 @@ import {
 } from 'rigidity/root';
 import { Link } from 'rigidity/meta';
 import styles from './styles/main.css?url';
+import example from './styles/example.less?url';
 
 export default createRigidityRoot({
   App(appProps) {
@@ -83,6 +84,7 @@ export default createRigidityRoot({
         }}
       >
         <Link rel="stylesheet" href={styles} />
+        <Link rel="stylesheet" href={example} />
         <div class="bg-gradient-to-r from-indigo-400 to-blue-600 w-full flex">
           <div class="flex flex-col items-center w-full min-h-screen overflow-x-hidden">
             <Suspense fallback={<h1>Loading...</h1>}>

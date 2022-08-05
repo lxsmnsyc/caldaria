@@ -1,7 +1,5 @@
 import {
   OnLoadArgs,
-  OnResolveArgs,
-  OnResolveResult,
   Plugin,
 } from 'esbuild';
 import path from 'path';
@@ -9,31 +7,16 @@ import fs from 'fs/promises';
 import postcss from 'postcss';
 import postcssrc from 'postcss-load-config';
 import PostcssModulesPlugin from 'postcss-modules';
+import createLazyCSS from './utils/create-lazy-css';
+import forkToCSSInJS from './utils/fork-to-css-in-js';
+import createRawCSSModule from './utils/create-raw-css-module';
+import createURLCSSModule from './utils/create-url-css-module';
+import createStyleId from './utils/create-style-id';
+import { outputFile, removeFile } from '../fs';
+import buildCSSEntrypoint from './utils/build-css-entrypoint';
 
 interface PostCSSOptions {
   dev: boolean;
-}
-
-function createLazyCSS(id: string, content: string, json: Record<string, string>) {
-  return `
-import { renderStyle } from 'rigidity/render-client';
-renderStyle(${JSON.stringify(id)}, ${JSON.stringify(content)});
-export default ${JSON.stringify(json)};
-`;
-}
-
-function createRawCSSModule(css: string, json: Record<string, string>) {
-  return `
-export const styles = ${JSON.stringify(json)};
-export const sheet = ${JSON.stringify(css)};
-`;
-}
-
-function createURLCSSModule(p: string, json: Record<string, string>) {
-  return `
-export const styles = ${JSON.stringify(json)};
-export { default as source } from ${JSON.stringify(`${p}?url-only`)};
-`;
 }
 
 export default function postcssPlugin(
@@ -45,57 +28,17 @@ export default function postcssPlugin(
     async setup(build) {
       const defaultOptions = build.initialOptions;
 
-      async function runBuild(
-        sourcefile: string,
-        contents: string,
-      ) {
-        await build.esbuild.build({
-          ...defaultOptions,
-          incremental: undefined,
-          entryPoints: undefined,
-          sourcemap: 'inline',
-          stdin: {
-            contents,
-            resolveDir: path.dirname(sourcefile),
-            loader: 'css',
-            sourcefile: path.basename(sourcefile),
-          },
-        });
-      }
-
       const config = await postcssrc({
         env: options.dev ? 'development' : 'production',
       });
 
-      const paths = new Map<string, string>();
-
-      let styleIds = 0;
-
-      function getStyleID(source: string) {
-        const id = paths.get(source);
-        if (id) {
-          return id;
-        }
-        const newID = `style-${styleIds}`;
-        styleIds += 1;
-        paths.set(source, newID);
-        return newID;
-      }
-
-      function pickCSSinJS(kind: OnResolveArgs['kind'], args: OnResolveResult): OnResolveResult {
-        if (kind === 'import-rule' || kind === 'entry-point') {
-          return {
-            path: args.path,
-            namespace: 'postcss-vanilla',
-          };
-        }
-        return args;
-      }
+      const getStyleID = createStyleId('postcss');
+      const decoder = new TextDecoder();
 
       build.onResolve({
         filter: /\.module\.css\?url-only$/,
       }, (args) => (
-        pickCSSinJS(args.kind, {
+        forkToCSSInJS('postcss-vanilla', args.kind, {
           path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 9)),
           namespace: 'postcss-modules-url-only',
         })
@@ -103,7 +46,7 @@ export default function postcssPlugin(
       build.onResolve({
         filter: /\.module\.css\?url$/,
       }, (args) => (
-        pickCSSinJS(args.kind, {
+        forkToCSSInJS('postcss-vanilla', args.kind, {
           path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
           namespace: 'postcss-modules-url',
         })
@@ -111,7 +54,7 @@ export default function postcssPlugin(
       build.onResolve({
         filter: /\.module\.css\?raw$/,
       }, (args) => (
-        pickCSSinJS(args.kind, {
+        forkToCSSInJS('postcss-vanilla', args.kind, {
           path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
           namespace: 'postcss-modules-raw',
         })
@@ -119,7 +62,7 @@ export default function postcssPlugin(
       build.onResolve({
         filter: /\.module\.css$/,
       }, (args) => (
-        pickCSSinJS(args.kind, {
+        forkToCSSInJS('postcss-vanilla', args.kind, {
           path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
           namespace: 'postcss-modules',
         })
@@ -127,7 +70,7 @@ export default function postcssPlugin(
       build.onResolve({
         filter: /\.css\?raw$/,
       }, (args) => (
-        pickCSSinJS(args.kind, {
+        forkToCSSInJS('postcss-vanilla', args.kind, {
           path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
           namespace: 'postcss-raw',
         })
@@ -135,7 +78,7 @@ export default function postcssPlugin(
       build.onResolve({
         filter: /\.css\?url$/,
       }, (args) => (
-        pickCSSinJS(args.kind, {
+        forkToCSSInJS('postcss-vanilla', args.kind, {
           path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
           namespace: 'postcss-url',
         })
@@ -143,7 +86,7 @@ export default function postcssPlugin(
       build.onResolve({
         filter: /\.css$/,
       }, (args) => (
-        pickCSSinJS(args.kind, {
+        forkToCSSInJS('postcss-vanilla', args.kind, {
           path: path.join(args.resolveDir, args.path),
           namespace: 'postcss',
         })
@@ -157,17 +100,23 @@ export default function postcssPlugin(
           ...config.options,
           from: args.path,
         });
-        const artifact = path.join(
-          defaultOptions.outdir ?? '',
-          'stdin.css',
-        );
 
-        await runBuild(
+        const output = await buildCSSEntrypoint(
+          build,
+          defaultOptions,
           args.path,
           result.css,
         );
 
-        return fs.readFile(artifact, 'utf8');
+        const root = output.outputFiles.filter((item) => path.basename(item.path) === 'stdin.css');
+
+        await Promise.all(output.outputFiles.filter(async (item) => {
+          if (path.basename(item.path) !== 'stdin.css') {
+            await outputFile(item.path, item.contents);
+          }
+        }));
+
+        return decoder.decode(root[0].contents);
       }
 
       build.onLoad({
@@ -227,16 +176,24 @@ export default function postcssPlugin(
           ...config.options,
           from: args.path,
         });
-        const artifact = path.join(
-          defaultOptions.outdir ?? '',
-          'stdin.css',
-        );
-        await runBuild(
+
+        const output = await buildCSSEntrypoint(
+          build,
+          defaultOptions,
           args.path,
           result.css,
         );
+
+        const root = output.outputFiles.filter((item) => path.basename(item.path) === 'stdin.css');
+
+        await Promise.all(output.outputFiles.filter(async (item) => {
+          if (path.basename(item.path) !== 'stdin.css') {
+            await outputFile(item.path, item.contents);
+          }
+        }));
+
         return {
-          css: await fs.readFile(artifact, 'utf8'),
+          css: decoder.decode(root[0].contents),
           json: resultJSON,
         };
       }
