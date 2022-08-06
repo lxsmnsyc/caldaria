@@ -13,7 +13,6 @@ import createRawCSSModule from './utils/create-raw-css-module';
 import createURLCSSModule from './utils/create-url-css-module';
 import createStyleId from './utils/create-style-id';
 import buildCSSEntrypoint from './utils/build-css-entrypoint';
-import createInlineSourceMap from './utils/create-inline-source-map';
 
 interface PostCSSOptions {
   dev: boolean;

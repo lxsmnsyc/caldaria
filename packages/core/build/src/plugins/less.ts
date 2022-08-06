@@ -2,6 +2,7 @@ import {
   OnLoadArgs,
   Plugin,
 } from 'esbuild';
+import type { RawSourceMap } from 'source-map-js';
 import path from 'path';
 import fs from 'fs/promises';
 import { log, red } from 'rigidity-shared';
@@ -9,6 +10,7 @@ import createLazyCSS from './utils/create-lazy-css';
 import createStyleId from './utils/create-style-id';
 import forkToCSSInJS from './utils/fork-to-css-in-js';
 import buildCSSEntrypoint from './utils/build-css-entrypoint';
+import createInlineSourceMap from './utils/create-inline-source-map';
 
 interface LessPluginOptions {
   dev?: boolean;
@@ -59,16 +61,26 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
         const result = await less.render(source, {
           filename: path.basename(args.path),
           rootpath: path.dirname(args.path),
-          sourceMap: options.dev ? {
-            sourceMapFileInline: true,
-          } : undefined,
+          sourceMap: options.dev ? {} : undefined,
         });
+
+        let deserializedMap: RawSourceMap | undefined;
+
+        if (result.map) {
+          deserializedMap = JSON.parse(result.map) as RawSourceMap;
+          const { sources, sourcesContent = [] } = deserializedMap;
+          await Promise.all(sources.map(async (item, index) => {
+            const resolved = path.join(path.dirname(args.path), item);
+            sourcesContent[index] = await fs.readFile(resolved, 'utf-8');
+          }));
+          deserializedMap.sourcesContent = sourcesContent;
+        }
 
         return buildCSSEntrypoint(
           build,
           defaultOptions,
           args.path,
-          result.css,
+          createInlineSourceMap(result.css, deserializedMap, options.dev),
         );
       }
 

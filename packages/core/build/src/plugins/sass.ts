@@ -9,6 +9,7 @@ import createLazyCSS from './utils/create-lazy-css';
 import createStyleId from './utils/create-style-id';
 import forkToCSSInJS from './utils/fork-to-css-in-js';
 import buildCSSEntrypoint from './utils/build-css-entrypoint';
+import createInlineSourceMap from './utils/create-inline-source-map';
 
 interface SassPluginOptions {
   dev?: boolean;
@@ -56,25 +57,28 @@ export default function sassPlugin(options: SassPluginOptions): Plugin {
         }
 
         const source = await fs.readFile(args.path, 'utf8');
-        const result = await sass.compileStringAsync(source, {
+        const { css, sourceMap } = await sass.compileStringAsync(source, {
           url: new URL(args.path, 'file://'),
           sourceMap: options.dev,
           syntax: /\.sass/.test(path.basename(args.path)) ? 'indented' : 'scss',
         });
 
         // TODO Fix urls
-        if (result.sourceMap) {
-          const { sources } = result.sourceMap;
-          for (let i = 0, len = sources.length; i < len; i += 1) {
-            sources[i] = path.relative(path.dirname(args.path), decodeURI(sources[i]));
-          }
+        if (sourceMap) {
+          const { sources, sourcesContent = [] } = sourceMap;
+          await Promise.all(sources.map(async (item, index) => {
+            const actualPath = decodeURI(item);
+            sources[index] = path.relative(path.dirname(args.path), actualPath);
+            sourcesContent[index] = await fs.readFile(actualPath, 'utf-8');
+          }));
+          sourceMap.sourcesContent = sourcesContent;
         }
 
         return buildCSSEntrypoint(
           build,
           defaultOptions,
           args.path,
-          result.css,
+          createInlineSourceMap(css, sourceMap, options.dev),
         );
       }
 
