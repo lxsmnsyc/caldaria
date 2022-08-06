@@ -34,6 +34,9 @@
     },
     "sass": {
       "optional": true
+    },
+    "stylus": {
+      "optional": true
     }
   },
   "scripts": {

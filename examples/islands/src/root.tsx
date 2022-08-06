@@ -7,7 +7,7 @@ import {
 } from 'rigidity/root';
 import { Link } from 'rigidity/meta';
 import styles from './styles/main.css?url';
-import example from './styles/example.less?url';
+import example from './styles/example.styl?url';
 
 export default createRigidityRoot({
   App(appProps) {

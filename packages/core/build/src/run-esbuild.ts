@@ -18,6 +18,7 @@ import islandsPlugin from './plugins/islands';
 import progressPlugin from './plugins/progress';
 import lessPlugin from './plugins/less';
 import sassPlugin from './plugins/sass';
+import stylusPlugin from './plugins/stylus';
 
 interface BuildInput {
   prefix: string;
@@ -106,6 +107,9 @@ export default async function runESBuild(
         dev: context.isDev,
       }),
       sassPlugin({
+        dev: context.isDev,
+      }),
+      stylusPlugin({
         dev: context.isDev,
       }),
       rawPlugin(),
