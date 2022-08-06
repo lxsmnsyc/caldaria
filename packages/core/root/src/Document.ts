@@ -2,6 +2,7 @@ import {
   JSX,
   createContext,
   useContext,
+  createMemo,
 } from 'solid-js';
 import {
   Dynamic,
@@ -9,6 +10,7 @@ import {
   createComponent,
   ssr,
   Assets,
+  NoHydration,
 } from 'solid-js/web';
 import {
   DOCUMENT_DATA,
@@ -139,12 +141,33 @@ export interface RootProps extends RenderResult<any> {
   document?: () => JSX.Element;
 }
 
+interface HydrationBoundaryProps {
+  shouldHydrate: boolean;
+  children: JSX.Element;
+}
+
+function HydrationBoundary(props: HydrationBoundaryProps) {
+  if (props.shouldHydrate) {
+    return createMemo(() => props.children);
+  }
+  return createComponent(NoHydration, {
+    get children() {
+      return props.children;
+    },
+  });
+}
+
 export function Root(props: RootProps): JSX.Element {
   return (
-    createComponent(DocumentContext.Provider, {
-      value: props,
+    createComponent(HydrationBoundary, {
+      shouldHydrate: props.mode !== 'islands',
       get children() {
-        return createComponent(props.document ?? DefaultDocument, {});
+        return createComponent(DocumentContext.Provider, {
+          value: props,
+          get children() {
+            return createComponent(props.document ?? DefaultDocument, {});
+          },
+        });
       },
     })
   );
