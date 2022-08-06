@@ -16,9 +16,6 @@
 
 ## Upcoming Features
 
-- Sass/SCSS support
-- Less support
-- Stylus support
 - Worker imports
 - WASM imports
 
