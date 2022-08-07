@@ -34,5 +34,9 @@ export const bgWhite = /* @__PURE__ */format(47, 49);
 export const bgGray = /* @__PURE__ */format(100, 49);
 
 export function log(prefix: string, message: string) {
-  console.log(`${magenta(`[rigidity:${prefix}]`)} ${message}`);
+  if (typeof window === 'undefined') {
+    console.log(`${magenta(`[rigidity:${prefix}]`)} ${message}`);
+  } else {
+    console.log(`%c[rigidity:${prefix}] %c${message}`, 'font-weight: bold; color: #a855f7', 'color: inherit');
+  }
 }

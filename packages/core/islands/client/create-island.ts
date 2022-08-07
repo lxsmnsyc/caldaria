@@ -2,6 +2,7 @@ import { createComponent, JSX, mergeProps } from 'solid-js';
 import { render, hydrate } from 'solid-js/web';
 import { on, onRemove } from 'rigidity-hybrid-router';
 import { MetaProvider } from 'rigidity-meta';
+import { log } from 'rigidity-shared';
 import { getRoot, getFragment } from './nodes';
 import processScript from './process-script';
 
@@ -104,6 +105,14 @@ export default function createIsland<P>(
           renderId: id,
         })
         : render(root, marker);
+
+      if (import.meta.env.DEV) {
+        if (strategy) {
+          log('islands', `Hydrated root "${id}" with strategy ${JSON.stringify(strategy)}`);
+        } else {
+          log('islands', `Hydrated root "${id}"`);
+        }
+      }
     });
 
     function clean() {

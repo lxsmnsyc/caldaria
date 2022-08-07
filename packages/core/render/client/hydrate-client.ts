@@ -16,6 +16,7 @@ import {
   DOCUMENT_DATA,
   GlobalRenderOptions,
   RenderResult,
+  log,
 } from 'rigidity-shared';
 import {
   createPageTree,
@@ -39,19 +40,19 @@ export function useHotReload(
   const socket = new WebSocket(`${protocol}://${host}:${port}`);
 
   socket.addEventListener('open', () => {
-    console.log('[rigidity] Connected.');
+    log('hot-reload', 'Connected.');
     socket.send(JSON.stringify({ type: 'connected' }));
   });
 
   socket.addEventListener('close', () => {
-    console.log('[rigidity] Disconnected.');
+    log('hot-reload', 'Disconnected.');
   });
 
   socket.addEventListener('message', () => {
-    console.log('[rigidity] Reloading');
+    log('hot-reload', 'Reloading...');
     setTimeout(() => {
       window.location.reload();
-    }, 1000);
+    }, 200);
   });
 }
 

@@ -13,7 +13,8 @@
     "pridepack"
   ],
   "dependencies": {
-    "rigidity-scheduler": "0.0.24"
+    "rigidity-scheduler": "0.0.24",
+    "rigidity-shared": "0.0.24"
   },
   "peerDependencies": {},
   "devDependencies": {
