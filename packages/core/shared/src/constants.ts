@@ -27,13 +27,13 @@ export const CUSTOM_ROOT = 'src/root';
 
 export const DIRECTORY_ROOT = 'index';
 
-export const SUPPORTED_PAGE_EXT = /* @__PURE__ */ [
+export const SUPPORTED_PAGE_EXT = /* @__PURE__ */ new Set([
   '.js',
   '.jsx',
   '.ts',
   '.tsx',
   ...'md|mdx|markdown|mdown|mkdn|mkd|mkdown|ron'.split('|').map((item) => `.${item}`),
-];
+]);
 
 export const BUILD_OUTPUT = {
   client: {

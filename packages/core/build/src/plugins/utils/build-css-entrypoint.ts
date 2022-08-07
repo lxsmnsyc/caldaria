@@ -1,5 +1,6 @@
 import { BuildOptions, PluginBuild } from 'esbuild';
 import path from 'path';
+import { filter, map } from 'rigidity-shared';
 import { outputFile } from '../../fs';
 
 const decoder = new TextDecoder();
@@ -24,9 +25,9 @@ export default async function buildCSSEntrypoint(
     },
   });
 
-  const root = output.outputFiles.filter((item) => path.basename(item.path) === 'stdin.css');
+  const root = filter(output.outputFiles, (item) => path.basename(item.path) === 'stdin.css');
 
-  await Promise.all(output.outputFiles.map(async (item) => {
+  await Promise.all(map(output.outputFiles, async (item) => {
     if (path.basename(item.path) !== 'stdin.css') {
       await outputFile(item.path, item.contents);
     }

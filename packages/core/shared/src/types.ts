@@ -44,10 +44,7 @@ export interface LazyPage<T, A = undefined> {
   preload: () => Promise<Page<T, A>>;
 }
 
-export interface PageRoute {
-  path: string;
-  component: LazyPage<any>;
-}
+export type PageRoute = [path: string, component: LazyPage<any>];
 
 export type PageTree = RouterNode<LazyPage<any>>;
 
@@ -68,10 +65,7 @@ export type APICallback = <
   Q extends Query = Query,
 >(ctx: ServerSideContext<P, Q>) => Response | Promise<Response>;
 
-export interface APIRoute {
-  path: string;
-  call: APICallback;
-}
+export type APIRoute = [path: string, call: APICallback];
 
 export type APITree = RouterNode<APICallback>;
 

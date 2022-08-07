@@ -1,4 +1,6 @@
 import path from 'path';
+import { map } from 'rigidity-shared';
+import getPOSIXPath from './get-posix-path';
 import {
   getPageLiteral,
   getAPILiteral,
@@ -11,15 +13,13 @@ export function getPageImports(
   pages: string[],
   isServer: boolean,
 ): string[] {
-  return pages.map((page, index) => {
+  return map(pages, (page, index) => {
     const { name, dir, ext } = path.parse(page);
 
     const srcFile = path.join(targetDirectory, dir, `${name}${ext}`);
 
     // Transform path to POSIX
-    const targetFile = path.relative(artifactDirectory, srcFile)
-      .split(path.sep)
-      .join(path.posix.sep);
+    const targetFile = getPOSIXPath(path.relative(artifactDirectory, srcFile));
 
     const literal = getPageLiteral(index);
     if (isServer) {
@@ -36,15 +36,13 @@ export function getAPIImports(
   artifactDirectory: string,
   endpoints: string[],
 ): string[] {
-  return endpoints.map((endpoint, index) => {
+  return map(endpoints, (endpoint, index) => {
     const { name, dir } = path.parse(endpoint);
 
     const srcFile = path.join(targetDirectory, dir, name);
 
     // Transform path to POSIX
-    const targetFile = path.relative(artifactDirectory, srcFile)
-      .split(path.sep)
-      .join(path.posix.sep);
+    const targetFile = getPOSIXPath(path.relative(artifactDirectory, srcFile));
 
     // Declare import for api
     return `import ${getAPILiteral(index)} from '${targetFile}';`;

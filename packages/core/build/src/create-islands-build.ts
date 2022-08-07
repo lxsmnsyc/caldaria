@@ -6,6 +6,7 @@ import {
   BUILD_PATH,
   BuildOptions,
   DEFAULT_WS_PORT,
+  map,
 } from 'rigidity-shared';
 import { outputFile, removeFile } from './fs';
 import {
@@ -35,8 +36,10 @@ async function generateIslandsArtifact(options: BuildOptions) {
 
   const artifactDirectory = getArtifactDirectory(options);
 
-  const artifacts = (await traverseDirectory(artifactDirectory))
-    .map((item) => path.join(artifactDirectory, item));
+  const artifacts = map(
+    await traverseDirectory(artifactDirectory),
+    (item) => path.join(artifactDirectory, item),
+  );
   const mainEntry = path.join(artifactDirectory, 'index.tsx');
 
   const lines = [];

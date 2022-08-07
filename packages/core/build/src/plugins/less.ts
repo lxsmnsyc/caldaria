@@ -5,7 +5,7 @@ import {
 import type { RawSourceMap } from 'source-map-js';
 import path from 'path';
 import fs from 'fs/promises';
-import { log, red } from 'rigidity-shared';
+import { log, map, red } from 'rigidity-shared';
 import createLazyCSS from './utils/create-lazy-css';
 import createStyleId from './utils/create-style-id';
 import forkToCSSInJS from './utils/fork-to-css-in-js';
@@ -69,7 +69,7 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
         if (result.map) {
           deserializedMap = JSON.parse(result.map) as RawSourceMap;
           const { sources, sourcesContent = [] } = deserializedMap;
-          await Promise.all(sources.map(async (item, index) => {
+          await Promise.all(map(sources, async (item, index) => {
             const resolved = path.join(path.dirname(args.path), item);
             sourcesContent[index] = await fs.readFile(resolved, 'utf-8');
           }));

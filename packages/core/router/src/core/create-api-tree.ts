@@ -8,8 +8,8 @@ export default function createAPITree(routes: APIRoute[]): APITree {
   const root = createRouterNode<APICallback>('');
 
   for (let i = 0, len = routes.length; i < len; i += 1) {
-    const route = routes[i];
-    addRoute(root, route.path.split('/'), route.call);
+    const [path, call] = routes[i];
+    addRoute(root, path.split('/'), call);
   }
 
   return root;

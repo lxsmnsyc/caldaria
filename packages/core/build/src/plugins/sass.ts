@@ -4,7 +4,7 @@ import {
 } from 'esbuild';
 import path from 'path';
 import fs from 'fs/promises';
-import { log, red } from 'rigidity-shared';
+import { log, map, red } from 'rigidity-shared';
 import createLazyCSS from './utils/create-lazy-css';
 import createStyleId from './utils/create-style-id';
 import forkToCSSInJS from './utils/fork-to-css-in-js';
@@ -66,7 +66,7 @@ export default function sassPlugin(options: SassPluginOptions): Plugin {
         // TODO Fix urls
         if (sourceMap) {
           const { sources, sourcesContent = [] } = sourceMap;
-          await Promise.all(sources.map(async (item, index) => {
+          await Promise.all(map(sources, async (item, index) => {
             const actualPath = decodeURI(item);
             sources[index] = path.relative(path.dirname(args.path), actualPath);
             sourcesContent[index] = await fs.readFile(actualPath, 'utf-8');

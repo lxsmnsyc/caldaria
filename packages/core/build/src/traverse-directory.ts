@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs/promises';
+import { map } from 'rigidity-shared';
 
 export default async function traverseDirectory(
   root: string,
@@ -18,7 +19,7 @@ export default async function traverseDirectory(
     };
 
     const results = await Promise.all(
-      files.map(recursiveTraverse),
+      map(files, recursiveTraverse),
     );
 
     return results.flat();

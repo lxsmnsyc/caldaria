@@ -1,5 +1,6 @@
 import path from 'path';
 import {
+  map,
   SUPPORTED_PAGE_EXT,
 } from 'rigidity-shared';
 import { pathExists } from './fs';
@@ -9,16 +10,19 @@ async function getCustomRootPath(
   rootPath: string,
 ): Promise<string | undefined> {
   const result = await Promise.all(
-    SUPPORTED_PAGE_EXT.map(async (ext) => {
-      const app = path.join(
-        `${rootPath}${ext}`,
-      );
+    map(
+      [...SUPPORTED_PAGE_EXT],
+      async (ext) => {
+        const app = path.join(
+          `${rootPath}${ext}`,
+        );
 
-      return {
-        path: app,
-        stat: await pathExists(app),
-      };
-    }),
+        return {
+          path: app,
+          stat: await pathExists(app),
+        };
+      },
+    ),
   );
   for (let i = 0; i < result.length; i += 1) {
     if (result[i].stat) {
@@ -39,9 +43,7 @@ export async function getCustomRoot(
   if (result) {
     const { name, dir, ext } = path.parse(result);
     const extensionless = path.join(dir, `${name}${ext}`);
-    const importPath = path.relative(artifactDirectory, extensionless)
-      .split(path.sep)
-      .join(path.posix.sep);
+    const importPath = getPOSIXPath(path.relative(artifactDirectory, extensionless));
 
     lines.push(
       `import CustomRoot from '${importPath}';`,
@@ -57,17 +59,20 @@ export async function getCustomPage(
   page: string,
 ): Promise<string | undefined> {
   const result = await Promise.all(
-    SUPPORTED_PAGE_EXT.map(async (ext) => {
-      const app = path.join(
-        pagesDirectory,
-        `${page}${ext}`,
-      );
+    map(
+      [...SUPPORTED_PAGE_EXT],
+      async (ext) => {
+        const app = path.join(
+          pagesDirectory,
+          `${page}${ext}`,
+        );
 
-      return {
-        path: app,
-        stat: await pathExists(app),
-      };
-    }),
+        return {
+          path: app,
+          stat: await pathExists(app),
+        };
+      },
+    ),
   );
   for (let i = 0; i < result.length; i += 1) {
     if (result[i].stat) {

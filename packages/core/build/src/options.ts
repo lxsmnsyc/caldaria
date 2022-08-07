@@ -1,6 +1,6 @@
 import path from 'path';
 import {
-  DIRECTORY_ROOT,
+  DIRECTORY_ROOT, filter, map,
 } from 'rigidity-shared';
 import getPOSIXPath from './get-posix-path';
 import {
@@ -15,15 +15,9 @@ function getPageOption(page: string, index: number): string {
 
   const extensionless = path.join(directory, filename);
 
-  const output = `{
-path: ${JSON.stringify(getPOSIXPath(path.join('/', extensionless)))},
-component: ${getPageLiteral(index)},
-}`;
+  const output = `[${JSON.stringify(getPOSIXPath(path.join('/', extensionless)))},${getPageLiteral(index)}]`;
   if (filename === DIRECTORY_ROOT) {
-    return `{
-path: ${JSON.stringify(getPOSIXPath(path.join('/', directory)))},
-component: ${getPageLiteral(index)},
-}, ${output}`;
+    return `[${JSON.stringify(getPOSIXPath(path.join('/', directory)))},${getPageLiteral(index)}], ${output}`;
   }
 
   return output;
@@ -37,17 +31,11 @@ function getAPIOption(
 
   const extensionless = path.join(dir, name);
 
-  const output = `{
-path: ${JSON.stringify(getPOSIXPath(path.join('/', extensionless)))},
-call: ${getAPILiteral(index)},
-}`;
+  const output = `[${JSON.stringify(getPOSIXPath(path.join('/', extensionless)))},${getAPILiteral(index)}]`;
 
   // If the file is named "index", make sure to support trailing slash
   if (name === DIRECTORY_ROOT) {
-    return `{
-path: ${JSON.stringify(getPOSIXPath(path.join('/', dir)))},
-call: API${getAPILiteral(index)},
-}, ${output}`;
+    return `[${JSON.stringify(getPOSIXPath(path.join('/', dir)))},API${getAPILiteral(index)}], ${output}`;
   }
 
   return output;
@@ -56,15 +44,15 @@ call: API${getAPILiteral(index)},
 export function getPagesOptions(
   pages: string[],
 ): string {
-  const pagesOptions = pages.map(getPageOption);
+  const pagesOptions = map(pages, getPageOption);
 
-  return `[${pagesOptions.filter(Boolean).join(',\n')}]`;
+  return `[${filter(pagesOptions, Boolean).join(',\n')}]`;
 }
 
 export function getAPIOptions(
   endpoints: string[],
 ): string {
-  const endpointOptions = endpoints.map(getAPIOption);
+  const endpointOptions = map(endpoints, getAPIOption);
 
   return `[${endpointOptions.join(',\n')}]`;
 }

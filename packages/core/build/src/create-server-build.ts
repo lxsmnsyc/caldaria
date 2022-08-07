@@ -12,6 +12,7 @@ import {
   PUBLIC_URL,
   CUSTOM_ROOT,
   BuildOptions,
+  map,
 } from 'rigidity-shared';
 import { outputFile, removeFile } from './fs';
 import {
@@ -122,8 +123,10 @@ export async function generateServerArtifact(options: BuildOptions) {
   const pagesDirectory = options.directories?.pages ?? PAGES_PATH;
   const apiDirectory = options.directories?.api ?? API_PATH;
 
-  const pages = await getPages(pagesDirectory);
-  const apis = await getPages(apiDirectory);
+  const [pages, apis] = await Promise.all([
+    getPages(pagesDirectory),
+    getPages(apiDirectory),
+  ]);
 
   const outputDirectory = getServerOutputDirectory(options);
 
@@ -163,7 +166,12 @@ export async function generateServerArtifact(options: BuildOptions) {
 
 export async function generateIslands(islands: IslandManifest[]) {
   if (islands.length) {
-    await Promise.all(islands.map((item) => outputFile(item.name, item.content)));
+    await Promise.all(
+      map(
+        islands,
+        (item) => outputFile(item.name, item.content),
+      ),
+    );
   }
 }
 
