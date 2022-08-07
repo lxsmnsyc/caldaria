@@ -26,7 +26,7 @@ export default async function buildCSSEntrypoint(
 
   const root = output.outputFiles.filter((item) => path.basename(item.path) === 'stdin.css');
 
-  await Promise.all(output.outputFiles.filter(async (item) => {
+  await Promise.all(output.outputFiles.map(async (item) => {
     if (path.basename(item.path) !== 'stdin.css') {
       await outputFile(item.path, item.contents);
     }
