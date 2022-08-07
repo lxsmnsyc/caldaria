@@ -1,17 +1,9 @@
 import {
-  createComponent,
   createEffect,
   createMemo,
   createSignal,
   JSX,
-  mergeProps,
 } from 'solid-js';
-import {
-  Dynamic,
-} from 'solid-js/web';
-import {
-  omitProps,
-} from 'solid-use';
 import {
   RIGIDITY_ACTION,
   RIGIDITY_DATA,
@@ -115,18 +107,33 @@ export default function Form(props: FormProps): JSX.Element {
     });
   });
 
-  return createComponent(Dynamic, mergeProps({
-    component: 'form',
-    get action() {
-      return actionUrl();
-    },
-    ref(el: HTMLFormElement) {
-      formEl = el;
-      if (typeof props.ref === 'function') {
-        props.ref(el);
-      }
-    },
-  }, omitProps(props, [
-    'action',
-  ])));
+  return (
+    <form
+      {...props}
+      action={actionUrl()}
+      ref={(el) => {
+        formEl = el;
+        if (typeof props.ref === 'function') {
+          props.ref(el);
+        }
+      }}
+    >
+      {props.children}
+    </form>
+  );
+
+  // return createComponent(Dynamic, mergeProps({
+  //   component: 'form',
+  //   get action() {
+  //     return actionUrl();
+  //   },
+  //   ref(el: HTMLFormElement) {
+  //     formEl = el;
+  //     if (typeof props.ref === 'function') {
+  //       props.ref(el);
+  //     }
+  //   },
+  // }, omitProps(props, [
+  //   'action',
+  // ])));
 }

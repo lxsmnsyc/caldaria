@@ -61,20 +61,20 @@
   "exports": {
     "./server": {
       "development": {
-        "require": "./dist/cjs/development/server.js",
-        "import": "./dist/esm/development/server.js"
+        "require": "./dist/cjs/development/server.jsx",
+        "import": "./dist/esm/development/server.jsx"
       },
-      "require": "./dist/cjs/production/server.js",
-      "import": "./dist/esm/production/server.js",
+      "require": "./dist/cjs/production/server.jsx",
+      "import": "./dist/esm/production/server.jsx",
       "types": "./dist/types/server/index.d.ts"
     },
     "./client": {
       "development": {
-        "require": "./dist/cjs/development/client.js",
-        "import": "./dist/esm/development/client.js"
+        "require": "./dist/cjs/development/client.jsx",
+        "import": "./dist/esm/development/client.jsx"
       },
-      "require": "./dist/cjs/production/client.js",
-      "import": "./dist/esm/production/client.js",
+      "require": "./dist/cjs/production/client.jsx",
+      "import": "./dist/esm/production/client.jsx",
       "types": "./dist/types/client/index.d.ts"
     }
   },

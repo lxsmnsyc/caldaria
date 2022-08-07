@@ -1,14 +1,9 @@
 import {
   JSX,
-  mergeProps,
   createEffect,
   createSignal,
   onCleanup,
 } from 'solid-js';
-import {
-  createComponent,
-  Dynamic,
-} from 'solid-js/web';
 import {
   omitProps,
 } from 'solid-use';
@@ -36,16 +31,21 @@ export default function RouterLink(
   const router = useRouterUnsafe();
 
   if (!router) {
-    return createComponent(Dynamic, mergeProps(
-      {
-        component: 'a',
-      },
-      omitProps(props, [
-        'prefetch',
-        'scroll',
-        'replace',
-      ]),
-    ));
+    return (
+      <a {...omitProps(props, ['prefetch', 'scroll', 'replace'])}>
+        {props.children}
+      </a>
+    );
+    // return createComponent(Dynamic, mergeProps(
+    //   {
+    //     component: 'a',
+    //   },
+    //   omitProps(props, [
+    //     'prefetch',
+    //     'scroll',
+    //     'replace',
+    //   ]),
+    // ));
   }
 
   let anchorRef!: HTMLAnchorElement;
@@ -143,22 +143,35 @@ export default function RouterLink(
   });
 
   return (
-    createComponent(Dynamic, mergeProps(
-      {
-        component: 'a',
-        ref: (e: HTMLAnchorElement) => {
-          if (typeof props.ref === 'function') {
-            props.ref(e);
-          }
-          anchorRef = e;
-        },
-      },
-      omitProps(props, [
-        'prefetch',
-        'scroll',
-        'ref',
-        'replace',
-      ]),
-    ))
+    <a
+      {...omitProps(props, ['prefetch', 'scroll', 'replace'])}
+      ref={(e: HTMLAnchorElement) => {
+        if (typeof props.ref === 'function') {
+          props.ref(e);
+        }
+        anchorRef = e;
+      }}
+    >
+      {props.children}
+    </a>
   );
+  // return (
+  //   createComponent(Dynamic, mergeProps(
+  //     {
+  //       component: 'a',
+  //       ref: (e: HTMLAnchorElement) => {
+  //         if (typeof props.ref === 'function') {
+  //           props.ref(e);
+  //         }
+  //         anchorRef = e;
+  //       },
+  //     },
+  //     omitProps(props, [
+  //       'prefetch',
+  //       'scroll',
+  //       'ref',
+  //       'replace',
+  //     ]),
+  //   ))
+  // );
 }

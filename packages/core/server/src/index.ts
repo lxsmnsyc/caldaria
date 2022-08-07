@@ -12,6 +12,7 @@ import {
   green,
   red,
   yellow,
+  log,
 } from 'rigidity-shared';
 import {
   renderServer,
@@ -58,8 +59,7 @@ export default function createServer(
               if (process.env.NODE_ENV === 'production') {
                 cacheControl['Cache-Control'] = 'max-age=31536000';
               }
-              console.log(`[${green('200')}][${yellow(request.method)}] ${url.pathname ?? ''}`);
-
+              log('server', `${green('200')} - ${yellow(request.method)} ${url.pathname}`);
               return new Response(
                 fs.createReadStream(targetFile) as unknown as ReadableStream,
                 {
@@ -97,7 +97,7 @@ export default function createServer(
               params: matchedNode.params,
               query: queries,
             });
-            console.log(`[${green(`${response.status}`)}][${yellow(request.method)}] ${url.pathname}`);
+            log('server', `${green(`${response.status}`)} - ${yellow(request.method)} ${url.pathname}`);
             return response;
           }
           throw new StatusCode(404, new Error(`"${url.pathname}" not found.`));
@@ -119,7 +119,7 @@ export default function createServer(
 
               // Check for redirect
               if (dataOnly) {
-                console.log(`[${green(result.status.toString())}][${yellow(request.method)}] ${url.pathname ?? ''}`);
+                log('server', `${green(result.status.toString())} - ${yellow(request.method)} ${url.pathname}`);
                 if (result.status >= 300 && result.status < 400) {
                   const headers = new Headers(result.headers);
                   headers.set(RIGIDITY_REDIRECT_HEADER, headers.get('Location')!);
@@ -139,7 +139,7 @@ export default function createServer(
             }
             const loadData = page.load ? await page.load(request, matchedNode.params) : null;
             if (dataOnly) {
-              console.log(`[${green('200')}][${yellow(request.method)}] ${url.pathname ?? ''}`);
+              log('server', `${green('200')} - ${yellow(request.method)} ${url.pathname}`);
               return new Response(
                 JSON.stringify(loadData),
                 {
@@ -155,7 +155,7 @@ export default function createServer(
               pathname: url.pathname,
               search: url.search,
             }, loadData, actionData);
-            console.log(`[${green('200')}][${yellow(request.method)}] ${url.pathname ?? ''}`);
+            log('server', `${green('200')} - ${yellow(request.method)} ${url.pathname}`);
 
             return new Response(
               result as BodyInit,
@@ -181,7 +181,7 @@ export default function createServer(
     } catch (error: any) {
       const statusCode = (error instanceof StatusCode) ? error.value : 500;
       const reason = (error instanceof StatusCode) ? error.reason : error;
-      console.log(`[${red(`${statusCode}`)}][${yellow(request.method)}] ${request.url ?? ''}`);
+      log('server', `${red(`${statusCode}`)} - ${yellow(request.method)} ${request.url}`);
       console.error(reason);
 
       return new Response(

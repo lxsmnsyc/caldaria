@@ -1,5 +1,4 @@
 import {
-  createComponent,
   createContext,
   createSignal,
   JSX,
@@ -32,8 +31,8 @@ export interface DataProviderProps<L, A = undefined> {
 export function DataProvider<L, A = undefined>(props: DataProviderProps<L, A>) {
   const [action, setAction] = createSignal(props.action);
   return (
-    createComponent(DataContext.Provider, {
-      value: {
+    <DataContext.Provider
+      value={{
         initial: true,
         get load() {
           return props.load;
@@ -42,10 +41,24 @@ export function DataProvider<L, A = undefined>(props: DataProviderProps<L, A>) {
           return action();
         },
         setAction,
-      },
-      get children() {
-        return props.children;
-      },
-    })
+      }}
+    >
+      {props.children}
+    </DataContext.Provider>
+    // createComponent(DataContext.Provider, {
+    //   value: {
+    //     initial: true,
+    //     get load() {
+    //       return props.load;
+    //     },
+    //     get action() {
+    //       return action();
+    //     },
+    //     setAction,
+    //   },
+    //   get children() {
+    //     return props.children;
+    //   },
+    // })
   );
 }

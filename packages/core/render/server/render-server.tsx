@@ -1,5 +1,4 @@
 import {
-  createComponent,
   renderToStream,
   renderToString,
   renderToStringAsync,
@@ -23,10 +22,11 @@ async function renderCore<T>(
   switch (globalOptions.ssrMode) {
     case 'async': {
       const documentResult = await renderToStringAsync(() => (
-        createComponent(Root, {
-          ...pageResult,
-          document: globalOptions.root.Document,
-        })
+        <Root {...pageResult} document={globalOptions.root.Document} />
+        // createComponent(Root, {
+        //   ...pageResult,
+        //   document: globalOptions.root.Document,
+        // })
       ));
 
       return `<!DOCTYPE html>${documentResult}`;
@@ -40,61 +40,34 @@ async function renderCore<T>(
       });
       writable.write('<!DOCTYPE html>');
       renderToStream(() => (
-        createComponent(Root, {
-          ...pageResult,
-          document: globalOptions.root.Document,
-        })
+        <Root {...pageResult} document={globalOptions.root.Document} />
+        // createComponent(Root, {
+        //   ...pageResult,
+        //   document: globalOptions.root.Document,
+        // })
       )).pipe(writable);
-      // pipeToNodeWritable(
-      //   () => (
-      //     createComponent(Root, {
-      //       ...pageResult,
-      //       document: globalOptions.document,
-      //     })
-      //   ),
-      //   writable,
-      //   {
-      //     onReady({ write, startWriting }) {
-      //       write('<!DOCTYPE html>');
-      //       startWriting();
-      //     },
-      //   },
-      // );
       return writable;
     }
     case 'web-stream': {
       const instance = new TransformStream();
       await instance.writable.getWriter().write('<!DOCTYPE html>');
       renderToStream(() => (
-        createComponent(Root, {
-          ...pageResult,
-          document: globalOptions.root.Document,
-        })
+        <Root {...pageResult} document={globalOptions.root.Document} />
+        // createComponent(Root, {
+        //   ...pageResult,
+        //   document: globalOptions.root.Document,
+        // })
       )).pipeTo(instance.writable);
-      // pipeToWritable(
-      //   () => (
-      //     createComponent(Root, {
-      //       ...pageResult,
-      //       document: globalOptions.document,
-      //     })
-      //   ),
-      //   stream.writable,
-      //   {
-      //     onReady({ write, startWriting }) {
-      //       write('<!DOCTYPE html>');
-      //       startWriting();
-      //     },
-      //   },
-      // );
       return instance.readable;
     }
     case 'sync':
     default: {
       const documentResult = renderToString(() => (
-        createComponent(Root, {
-          ...pageResult,
-          document: globalOptions.root.Document,
-        })
+        <Root {...pageResult} document={globalOptions.root.Document} />
+        // createComponent(Root, {
+        //   ...pageResult,
+        //   document: globalOptions.root.Document,
+        // })
       ));
 
       return `<!DOCTYPE html>${documentResult}`;

@@ -1,5 +1,4 @@
 import {
-  createComponent,
   createEffect,
   createResource,
   createUniqueId,
@@ -33,15 +32,24 @@ export function createServerPage<L, A = undefined>(
       },
     );
 
-    return createComponent(MockLazy, {
-      get data() {
-        return {
+    return (
+      <MockLazy
+        data={{
           load: load() as L,
           action: ctx.action,
-        };
-      },
-      params: router.params,
-    });
+        }}
+        params={router.params}
+      />
+    );
+    // return createComponent(MockLazy, {
+    //   get data() {
+    //     return {
+    //       load: load() as L,
+    //       action: ctx.action,
+    //     };
+    //   },
+    //   params: router.params,
+    // });
   }
 
   Component.preload = async () => {
@@ -73,16 +81,25 @@ export function createClientPage<L, A = undefined>(
     createEffect(() => {
       ctx.initial = false;
     });
-
-    return createComponent(PageComponent, {
-      get data() {
-        return {
+    return (
+      <PageComponent
+        data={{
           load: load() as L,
           action: ctx.action,
-        };
-      },
-      params: router.params,
-    });
+        }}
+        params={router.params}
+      />
+    );
+
+    // return createComponent(PageComponent, {
+    //   get data() {
+    //     return {
+    //       load: load() as L,
+    //       action: ctx.action,
+    //     };
+    //   },
+    //   params: router.params,
+    // });
   }
 
   Component.preload = async () => {

@@ -3,5 +3,6 @@
   "entrypoints": {
     "./server": "server/index.ts",
     "./client": "client/index.ts"
-  }
+  },
+  "jsx": "preserve"
 }

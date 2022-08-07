@@ -4,10 +4,8 @@ import {
   useContext,
   createMemo,
   mergeProps,
+  Show,
 } from 'solid-js';
-import {
-  createComponent,
-} from 'solid-js/web';
 import {
   PageTree,
   RouterParams,
@@ -43,33 +41,44 @@ export default function Router(
   ));
 
   return (
-    createComponent(LocationContext.Provider, {
-      value: location,
-      get children() {
-        return createMemo(() => {
-          const route = matchedRoute();
-          if (route != null) {
-            const result = route;
-            return (
-              createComponent(ParamsContext.Provider, {
-                get value() {
-                  return result.params;
-                },
-                get children() {
-                  return createMemo(() => {
-                    if (result.value) {
-                      return createComponent(result.value, {});
-                    }
-                    return undefined;
-                  });
-                },
-              })
-            );
-          }
-          return props.fallback;
-        });
-      },
-    })
+    <LocationContext.Provider value={location}>
+      <Show when={matchedRoute()} fallback={props.fallback}>
+        {(route) => (
+          <ParamsContext.Provider value={route.params}>
+            <Show when={route.value}>
+              {(Comp) => <Comp />}
+            </Show>
+          </ParamsContext.Provider>
+        )}
+      </Show>
+    </LocationContext.Provider>
+    // createComponent(LocationContext.Provider, {
+    //   value: location,
+    //   get children() {
+    //     return createMemo(() => {
+    //       const route = matchedRoute();
+    //       if (route != null) {
+    //         const result = route;
+    //         return (
+    //           createComponent(ParamsContext.Provider, {
+    //             get value() {
+    //               return result.params;
+    //             },
+    //             get children() {
+    //               return createMemo(() => {
+    //                 if (result.value) {
+    //                   return createComponent(result.value, {});
+    //                 }
+    //                 return undefined;
+    //               });
+    //             },
+    //           })
+    //         );
+    //       }
+    //       return props.fallback;
+    //     });
+    //   },
+    // })
   );
 }
 
