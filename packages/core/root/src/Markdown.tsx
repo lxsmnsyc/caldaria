@@ -1,5 +1,4 @@
 import {
-  createComponent,
   createContext,
   JSX,
   splitProps,
@@ -12,12 +11,15 @@ const MDXContext = /* @__PURE__ */ createContext<MDXProps>();
 export function MDXProvider(props: MDXProps & { children: JSX.Element }): JSX.Element {
   const [local, other] = splitProps(props, ['children']);
   return (
-    createComponent(MDXContext.Provider, {
-      value: other,
-      get children() {
-        return local.children;
-      },
-    })
+    <MDXContext.Provider value={other}>
+      {local.children}
+    </MDXContext.Provider>
+    // createComponent(MDXContext.Provider, {
+    //   value: other,
+    //   get children() {
+    //     return local.children;
+    //   },
+    // })
   );
 }
 

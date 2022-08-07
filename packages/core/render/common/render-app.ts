@@ -3,11 +3,10 @@ import {
   ErrorBoundary,
   JSX,
   Suspense,
-  useContext,
 } from 'solid-js';
 import {
   DefaultApp,
-  DocumentContext,
+  useDocumentContext,
 } from 'rigidity-root';
 import {
   MetaProvider,
@@ -40,7 +39,7 @@ export default function renderApp<L, A = undefined>(
   const CustomNotFound = getErrorPage(404, global);
 
   return () => {
-    const context = useContext(DocumentContext);
+    const context = useDocumentContext('InternalApp');
     return (
       createComponent(DataProvider, {
         load: loadData,
@@ -50,7 +49,7 @@ export default function renderApp<L, A = undefined>(
             get children() {
               return (
                 createComponent(MetaProvider, {
-                  tags: context?.tags ?? [],
+                  tags: context.tags,
                   get children() {
                     return (
                       createComponent(ErrorBoundary, {

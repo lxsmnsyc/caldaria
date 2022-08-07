@@ -246,7 +246,6 @@ importers:
       postcss-modules: ^4.3.1
       pridepack: 2.2.1
       rigidity-islands: 0.0.24
-      rigidity-render: 0.0.24
       rigidity-router: 0.0.24
       rigidity-shared: 0.0.24
       sass: ^1.54.3
@@ -270,7 +269,6 @@ importers:
       postcss-load-config: 4.0.1_postcss@8.4.14
       postcss-modules: 4.3.1_postcss@8.4.14
       rigidity-islands: link:../islands
-      rigidity-render: link:../render
       rigidity-router: link:../router
       rigidity-shared: link:../shared
       ws: 8.8.1

@@ -5,7 +5,6 @@ export {
 } from './App';
 export {
   DefaultDocument,
-  DocumentContext,
   DocumentHead,
   DocumentHeadProps,
   DocumentHtml,
@@ -13,6 +12,7 @@ export {
   DocumentScript,
   Root,
   RootProps,
+  useDocumentContext,
 } from './Document';
 export {
   default as DefaultErrorComponent,

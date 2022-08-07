@@ -3,11 +3,10 @@ import {
   ErrorBoundary,
   JSX,
   Suspense,
-  useContext,
 } from 'solid-js';
 import {
   DefaultApp,
-  DocumentContext,
+  useDocumentContext,
 } from 'rigidity-root';
 import {
   MetaProvider,
@@ -26,13 +25,13 @@ export default function renderError(
   const CustomErrorPage = getErrorPage(options.statusCode, global);
   const Custom500Page = getErrorPage(500, global);
   return () => {
-    const context = useContext(DocumentContext);
+    const context = useDocumentContext('InternalErrorPage');
     return (
       createComponent(Suspense, {
         get children() {
           return (
             createComponent(MetaProvider, {
-              tags: context?.tags ?? [],
+              tags: context.tags,
               get children() {
                 return (
                   createComponent(ErrorBoundary, {
