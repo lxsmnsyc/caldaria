@@ -26,6 +26,7 @@
     "solid-js": "^1.3"
   },
   "dependencies": {
+    "rigidity-hybrid-router": "0.0.24",
     "rigidity-meta": "0.0.24",
     "rigidity-root": "0.0.24",
     "rigidity-router": "0.0.24",

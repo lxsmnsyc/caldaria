@@ -378,6 +378,7 @@ importers:
       eslint: ^8.21.0
       eslint-config-lxsmnsyc: ^0.4.8
       pridepack: 2.2.1
+      rigidity-hybrid-router: 0.0.24
       rigidity-meta: 0.0.24
       rigidity-root: 0.0.24
       rigidity-router: 0.0.24
@@ -388,6 +389,7 @@ importers:
       vitest: ^0.20.3
       web-vitals: ^2.1.4
     dependencies:
+      rigidity-hybrid-router: link:../hybrid-router
       rigidity-meta: link:../meta
       rigidity-root: link:../root
       rigidity-router: link:../router
