@@ -1,6 +1,6 @@
 import {
-  OnLoadArgs,
   Plugin,
+  PluginBuild,
 } from 'esbuild';
 import path from 'path';
 import fs from 'fs/promises';
@@ -15,11 +15,49 @@ interface SassPluginOptions {
   dev?: boolean;
 }
 
+async function processSass(
+  file: string,
+  options: SassPluginOptions,
+  build: PluginBuild,
+): Promise<string> {
+  let sass;
+  try {
+    sass = (await import('sass')).default;
+  } catch (err) {
+    log('sass', red('You need to install `sass` before using!'));
+    throw err;
+  }
+
+  const source = await fs.readFile(file, 'utf8');
+
+  const { css, sourceMap } = await sass.compileStringAsync(source, {
+    url: new URL(file, 'file://'),
+    sourceMap: options.dev,
+    syntax: /\.sass/.test(path.basename(file)) ? 'indented' : 'scss',
+  });
+
+  // TODO Fix urls
+  if (sourceMap) {
+    const { sources, sourcesContent = [] } = sourceMap;
+    await Promise.all(map(sources, async (item, index) => {
+      const actualPath = decodeURI(item);
+      sources[index] = path.relative(path.dirname(file), actualPath);
+      sourcesContent[index] = await fs.readFile(actualPath, 'utf-8');
+    }));
+    sourceMap.sourcesContent = sourcesContent;
+  }
+
+  return buildCSSEntrypoint(
+    build,
+    file,
+    createInlineSourceMap(css, sourceMap, options.dev),
+  );
+}
+
 export default function sassPlugin(options: SassPluginOptions): Plugin {
   return {
     name: 'rigidity:sass',
     setup(build) {
-      const defaultOptions = build.initialOptions;
       const getStyleID = createStyleId('sass');
 
       build.onResolve({
@@ -47,46 +85,11 @@ export default function sassPlugin(options: SassPluginOptions): Plugin {
         })
       ));
 
-      async function processSass(args: OnLoadArgs): Promise<string> {
-        let sass;
-        try {
-          sass = (await import('sass')).default;
-        } catch (err) {
-          log('sass', red('You need to install `sass` before using!'));
-          throw err;
-        }
-
-        const source = await fs.readFile(args.path, 'utf8');
-        const { css, sourceMap } = await sass.compileStringAsync(source, {
-          url: new URL(args.path, 'file://'),
-          sourceMap: options.dev,
-          syntax: /\.sass/.test(path.basename(args.path)) ? 'indented' : 'scss',
-        });
-
-        // TODO Fix urls
-        if (sourceMap) {
-          const { sources, sourcesContent = [] } = sourceMap;
-          await Promise.all(map(sources, async (item, index) => {
-            const actualPath = decodeURI(item);
-            sources[index] = path.relative(path.dirname(args.path), actualPath);
-            sourcesContent[index] = await fs.readFile(actualPath, 'utf-8');
-          }));
-          sourceMap.sourcesContent = sourcesContent;
-        }
-
-        return buildCSSEntrypoint(
-          build,
-          defaultOptions,
-          args.path,
-          createInlineSourceMap(css, sourceMap, options.dev),
-        );
-      }
-
       build.onLoad({
         filter: /.*/,
         namespace: 'sass-vanilla',
       }, async (args) => {
-        const result = await processSass(args);
+        const result = await processSass(args.path, options, build);
         return {
           contents: result,
           resolveDir: path.dirname(args.path),
@@ -97,7 +100,7 @@ export default function sassPlugin(options: SassPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'sass',
       }, async (args) => {
-        const result = await processSass(args);
+        const result = await processSass(args.path, options, build);
         return {
           contents: createLazyCSS(getStyleID(args.path), result, {}),
           resolveDir: path.dirname(args.path),
@@ -108,7 +111,7 @@ export default function sassPlugin(options: SassPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'sass-raw',
       }, async (args) => {
-        const result = await processSass(args);
+        const result = await processSass(args.path, options, build);
         return {
           contents: result,
           loader: 'text',
@@ -118,7 +121,7 @@ export default function sassPlugin(options: SassPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'sass-url',
       }, async (args) => {
-        const result = await processSass(args);
+        const result = await processSass(args.path, options, build);
         return {
           contents: result,
           loader: 'file',

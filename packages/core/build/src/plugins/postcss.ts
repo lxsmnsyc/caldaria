@@ -104,7 +104,6 @@ export default function postcssPlugin(
 
         return buildCSSEntrypoint(
           build,
-          defaultOptions,
           args.path,
           result.css,
         );
@@ -153,7 +152,9 @@ export default function postcssPlugin(
         };
       });
 
-      async function processPostCSSModules(args: OnLoadArgs) {
+      async function processPostCSSModules(
+        args: OnLoadArgs,
+      ) {
         const source = await fs.readFile(args.path, 'utf8');
 
         const processor = postcss(config.plugins);
@@ -173,7 +174,6 @@ export default function postcssPlugin(
 
         const css = await buildCSSEntrypoint(
           build,
-          defaultOptions,
           args.path,
           result.css,
         );

@@ -18,6 +18,35 @@ interface SolidOptions {
   babel: SolidBabelOption;
 }
 
+async function transform(
+  filepath: string,
+  options: SolidOptions,
+) {
+  const source = await fs.readFile(filepath, { encoding: 'utf-8' });
+
+  const { name, ext } = path.parse(filepath);
+  const filename = name + ext;
+
+  const result = await babel.transformAsync(source, {
+    presets: [
+      [solid, { generate: options.generate, hydratable: true }],
+      [ts],
+      ...options.babel.presets,
+    ],
+    plugins: [
+      [solidSFC, { dev: options.dev }],
+      ...options.babel.plugins,
+    ],
+    filename,
+    sourceMaps: 'inline',
+  });
+
+  if (result) {
+    return result.code ?? '';
+  }
+  throw new Error('[rigidity:solid] Babel Transform returned null.');
+}
+
 export default function solidPlugin(options: SolidOptions): Plugin {
   return {
     name: 'rigidity:solid',
@@ -25,31 +54,10 @@ export default function solidPlugin(options: SolidOptions): Plugin {
     setup(build) {
       build.onLoad({
         filter: /\.(t|j)sx$/,
-      }, async (args) => {
-        const source = await fs.readFile(args.path, { encoding: 'utf-8' });
-
-        const { name, ext } = path.parse(args.path);
-        const filename = name + ext;
-
-        const result = await babel.transformAsync(source, {
-          presets: [
-            [solid, { generate: options.generate, hydratable: true }],
-            [ts],
-            ...options.babel.presets,
-          ],
-          plugins: [
-            [solidSFC, { dev: options.dev }],
-            ...options.babel.plugins,
-          ],
-          filename,
-          sourceMaps: 'inline',
-        });
-
-        if (result) {
-          return { contents: result.code ?? '', loader: 'js' };
-        }
-        throw new Error('[rigidity:solid] Babel Transform returned null.');
-      });
+      }, async (args) => ({
+        contents: await transform(args.path, options),
+        loader: 'js',
+      }));
     },
   };
 }

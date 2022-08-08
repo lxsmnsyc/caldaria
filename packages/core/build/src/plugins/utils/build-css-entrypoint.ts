@@ -1,4 +1,4 @@
-import { BuildOptions, PluginBuild } from 'esbuild';
+import { PluginBuild } from 'esbuild';
 import path from 'path';
 import { filter, map } from 'rigidity-shared';
 import { outputFile } from '../../fs';
@@ -7,15 +7,14 @@ const decoder = new TextDecoder();
 
 export default async function buildCSSEntrypoint(
   instance: PluginBuild,
-  defaultOptions: BuildOptions,
   sourcefile: string,
   contents: string,
 ) {
   const output = await instance.esbuild.build({
-    ...defaultOptions,
+    ...instance.initialOptions,
     incremental: undefined,
     entryPoints: undefined,
-    sourcemap: defaultOptions.sourcemap ? 'inline' : undefined,
+    sourcemap: instance.initialOptions.sourcemap ? 'inline' : undefined,
     write: false,
     stdin: {
       contents,

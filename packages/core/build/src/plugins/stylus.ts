@@ -1,6 +1,6 @@
 import {
-  OnLoadArgs,
   Plugin,
+  PluginBuild,
 } from 'esbuild';
 import path from 'path';
 import fs from 'fs/promises';
@@ -12,6 +12,7 @@ import buildCSSEntrypoint from './utils/build-css-entrypoint';
 
 async function renderStylus(
   filePath: string,
+  source: string,
   sourcemap?: boolean,
 ) {
   let stylus;
@@ -22,7 +23,6 @@ async function renderStylus(
     throw err;
   }
 
-  const source = await fs.readFile(filePath, 'utf8');
   const instance = stylus(source)
     .set('filename', filePath);
 
@@ -49,11 +49,26 @@ interface LessPluginOptions {
   dev?: boolean;
 }
 
+async function processStylus(
+  file: string,
+  options: LessPluginOptions,
+  build: PluginBuild,
+): Promise<string> {
+  const source = await fs.readFile(file, 'utf8');
+
+  const result = await renderStylus(file, source, options.dev);
+
+  return buildCSSEntrypoint(
+    build,
+    file,
+    result,
+  );
+}
+
 export default function stylusPlugin(options: LessPluginOptions): Plugin {
   return {
     name: 'rigidity:stylus',
     setup(build) {
-      const defaultOptions = build.initialOptions;
       const getStyleID = createStyleId('stylus');
 
       build.onResolve({
@@ -81,22 +96,11 @@ export default function stylusPlugin(options: LessPluginOptions): Plugin {
         })
       ));
 
-      async function processLess(args: OnLoadArgs): Promise<string> {
-        const result = await renderStylus(args.path, options.dev);
-
-        return buildCSSEntrypoint(
-          build,
-          defaultOptions,
-          args.path,
-          result,
-        );
-      }
-
       build.onLoad({
         filter: /.*/,
         namespace: 'stylus-vanilla',
       }, async (args) => {
-        const result = await processLess(args);
+        const result = await processStylus(args.path, options, build);
         return {
           contents: result,
           resolveDir: path.dirname(args.path),
@@ -107,7 +111,7 @@ export default function stylusPlugin(options: LessPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'stylus',
       }, async (args) => {
-        const result = await processLess(args);
+        const result = await processStylus(args.path, options, build);
         return {
           contents: createLazyCSS(getStyleID(args.path), result, {}),
           resolveDir: path.dirname(args.path),
@@ -118,7 +122,7 @@ export default function stylusPlugin(options: LessPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'stylus-raw',
       }, async (args) => {
-        const result = await processLess(args);
+        const result = await processStylus(args.path, options, build);
         return {
           contents: result,
           loader: 'text',
@@ -128,7 +132,7 @@ export default function stylusPlugin(options: LessPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'stylus-url',
       }, async (args) => {
-        const result = await processLess(args);
+        const result = await processStylus(args.path, options, build);
         return {
           contents: result,
           loader: 'file',

@@ -1,5 +1,4 @@
 import {
-  BuildResult,
   build,
   Plugin,
 } from 'esbuild';
@@ -28,11 +27,11 @@ interface BuildInput {
   incremental?: boolean;
 }
 
-export default async function runESBuild(
+export default function runESBuild(
   input: BuildInput,
   context: BuildContext,
   options: BuildOptions,
-): Promise<BuildResult> {
+) {
   const esbuildConfig = typeof options.esbuild === 'function'
     ? options.esbuild(context)
     : options.esbuild;
@@ -43,7 +42,25 @@ export default async function runESBuild(
     ? options.babel.presets(context)
     : options.babel?.presets;
 
-  const initialPlugins: Plugin[] = [];
+  const initialPlugins: Plugin[] = [
+    progressPlugin({
+      prefix: input.prefix,
+    }),
+    postcssPlugin({
+      dev: context.isDev,
+    }),
+    lessPlugin({
+      dev: context.isDev,
+    }),
+    sassPlugin({
+      dev: context.isDev,
+    }),
+    stylusPlugin({
+      dev: context.isDev,
+    }),
+    rawPlugin(),
+    urlPlugin(),
+  ];
 
   if (options.mode?.type === 'islands' && context.isServer) {
     initialPlugins.push(
@@ -61,6 +78,14 @@ export default async function runESBuild(
   } else {
     initialPlugins.push(
       solidPlugin({
+        generate: context.isServer ? 'ssr' : 'dom',
+        babel: {
+          plugins: babelPluginsConfig ?? [],
+          presets: babelPresetsConfig ?? [],
+        },
+        dev: context.isDev,
+      }),
+      markdownPlugin({
         generate: context.isServer ? 'ssr' : 'dom',
         babel: {
           plugins: babelPluginsConfig ?? [],
@@ -97,31 +122,6 @@ export default async function runESBuild(
     jsx: 'preserve',
     plugins: [
       ...initialPlugins,
-      progressPlugin({
-        prefix: input.prefix,
-      }),
-      postcssPlugin({
-        dev: context.isDev,
-      }),
-      lessPlugin({
-        dev: context.isDev,
-      }),
-      sassPlugin({
-        dev: context.isDev,
-      }),
-      stylusPlugin({
-        dev: context.isDev,
-      }),
-      rawPlugin(),
-      urlPlugin(),
-      markdownPlugin({
-        generate: context.isServer ? 'ssr' : 'dom',
-        babel: {
-          plugins: babelPluginsConfig ?? [],
-          presets: babelPresetsConfig ?? [],
-        },
-        dev: context.isDev,
-      }),
       ...(esbuildConfig?.plugins ?? []),
     ],
     external: esbuildConfig?.external,

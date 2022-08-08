@@ -21,6 +21,37 @@ interface IslandsOptions {
   onEntry?: (id: string, entry: string) => void;
 }
 
+async function transformIsland(
+  filepath: string,
+  options: IslandsOptions,
+  handler: IslandsHandler,
+) {
+  const source = await fs.readFile(filepath, { encoding: 'utf-8' });
+
+  const { name, ext } = path.parse(filepath);
+  const filename = name + ext;
+
+  const result = await babel.transformAsync(source, {
+    presets: [
+      [solid, { generate: options.generate, hydratable: true }],
+      [ts],
+      ...options.babel.presets,
+    ],
+    plugins: [
+      ...handler.getPlugins(filepath),
+      [solidSFC, { dev: options.dev }],
+      ...options.babel.plugins,
+    ],
+    filename,
+    sourceMaps: 'inline',
+  });
+
+  if (result) {
+    return result.code ?? '';
+  }
+  throw new Error('[rigidity:islands] Babel Transform returned null.');
+}
+
 export default function islandsPlugin(options: IslandsOptions): Plugin {
   const handler = new IslandsHandler({
     onEntry: options.onEntry,
@@ -36,32 +67,10 @@ export default function islandsPlugin(options: IslandsOptions): Plugin {
     setup(build) {
       build.onLoad({
         filter: /\.[tj]sx?$/,
-      }, async (args) => {
-        const source = await fs.readFile(args.path, { encoding: 'utf-8' });
-
-        const { name, ext } = path.parse(args.path);
-        const filename = name + ext;
-
-        const result = await babel.transformAsync(source, {
-          presets: [
-            [solid, { generate: options.generate, hydratable: true }],
-            [ts],
-            ...options.babel.presets,
-          ],
-          plugins: [
-            ...handler.getPlugins(args.path),
-            [solidSFC, { dev: options.dev }],
-            ...options.babel.plugins,
-          ],
-          filename,
-          sourceMaps: 'inline',
-        });
-
-        if (result) {
-          return { contents: result.code ?? '', loader: 'js' };
-        }
-        throw new Error('[rigidity:islands] Babel Transform returned null.');
-      });
+      }, async (args) => ({
+        contents: await transformIsland(args.path, options, handler),
+        loader: 'js',
+      }));
     },
   };
 }
