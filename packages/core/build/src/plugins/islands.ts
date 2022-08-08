@@ -3,10 +3,10 @@ import { Plugin } from 'esbuild';
 import path from 'path';
 import fs from 'fs/promises';
 
-import islands from 'rigidity-islands/babel';
 import solid from 'babel-preset-solid';
 import ts from '@babel/preset-typescript';
 import solidSFC from 'babel-plugin-solid-sfc';
+import IslandsHandler from './utils/islands-handler';
 
 interface SolidBabelOption {
   plugins: babel.PluginItem[];
@@ -22,44 +22,13 @@ interface IslandsOptions {
 }
 
 export default function islandsPlugin(options: IslandsOptions): Plugin {
-  const entries = new Map<string, string>();
-  const filenames = new Map<string, string>();
-
-  function createEntry(entry: string): string {
-    const result = entries.get(entry);
-    if (result) {
-      return result;
-    }
-    const id = `${entries.size}`;
-    entries.set(entry, id);
-    options.onEntry?.(id, entry);
-    return id;
-  }
-
-  function getFilename(pth: string) {
-    const filename = filenames.get(pth);
-
-    if (filename) {
-      return filename;
-    }
-
-    const entry = createEntry(pth);
-    const newFilename = `/${options.assets}/${entry}.js`;
-    filenames.set(pth, newFilename);
-    return newFilename;
-  }
-
-  function getInitialPlugins(
-    pth: string,
-  ) {
-    if (options.generate !== 'ssr') {
-      return [];
-    }
-    if (/\.client\.[tj]sx?$/.test(pth)) {
-      return [[islands, { source: getFilename(pth) }]];
-    }
-    return [[islands]];
-  }
+  const handler = new IslandsHandler({
+    onEntry: options.onEntry,
+    assets: options.assets,
+    generate: options.generate,
+    prefix: 'solid',
+    extension: '[tj]sx?',
+  });
 
   return {
     name: 'rigidity:islands',
@@ -80,7 +49,7 @@ export default function islandsPlugin(options: IslandsOptions): Plugin {
             ...options.babel.presets,
           ],
           plugins: [
-            ...getInitialPlugins(args.path),
+            ...handler.getPlugins(args.path),
             [solidSFC, { dev: options.dev }],
             ...options.babel.plugins,
           ],
