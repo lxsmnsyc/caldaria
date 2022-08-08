@@ -24,7 +24,7 @@
     "solid-js": "^1.4.8",
     "tslib": "^2.4.0",
     "typescript": "^4.7.4",
-    "vitest": "^0.20.3",
+    "vitest": "^0.21.0",
     "web-vitals": "^2.1.4"
   },
   "peerDependencies": {
