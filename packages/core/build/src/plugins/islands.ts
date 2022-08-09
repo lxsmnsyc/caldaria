@@ -7,6 +7,14 @@ import solid from 'babel-preset-solid';
 import ts from '@babel/preset-typescript';
 import solidSFC from 'babel-plugin-solid-sfc';
 import IslandsHandler from './utils/islands-handler';
+import {
+  registerDependencyMarker,
+  createFileCache,
+  FileCache,
+  isFileDirty,
+  readFileCache,
+  writeFileCache,
+} from './utils/file-cache';
 
 interface SolidBabelOption {
   plugins: babel.PluginItem[];
@@ -22,34 +30,37 @@ interface IslandsOptions {
 }
 
 async function transformIsland(
-  filepath: string,
+  file: string,
   options: IslandsOptions,
   handler: IslandsHandler,
+  cache: FileCache,
 ) {
-  const source = await fs.readFile(filepath, { encoding: 'utf-8' });
+  if (isFileDirty(file)) {
+    const source = await fs.readFile(file, 'utf-8');
 
-  const { name, ext } = path.parse(filepath);
-  const filename = name + ext;
+    const result = await babel.transformAsync(source, {
+      presets: [
+        [solid, { generate: options.generate, hydratable: true }],
+        [ts],
+        ...options.babel.presets,
+      ],
+      plugins: [
+        ...handler.getPlugins(file),
+        [solidSFC, { dev: options.dev }],
+        ...options.babel.plugins,
+      ],
+      filename: path.basename(file),
+      sourceMaps: 'inline',
+    });
 
-  const result = await babel.transformAsync(source, {
-    presets: [
-      [solid, { generate: options.generate, hydratable: true }],
-      [ts],
-      ...options.babel.presets,
-    ],
-    plugins: [
-      ...handler.getPlugins(filepath),
-      [solidSFC, { dev: options.dev }],
-      ...options.babel.plugins,
-    ],
-    filename,
-    sourceMaps: 'inline',
-  });
-
-  if (result) {
-    return result.code ?? '';
+    if (result) {
+      const contents = result.code ?? '';
+      await writeFileCache(cache, file, contents);
+      return contents;
+    }
+    throw new Error('[rigidity:islands] Babel Transform returned null.');
   }
-  throw new Error('[rigidity:islands] Babel Transform returned null.');
+  return readFileCache(cache, file);
 }
 
 export default function islandsPlugin(options: IslandsOptions): Plugin {
@@ -58,17 +69,21 @@ export default function islandsPlugin(options: IslandsOptions): Plugin {
     assets: options.assets,
     generate: options.generate,
     prefix: 'solid',
-    extension: '[tj]sx?',
+    extension: '[tj]sx',
   });
+
+  const cache = createFileCache(`islands-${options.generate ?? 'dom'}`);
 
   return {
     name: 'rigidity:islands',
 
     setup(build) {
+      registerDependencyMarker(build, /\.[tj]sx$/);
+
       build.onLoad({
-        filter: /\.[tj]sx?$/,
+        filter: /\.[tj]sx$/,
       }, async (args) => ({
-        contents: await transformIsland(args.path, options, handler),
+        contents: await transformIsland(args.path, options, handler, cache),
         loader: 'js',
       }));
     },
