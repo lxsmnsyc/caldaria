@@ -1,5 +1,6 @@
 import type ws from 'ws';
 import type execa from 'execa';
+import path from 'path';
 import {
   BuildOptions,
   BUILD_OUTPUT,
@@ -17,6 +18,7 @@ import {
 } from './create-server-build';
 import { buildClient, generateClientArtifact } from './create-client-build';
 import createIslandsBuild from './create-islands-build';
+import { clearDirty, markFile, unmountFile } from './plugins/utils/file-cache';
 
 function debounce(callback: () => void, timeout = 200) {
   let debounced: NodeJS.Timeout | undefined;
@@ -37,8 +39,6 @@ async function getProcess(
   reload: () => void,
 ) {
   const execa = await import('execa');
-
-  const path = await import('path');
 
   const buildDirectory = options.directories?.build ?? BUILD_PATH;
   const outputDirectory = path.join(
@@ -170,10 +170,12 @@ export default async function createDevBuild(
     for (const client of clients.keys()) {
       client.send('update');
     }
+    clearDirty();
   });
 
   log('dev-server', green('Started.'));
 
+  const cwd = process.cwd();
   // Add watcher
   chokidar.watch(
     '.',
@@ -181,7 +183,10 @@ export default async function createDevBuild(
       ignored: new RegExp(pattern),
       persistent: true,
     },
-  ).on('change', () => {
+  ).on('change', (file) => {
+    markFile(path.join(cwd, file));
     runProcess();
+  }).on('unlink', (file) => {
+    unmountFile(path.join(cwd, file));
   });
 }
