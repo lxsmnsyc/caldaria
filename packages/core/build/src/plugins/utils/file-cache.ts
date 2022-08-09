@@ -54,7 +54,6 @@ export function clearDirty() {
   for (const file of PENDING_DIRTY.keys()) {
     DIRTY.set(file, false);
   }
-  console.log(DEPENDENCY_TREE);
   PENDING_DIRTY.clear();
 }
 

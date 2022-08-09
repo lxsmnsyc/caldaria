@@ -24,7 +24,6 @@ export function checkPath(pth: string) {
 
     if (pathHasInvalidWinCharacters) {
       const error = new Error(`Path contains invalid characters: ${pth}`);
-      error.code = 'EINVAL';
       throw error;
     }
   }
