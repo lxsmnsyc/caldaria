@@ -7,6 +7,14 @@ import * as marked from 'solid-marked';
 import solid from 'babel-preset-solid';
 import ts from '@babel/preset-typescript';
 import solidSFC from 'babel-plugin-solid-sfc';
+import {
+  createFileCache,
+  FileCache,
+  isFileDirty,
+  readFileCache,
+  registerDependencyMarker,
+  writeFileCache,
+} from './utils/file-cache';
 
 interface MarkdownBabelOption {
   plugins: babel.PluginItem[];
@@ -15,43 +23,53 @@ interface MarkdownBabelOption {
 
 interface MarkdownOptions {
   dev: boolean;
-  generate?: 'dom' | 'ssr';
+  generate: 'dom' | 'ssr';
   babel: MarkdownBabelOption;
 }
 
 async function transform(
-  filepath: string,
+  file: string,
   options: MarkdownOptions,
+  cache: FileCache,
 ) {
-  const file = await fs.readFile(filepath, 'utf-8');
+  if (isFileDirty(file)) {
+    const source = await fs.readFile(file, 'utf-8');
 
-  const markdownResult = await marked.compile('rigidity/root', filepath, file);
+    const markdownResult = await marked.compile('rigidity/root', file, source);
 
-  const babelResult = await babel.transformAsync(markdownResult.code, {
-    presets: [
-      [solid, { generate: options.generate, hydratable: true }],
-      [ts],
-      ...options.babel.presets,
-    ],
-    plugins: [
-      [solidSFC, { dev: options.dev }],
-      ...options.babel.plugins,
-    ],
-    filename: filepath,
-    sourceMaps: 'inline',
-    inputSourceMap: markdownResult.map,
-  });
+    const babelResult = await babel.transformAsync(markdownResult.code, {
+      presets: [
+        [solid, { generate: options.generate, hydratable: true }],
+        [ts],
+        ...options.babel.presets,
+      ],
+      plugins: [
+        [solidSFC, { dev: options.dev }],
+        ...options.babel.plugins,
+      ],
+      filename: path.basename(file),
+      sourceMaps: 'inline',
+      inputSourceMap: markdownResult.map,
+    });
 
-  if (babelResult) {
-    return babelResult.code ?? '';
+    if (babelResult) {
+      const contents = babelResult.code ?? '';
+      await writeFileCache(cache, file, contents);
+      return contents;
+    }
+    throw new Error('[rigidity:markdown] Babel Transform returned null.');
   }
-  throw new Error('[rigidity:markdown] Babel Transform returned null.');
+  return readFileCache(cache, file);
 }
 
 export default function markdownPlugin(options: MarkdownOptions): Plugin {
+  const cache = createFileCache(`markdown-${options.generate}`);
+
   return {
     name: 'rigidity:markdown',
     setup(build) {
+      registerDependencyMarker(build, /\.(md|mdx|markdown|mdown|mkdn|mkd|mkdown|ron)$/);
+
       build.onResolve({
         filter: /\.(md|mdx|markdown|mdown|mkdn|mkd|mkdown|ron)$/,
       }, (args) => ({
@@ -63,7 +81,7 @@ export default function markdownPlugin(options: MarkdownOptions): Plugin {
         filter: /.*/,
         namespace: 'markdown',
       }, async (args) => ({
-        contents: await transform(args.path, options),
+        contents: await transform(args.path, options, cache),
         resolveDir: path.dirname(args.path),
         loader: 'jsx',
       }));

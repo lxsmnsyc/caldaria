@@ -1,57 +1,74 @@
-import { PluginBuild } from 'esbuild';
+import { OnResolveArgs, PluginBuild } from 'esbuild';
 import fs from 'fs/promises';
 import path from 'path';
 import { outputFile } from '../../fs';
+import getPOSIXPath from '../../get-posix-path';
 import UniqueIdGenerator from './id-generator';
 
 const DEPENDENCY_TREE = new Map<string, Set<string>>();
 const DIRTY = new Map<string, boolean>();
 
+function normalizePath(file: string) {
+  return getPOSIXPath(file);
+}
+
 export function addDependency(importer: string, imported: string) {
-  let dependencies = DEPENDENCY_TREE.get(importer);
+  const normalizedImporter = normalizePath(importer);
+  const normalizedImported = normalizePath(imported);
+  let dependencies = DEPENDENCY_TREE.get(normalizedImporter);
 
   if (!dependencies) {
     dependencies = new Set();
-    DEPENDENCY_TREE.set(importer, dependencies);
+    DEPENDENCY_TREE.set(normalizedImporter, dependencies);
   }
 
-  dependencies.add(imported);
+  dependencies.add(normalizedImported);
 }
 
 export function unmountFile(file: string) {
-  DIRTY.delete(file);
+  const normalizedFile = normalizePath(file);
+  DIRTY.delete(normalizedFile);
 
-  DEPENDENCY_TREE.delete(file);
+  DEPENDENCY_TREE.delete(normalizedFile);
 
   for (const dependencies of DEPENDENCY_TREE.values()) {
-    dependencies.delete(file);
+    dependencies.delete(normalizedFile);
   }
 }
 
 const PENDING_DIRTY = new Set<string>();
 
+export function markCleanFile(file: string) {
+  const normalizedFile = normalizePath(file);
+  DIRTY.set(normalizedFile, false);
+  PENDING_DIRTY.delete(normalizedFile);
+}
+
 export function markFile(file: string) {
-  DIRTY.set(file, true);
-  PENDING_DIRTY.add(file);
+  const normalizedFile = normalizePath(file);
+  DIRTY.set(normalizedFile, true);
+  PENDING_DIRTY.add(normalizedFile);
 }
 
 export function clearDirty() {
   for (const file of PENDING_DIRTY.keys()) {
     DIRTY.set(file, false);
   }
+  console.log(DEPENDENCY_TREE);
   PENDING_DIRTY.clear();
 }
 
 export function isFileDirty(file: string): boolean {
-  const current = DIRTY.get(file);
+  const normalizedFile = normalizePath(file);
+  const current = DIRTY.get(normalizedFile);
   if (current == null) {
-    markFile(file);
+    markFile(normalizedFile);
     return true;
   }
   if (current) {
     return true;
   }
-  const dependencies = DEPENDENCY_TREE.get(file);
+  const dependencies = DEPENDENCY_TREE.get(normalizedFile);
   if (dependencies) {
     for (const value of dependencies.keys()) {
       if (isFileDirty(value)) {
@@ -78,12 +95,13 @@ export function createFileCache(prefix: string): FileCache {
 }
 
 function getID(cache: FileCache, file: string) {
-  const current = cache.ids.get(file);
+  const normalizedFile = normalizePath(file);
+  const current = cache.ids.get(normalizedFile);
   if (current) {
     return current;
   }
   const newID = cache.id.next();
-  cache.ids.set(file, newID);
+  cache.ids.set(normalizedFile, newID);
   return newID;
 }
 
@@ -106,13 +124,16 @@ export function readFileCache(cache: FileCache, file: string) {
   return fs.readFile(getTargetFile(cache, file), 'utf-8');
 }
 
+export function resolvePath(args: OnResolveArgs): string {
+  return new URL(args.path, `file://${args.resolveDir}/`).pathname.substring(1);
+}
+
 export function registerDependencyMarker(build: PluginBuild, filter: RegExp) {
   build.onResolve({
     filter,
   }, (args) => {
     if (args.kind !== 'entry-point' && args.kind !== 'require-resolve') {
-      const directory = path.dirname(args.importer);
-      addDependency(args.importer, path.join(directory, args.path));
+      addDependency(args.importer, resolvePath(args));
     }
     return null;
   });

@@ -9,40 +9,25 @@ import createLazyCSS from './utils/create-lazy-css';
 import createStyleId from './utils/create-style-id';
 import forkToCSSInJS from './utils/fork-to-css-in-js';
 import buildCSSEntrypoint from './utils/build-css-entrypoint';
+import {
+  addDependency,
+  createFileCache,
+  FileCache,
+  isFileDirty,
+  markCleanFile,
+  readFileCache,
+  registerDependencyMarker,
+  resolvePath,
+  writeFileCache,
+} from './utils/file-cache';
 
-async function renderStylus(
-  filePath: string,
-  source: string,
-  sourcemap?: boolean,
-) {
-  let stylus;
+async function importStylus() {
   try {
-    stylus = (await import('stylus')).default;
+    return (await import('stylus')).default;
   } catch (err) {
     log('stylus', red('You need to install `stylus` before using!'));
     throw err;
   }
-
-  const instance = stylus(source)
-    .set('filename', filePath);
-
-  if (sourcemap) {
-    instance.set('sourcemap', {
-      comment: true,
-      inline: true,
-      basePath: path.dirname(filePath),
-    });
-  }
-
-  return new Promise<string>((resolve, reject) => {
-    instance.render((err, css) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(css);
-      }
-    });
-  });
 }
 
 interface LessPluginOptions {
@@ -53,29 +38,66 @@ async function processStylus(
   file: string,
   options: LessPluginOptions,
   build: PluginBuild,
+  cache: FileCache,
 ): Promise<string> {
-  const source = await fs.readFile(file, 'utf8');
+  if (isFileDirty(file)) {
+    const source = await fs.readFile(file, 'utf8');
 
-  const result = await renderStylus(file, source, options.dev);
+    const stylus = await importStylus();
 
-  return buildCSSEntrypoint(
-    build,
-    file,
-    result,
-  );
+    const instance = stylus(source)
+      .set('filename', file);
+
+    if (options.dev) {
+      instance.set('sourcemap', {
+        comment: true,
+        inline: true,
+        basePath: path.dirname(file),
+      });
+    }
+
+    const result = await new Promise<string>((resolve, reject) => {
+      instance.render((err, css) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(css);
+        }
+      });
+    });
+
+    for (const dep of instance.deps()) {
+      addDependency(file, dep);
+      markCleanFile(dep);
+    }
+
+    const contents = await buildCSSEntrypoint(
+      build,
+      file,
+      result,
+    );
+
+    await writeFileCache(cache, file, contents);
+
+    return contents;
+  }
+  return readFileCache(cache, file);
 }
 
 export default function stylusPlugin(options: LessPluginOptions): Plugin {
+  const cache = createFileCache('stylus');
   return {
     name: 'rigidity:stylus',
     setup(build) {
       const getStyleID = createStyleId('stylus');
 
+      registerDependencyMarker(build, /\.styl(us)?(\?(raw|url))?/);
+
       build.onResolve({
         filter: /\.styl(us)?\?raw$/,
       }, (args) => (
         forkToCSSInJS('stylus-vanilla', args.kind, {
-          path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+          path: resolvePath(args),
           namespace: 'stylus-raw',
         })
       ));
@@ -83,7 +105,7 @@ export default function stylusPlugin(options: LessPluginOptions): Plugin {
         filter: /\.styl(us)?\?url$/,
       }, (args) => (
         forkToCSSInJS('stylus-vanilla', args.kind, {
-          path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+          path: resolvePath(args),
           namespace: 'stylus-url',
         })
       ));
@@ -100,7 +122,7 @@ export default function stylusPlugin(options: LessPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'stylus-vanilla',
       }, async (args) => {
-        const result = await processStylus(args.path, options, build);
+        const result = await processStylus(args.path, options, build, cache);
         return {
           contents: result,
           resolveDir: path.dirname(args.path),
@@ -111,7 +133,7 @@ export default function stylusPlugin(options: LessPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'stylus',
       }, async (args) => {
-        const result = await processStylus(args.path, options, build);
+        const result = await processStylus(args.path, options, build, cache);
         return {
           contents: createLazyCSS(getStyleID(args.path), result, {}),
           resolveDir: path.dirname(args.path),
@@ -122,7 +144,7 @@ export default function stylusPlugin(options: LessPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'stylus-raw',
       }, async (args) => {
-        const result = await processStylus(args.path, options, build);
+        const result = await processStylus(args.path, options, build, cache);
         return {
           contents: result,
           loader: 'text',
@@ -132,7 +154,7 @@ export default function stylusPlugin(options: LessPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'stylus-url',
       }, async (args) => {
-        const result = await processStylus(args.path, options, build);
+        const result = await processStylus(args.path, options, build, cache);
         return {
           contents: result,
           loader: 'file',

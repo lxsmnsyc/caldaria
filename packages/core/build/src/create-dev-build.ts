@@ -86,6 +86,7 @@ async function getProcess(
         log('dev-server', green('Restarted!'));
         reload();
       }
+      clearDirty();
       building = false;
     };
 
@@ -125,6 +126,7 @@ async function getProcess(
       log('dev-server', green('Restarted!'));
       reload();
     }
+    clearDirty();
     building = false;
   };
 
@@ -170,7 +172,6 @@ export default async function createDevBuild(
     for (const client of clients.keys()) {
       client.send('update');
     }
-    clearDirty();
   });
 
   log('dev-server', green('Started.'));

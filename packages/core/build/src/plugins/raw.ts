@@ -1,8 +1,8 @@
 import {
   Plugin,
 } from 'esbuild';
-import path from 'path';
 import fs from 'fs/promises';
+import { resolvePath } from './utils/file-cache';
 
 export default function rawPlugin(): Plugin {
   return {
@@ -12,7 +12,7 @@ export default function rawPlugin(): Plugin {
       build.onResolve({
         filter: /\?raw$/,
       }, (args) => ({
-        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+        path: resolvePath(args),
         namespace: 'raw',
       }));
       build.onLoad({

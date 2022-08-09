@@ -19,6 +19,8 @@ import {
   writeFileCache,
   registerDependencyMarker,
   addDependency,
+  markCleanFile,
+  resolvePath,
 } from './utils/file-cache';
 
 interface LessPluginOptions {
@@ -59,6 +61,7 @@ async function processLess(
 
     for (const item of result.imports) {
       addDependency(file, item);
+      markCleanFile(item);
     }
 
     if (result.map) {
@@ -101,7 +104,7 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
         filter: /\.less\?raw$/,
       }, (args) => (
         forkToCSSInJS('less-vanilla', args.kind, {
-          path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+          path: resolvePath(args),
           namespace: 'less-raw',
         })
       ));
@@ -109,7 +112,7 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
         filter: /\.less\?url$/,
       }, (args) => (
         forkToCSSInJS('less-vanilla', args.kind, {
-          path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+          path: resolvePath(args),
           namespace: 'less-url',
         })
       ));

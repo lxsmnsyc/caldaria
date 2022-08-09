@@ -18,6 +18,7 @@ import progressPlugin from './plugins/progress';
 import lessPlugin from './plugins/less';
 import sassPlugin from './plugins/sass';
 import stylusPlugin from './plugins/stylus';
+import resolversPlugin from './plugins/resolvers';
 
 interface BuildInput {
   prefix: string;
@@ -43,6 +44,7 @@ export default function runESBuild(
     : options.babel?.presets;
 
   const initialPlugins: Plugin[] = [
+    resolversPlugin(),
     progressPlugin({
       prefix: input.prefix,
     }),
@@ -60,6 +62,14 @@ export default function runESBuild(
     }),
     rawPlugin(),
     urlPlugin(),
+    markdownPlugin({
+      generate: context.isServer ? 'ssr' : 'dom',
+      babel: {
+        plugins: babelPluginsConfig ?? [],
+        presets: babelPresetsConfig ?? [],
+      },
+      dev: context.isDev,
+    }),
   ];
 
   if (options.mode?.type === 'islands' && context.isServer) {
@@ -78,14 +88,6 @@ export default function runESBuild(
   } else {
     initialPlugins.push(
       solidPlugin({
-        generate: context.isServer ? 'ssr' : 'dom',
-        babel: {
-          plugins: babelPluginsConfig ?? [],
-          presets: babelPresetsConfig ?? [],
-        },
-        dev: context.isDev,
-      }),
-      markdownPlugin({
         generate: context.isServer ? 'ssr' : 'dom',
         babel: {
           plugins: babelPluginsConfig ?? [],

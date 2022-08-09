@@ -198,6 +198,11 @@ declare module '*?url' {
   export default contents;
 }
 
+declare module '*.txt' {
+  const contents: string;
+  export default contents;
+}
+
 // JSON
 declare module '*.json' {
   type JSON =

@@ -23,7 +23,7 @@ interface SolidBabelOption {
 
 interface IslandsOptions {
   dev: boolean;
-  generate?: 'dom' | 'ssr';
+  generate: 'dom' | 'ssr';
   assets: string;
   babel: SolidBabelOption;
   onEntry?: (id: string, entry: string) => void;
@@ -72,7 +72,7 @@ export default function islandsPlugin(options: IslandsOptions): Plugin {
     extension: '[tj]sx',
   });
 
-  const cache = createFileCache(`islands-${options.generate ?? 'dom'}`);
+  const cache = createFileCache(`islands-${options.generate}`);
 
   return {
     name: 'rigidity:islands',

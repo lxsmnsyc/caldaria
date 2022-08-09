@@ -1,37 +1,42 @@
 import {
-  OnResolveArgs,
-  OnResolveResult,
   Plugin,
 } from 'esbuild';
-import path from 'path';
 import fs from 'fs/promises';
+import { registerDependencyMarker, resolvePath } from './utils/file-cache';
 
 export default function urlPlugin(): Plugin {
   return {
     name: 'rigidity:url',
 
     setup(build) {
-      function normalizeResolve(args: OnResolveArgs): OnResolveResult {
-        if (/^https?:\/\//.test(args.path)) {
-          return {
-            external: true,
-          };
-        }
-        return {
-          path: path.join(args.resolveDir, args.path),
-          namespace: 'url',
-        };
-      }
+      build.onResolve({ filter: /^https?:\/\// }, () => ({
+        external: true,
+      }));
+
+      registerDependencyMarker(build, /\?url$/);
+      registerDependencyMarker(build, /\.(jpe?g|png|gif|svg|ico|webp|avif)$/);
+      registerDependencyMarker(build, /\.(mp4|webm|ogg|mp3|wav|flac|aac)$/);
+      registerDependencyMarker(build, /\.(woff2?|eot|ttf|otf)$/);
+
       build.onResolve({ filter: /\?url$/ }, (args) => ({
-        path: path.join(args.resolveDir, args.path.substring(0, args.path.length - 4)),
+        path: resolvePath(args),
         namespace: 'url',
       }));
       // images
-      build.onResolve({ filter: /\.(jpe?g|png|gif|svg|ico|webp|avif)$/ }, normalizeResolve);
+      build.onResolve({ filter: /\.(jpe?g|png|gif|svg|ico|webp|avif)$/ }, (args) => ({
+        path: resolvePath(args),
+        namespace: 'url',
+      }));
       // media
-      build.onResolve({ filter: /\.(mp4|webm|ogg|mp3|wav|flac|aac)$/ }, normalizeResolve);
+      build.onResolve({ filter: /\.(mp4|webm|ogg|mp3|wav|flac|aac)$/ }, (args) => ({
+        path: resolvePath(args),
+        namespace: 'url',
+      }));
       // font
-      build.onResolve({ filter: /\.(woff2?|eot|ttf|otf)$/ }, normalizeResolve);
+      build.onResolve({ filter: /\.(woff2?|eot|ttf|otf)$/ }, (args) => ({
+        path: resolvePath(args),
+        namespace: 'url',
+      }));
 
       // Loader
       build.onLoad({ filter: /.*/, namespace: 'url' }, async (args) => ({
