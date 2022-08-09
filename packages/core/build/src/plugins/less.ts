@@ -11,56 +11,91 @@ import createStyleId from './utils/create-style-id';
 import forkToCSSInJS from './utils/fork-to-css-in-js';
 import buildCSSEntrypoint from './utils/build-css-entrypoint';
 import createInlineSourceMap from './utils/create-inline-source-map';
+import {
+  createFileCache,
+  FileCache,
+  isFileDirty,
+  readFileCache,
+  writeFileCache,
+  registerDependencyMarker,
+  addDependency,
+} from './utils/file-cache';
 
 interface LessPluginOptions {
   dev?: boolean;
+}
+
+async function importLess() {
+  try {
+    return (await import('less')).default;
+  } catch (err) {
+    log('less', red('You need to install `less` before using!'));
+    throw err;
+  }
 }
 
 async function processLess(
   file: string,
   options: LessPluginOptions,
   build: PluginBuild,
+  cache: FileCache,
 ): Promise<string> {
-  let less;
-  try {
-    less = (await import('less')).default;
-  } catch (err) {
-    log('less', red('You need to install `less` before using!'));
-    throw err;
+  if (isFileDirty(file)) {
+    const less = await importLess();
+
+    const source = await fs.readFile(file, 'utf8');
+
+    const root = path.dirname(file);
+
+    const result = await less.render(source, {
+      filename: path.basename(file),
+      paths: [
+        root,
+      ],
+      sourceMap: options.dev ? {} : undefined,
+    });
+
+    let deserializedMap: RawSourceMap | undefined;
+
+    for (const item of result.imports) {
+      addDependency(file, item);
+    }
+
+    if (result.map) {
+      deserializedMap = JSON.parse(result.map) as RawSourceMap;
+      const { sources, sourcesContent = [] } = deserializedMap;
+      await Promise.all(map(sources, async (item, index) => {
+        if (item === path.basename(file)) {
+          sourcesContent[index] = source;
+        } else {
+          const resolved = path.relative(root, item);
+          sources[index] = resolved;
+          sourcesContent[index] = await fs.readFile(item, 'utf-8');
+        }
+      }));
+      deserializedMap.sourcesContent = sourcesContent;
+    }
+
+    const contents = await buildCSSEntrypoint(
+      build,
+      file,
+      createInlineSourceMap(result.css, deserializedMap, options.dev),
+    );
+    await writeFileCache(cache, file, contents);
+    return contents;
   }
 
-  const source = await fs.readFile(file, 'utf8');
-
-  const result = await less.render(source, {
-    filename: path.basename(file),
-    rootpath: path.dirname(file),
-    sourceMap: options.dev ? {} : undefined,
-  });
-
-  let deserializedMap: RawSourceMap | undefined;
-
-  if (result.map) {
-    deserializedMap = JSON.parse(result.map) as RawSourceMap;
-    const { sources, sourcesContent = [] } = deserializedMap;
-    await Promise.all(map(sources, async (item, index) => {
-      const resolved = path.join(path.dirname(file), item);
-      sourcesContent[index] = await fs.readFile(resolved, 'utf-8');
-    }));
-    deserializedMap.sourcesContent = sourcesContent;
-  }
-
-  return buildCSSEntrypoint(
-    build,
-    file,
-    createInlineSourceMap(result.css, deserializedMap, options.dev),
-  );
+  return readFileCache(cache, file);
 }
 
 export default function lessPlugin(options: LessPluginOptions): Plugin {
+  const cache = createFileCache('less');
   return {
     name: 'rigidity:less',
     setup(build) {
       const getStyleID = createStyleId('less');
+
+      registerDependencyMarker(build, /\.less(\?(raw|url))?$/);
 
       build.onResolve({
         filter: /\.less\?raw$/,
@@ -91,7 +126,7 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'less-vanilla',
       }, async (args) => ({
-        contents: await processLess(args.path, options, build),
+        contents: await processLess(args.path, options, build, cache),
         resolveDir: path.dirname(args.path),
         loader: 'css',
       }));
@@ -99,7 +134,7 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'less',
       }, async (args) => {
-        const result = await processLess(args.path, options, build);
+        const result = await processLess(args.path, options, build, cache);
         return {
           contents: createLazyCSS(getStyleID(args.path), result, {}),
           resolveDir: path.dirname(args.path),
@@ -110,7 +145,7 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'less-raw',
       }, async (args) => {
-        const result = await processLess(args.path, options, build);
+        const result = await processLess(args.path, options, build, cache);
         return {
           contents: result,
           loader: 'text',
@@ -120,7 +155,7 @@ export default function lessPlugin(options: LessPluginOptions): Plugin {
         filter: /.*/,
         namespace: 'less-url',
       }, async (args) => {
-        const result = await processLess(args.path, options, build);
+        const result = await processLess(args.path, options, build, cache);
         return {
           contents: result,
           loader: 'file',
