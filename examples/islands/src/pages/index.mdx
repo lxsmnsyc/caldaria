@@ -1,0 +1,11 @@
+import Counter from '../components/Counter.client';
+import Main from '../components/Main.client';
+
+# This is a server-side title
+
+<div class="bg-gradient-to-r from-fuchsia-500 to-purple-600">
+  <div class="flex flex-col items-center justify-center w-full">
+    <Counter client:interaction initialValue={100} />
+    <p class="text-black">This is a server-side paragraph.</p>
+  </div>
+</div>
