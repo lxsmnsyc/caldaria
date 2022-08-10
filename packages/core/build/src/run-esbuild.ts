@@ -69,13 +69,14 @@ export default function runESBuild(
         presets: babelPresetsConfig ?? [],
       },
       dev: context.isDev,
+      islands: options.mode?.type === 'islands' && context.isServer,
     }),
   ];
 
   if (options.mode?.type === 'islands' && context.isServer) {
     initialPlugins.push(
       islandsPlugin({
-        generate: context.isServer ? 'ssr' : 'dom',
+        generate: 'ssr',
         babel: {
           plugins: babelPluginsConfig ?? [],
           presets: babelPresetsConfig ?? [],

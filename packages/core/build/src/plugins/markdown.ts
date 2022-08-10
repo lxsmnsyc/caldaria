@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import * as marked from 'solid-marked';
 
+import islands from 'rigidity-islands/babel';
 import solid from 'babel-preset-solid';
 import ts from '@babel/preset-typescript';
 import solidSFC from 'babel-plugin-solid-sfc';
@@ -25,6 +26,7 @@ interface MarkdownOptions {
   dev: boolean;
   generate: 'dom' | 'ssr';
   babel: MarkdownBabelOption;
+  islands: boolean;
 }
 
 async function transform(
@@ -35,7 +37,9 @@ async function transform(
   if (isFileDirty(file)) {
     const source = await fs.readFile(file, 'utf-8');
 
-    const markdownResult = await marked.compile('rigidity/root', file, source);
+    const markdownResult = await marked.compile('rigidity/root', file, source, {
+      noDynamicComponents: 'only-mdx',
+    });
 
     const babelResult = await babel.transformAsync(markdownResult.code, {
       presets: [
@@ -44,6 +48,7 @@ async function transform(
         ...options.babel.presets,
       ],
       plugins: [
+        options.islands ? [islands] : [],
         [solidSFC, { dev: options.dev }],
         ...options.babel.plugins,
       ],
