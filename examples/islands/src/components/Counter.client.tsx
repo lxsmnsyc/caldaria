@@ -1,6 +1,6 @@
 /* @jsxImportSource solid-js */
 import { createSignal, JSX } from 'solid-js';
-import { IslandComponent } from 'rigidity/islands-client';
+import { IslandComponent } from 'caldaria/islands-client';
 
 type CountProps = IslandComponent<{
   initialValue: number;

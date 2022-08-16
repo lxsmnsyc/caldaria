@@ -2,7 +2,7 @@ import path from 'path';
 import {
   map,
   SUPPORTED_PAGE_EXT,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import { pathExists } from './fs';
 import getPOSIXPath from './get-posix-path';
 

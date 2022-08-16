@@ -1,4 +1,4 @@
-import { ServerSideContext } from 'rigidity/types';
+import { ServerSideContext } from 'caldaria/types';
 
 export default function getMessage(ctx: ServerSideContext): Response {
   console.log(ctx);

@@ -9,7 +9,7 @@ import {
   green,
   log,
   yellow,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import {
   buildServer,
   generateIslands,

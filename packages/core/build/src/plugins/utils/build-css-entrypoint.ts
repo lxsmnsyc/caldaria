@@ -1,6 +1,6 @@
 import { PluginBuild } from 'esbuild';
 import path from 'path';
-import { filter, map } from 'rigidity-shared';
+import { filter, map } from 'caldaria-shared';
 import { outputFile } from '../../fs';
 
 const decoder = new TextDecoder();

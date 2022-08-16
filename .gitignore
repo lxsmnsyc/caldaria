@@ -107,7 +107,7 @@ dist
 .npmrc
 .poneglyph
 
-.rigidity
-.rigidity_cache
+.caldaria
+.caldaria_cache
 
 .vercel

@@ -1,17 +1,18 @@
 {
-  "name": "rigidity-adapter-http2",
+  "name": "caldaria-adapter-http2",
   "version": "0.0.24",
+  "type": "module",
   "types": "dist/types/index.d.ts",
   "main": "dist/cjs/production/index.js",
   "module": "dist/esm/production/index.js",
   "exports": {
     ".": {
       "development": {
-        "require": "./dist/cjs/development/index.js",
-        "import": "./dist/esm/development/index.js"
+        "require": "./dist/cjs/development/index.cjs",
+        "import": "./dist/esm/development/index.mjs"
       },
-      "require": "./dist/cjs/production/index.js",
-      "import": "./dist/esm/production/index.js",
+      "require": "./dist/cjs/production/index.cjs",
+      "import": "./dist/esm/production/index.mjs",
       "types": "./dist/types/index.d.ts"
     }
   },
@@ -31,18 +32,18 @@
     "eslint": "^8.21.0",
     "eslint-config-lxsmnsyc": "^0.4.8",
     "pridepack": "^2.1.2",
-    "rigidity": "0.0.24",
+    "caldaria": "0.0.24",
     "tslib": "^2.4.0",
     "typescript": "^4.7.4"
   },
-  "description": "HTTP2 Adapter for Rigidity",
+  "description": "HTTP2 Adapter for Caldaria",
   "repository": {
-    "url": "https://github.com/lxsmnsyc/rigidity.git",
+    "url": "https://github.com/lxsmnsyc/caldaria.git",
     "type": "git"
   },
-  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/adapters/http2",
+  "homepage": "https://github.com/lxsmnsyc/caldaria/tree/main/packages/adapters/http2",
   "bugs": {
-    "url": "https://github.com/lxsmnsyc/rigidity/issues"
+    "url": "https://github.com/lxsmnsyc/caldaria/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -61,7 +62,7 @@
     "dev": "pridepack dev"
   },
   "peerDependencies": {
-    "rigidity": "^0.0"
+    "caldaria": "^0.0"
   },
   "dependencies": {
     "node-fetch": "^3.1.0"

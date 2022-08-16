@@ -1,28 +1,28 @@
-# ![rigidity](https://github.com/LXSMNSYC/rigidity/blob/main/images/banner.png?raw=true)
+# ![caldaria](https://github.com/LXSMNSYC/caldaria/blob/main/images/banner.png?raw=true)
 
 ## 🚧 UNDER DEVELOPMENT 🚧
 
 ## Install
 
 ```bash
-npm install rigidity
+npm install caldaria
 ```
 
 ```bash
-yarn add rigidity
+yarn add caldaria
 ```
 
 ```bash
-pnpm add rigidity
+pnpm add caldaria
 ```
 
 ## Usage
 
 ### Project structure
 
-`rigidity` projects has a common file structure:
+`caldaria` projects has a common file structure:
 
-- `.rigidity` - This is the directory where the build output (both server and client) goes.
+- `.caldaria` - This is the directory where the build output (both server and client) goes.
 - `src` - The project's main directory.
   - `pages` - Directory where the pages are located. The structure of this directory is used for building the page router.
   - `api` - Directory where the API routes are located. Like `pages`, the structure of this directory is used for building the API router.
@@ -30,31 +30,31 @@ pnpm add rigidity
 
 ### Creating a build
 
-`rigidity` does not have a CLI, however, it exposes an API for building the project. `rigidity` uses [ESBuild](https://esbuild.github.io/) for blazing-fast build times.
+`caldaria` does not have a CLI, however, it exposes an API for building the project. `caldaria` uses [ESBuild](https://esbuild.github.io/) for blazing-fast build times.
 
 ```js
-const rigidity = require('rigidity');
+const caldaria = require('caldaria');
 
-rigidity.createBuild({});
+caldaria.createBuild({});
 ```
 
-You can run this file (e.g. `node build.js`) and this must be located on the root of the working directory. This will build the files from `src` and output it to `.rigidity`. `createBuild` can accept options to customize your build.
+You can run this file (e.g. `node build.js`) and this must be located on the root of the working directory. This will build the files from `src` and output it to `.caldaria`. `createBuild` can accept options to customize your build.
 
 ## Features
 
 ### SPA + SSR
 
-`rigidity` utilizes Solid's blazing fast SSR capabilities while also maintaing the goodness of Single Page Applications. SolidJS offers 3 kinds of SSR: Sync, Async and Streaming, in which `rigidity` defaults to Async. You can pick your own SSR mode to build with using the `ssrMode` option for `createBuild`:
+`caldaria` utilizes Solid's blazing fast SSR capabilities while also maintaing the goodness of Single Page Applications. SolidJS offers 3 kinds of SSR: Sync, Async and Streaming, in which `caldaria` defaults to Async. You can pick your own SSR mode to build with using the `ssrMode` option for `createBuild`:
 
 ```js
-rigidity.createBuild({
+caldaria.createBuild({
   ssrMode: 'async' // Other values: 'sync', 'node-stream', 'web-stream'
 });
 ```
 
 ### File-based routing
 
-Inspired by [Next.js' File-based Routing](https://nextjs.org/docs/routing/introduction), `rigidity` utilizes the same capability for building your app's pages. The pages, when directly accessed, are server-rendered and then hydrated on the client. Switching between pages on the client-side, `rigidity` opts-in to SPA to reduce the need for a server roundtrip, that is going into a full page reload. This way, app state is retained while navigating between pages.
+Inspired by [Next.js' File-based Routing](https://nextjs.org/docs/routing/introduction), `caldaria` utilizes the same capability for building your app's pages. The pages, when directly accessed, are server-rendered and then hydrated on the client. Switching between pages on the client-side, `caldaria` opts-in to SPA to reduce the need for a server roundtrip, that is going into a full page reload. This way, app state is retained while navigating between pages.
 
 #### Index routes
 
@@ -94,10 +94,10 @@ For dynamically sized routes, you can use wildcard routes. Unlike dynamic routes
 
 ### Navigation and Page Linking
 
-Using `<RouterLink>`, `rigidity` allows you to perform client-side routing between pages without losing the app state.
+Using `<RouterLink>`, `caldaria` allows you to perform client-side routing between pages without losing the app state.
 
 ```js
-import { RouterLink } from 'rigidity';
+import { RouterLink } from 'caldaria';
 
 export default function Home() {
   return (
@@ -114,7 +114,7 @@ export default function Home() {
 
 `createResource` may be convenient for performing data fetching however there are sometimes that we might want to utilize some server-side code, for instance, performing DB queries, which `createResource` isn't suitable for. Data loaders allows pages to perform server-side data fetching.
 
-By declaring `load` to the pages' component, `rigidity` runs the function on server-side before the app is server-rendered. `load` receives a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object and the `params` that was parsed from the route.
+By declaring `load` to the pages' component, `caldaria` runs the function on server-side before the app is server-rendered. `load` receives a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object and the `params` that was parsed from the route.
 
 ```js
 // pages/user/[id].js
@@ -133,7 +133,7 @@ if (isServer) {
 export default UserProfile;
 ```
 
-`load` is only used on server-side and never on the client-side. When navigating to another page on client-side, `rigidity`'s client performs a data-only request to the page's route, that is, only `load` is evaluated and the SSR never takes place. This way, the client never opts-out of SPA while still staying true to the benefits of on-demand SSR.
+`load` is only used on server-side and never on the client-side. When navigating to another page on client-side, `caldaria`'s client performs a data-only request to the page's route, that is, only `load` is evaluated and the SSR never takes place. This way, the client never opts-out of SPA while still staying true to the benefits of on-demand SSR.
 
 ### Actions and `<Form>`
 

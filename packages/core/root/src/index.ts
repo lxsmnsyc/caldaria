@@ -1,4 +1,4 @@
-import { RigidityRoot } from 'rigidity-shared';
+import { CaldariaRoot } from 'caldaria-shared';
 
 export {
   default as DefaultApp,
@@ -22,6 +22,6 @@ export {
   useMDX,
 } from './Markdown';
 
-export function createRigidityRoot(options: RigidityRoot): RigidityRoot {
+export function createCaldariaRoot(options: CaldariaRoot): CaldariaRoot {
   return options;
 }

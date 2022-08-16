@@ -1,6 +1,7 @@
 {
-  "name": "rigidity-islands",
+  "name": "caldaria-islands",
   "version": "0.0.24",
+  "type": "module",
   "files": [
     "dist",
     "src"
@@ -17,10 +18,10 @@
     "@babel/helper-module-imports": "^7.18.6",
     "@babel/traverse": "^7.18.9",
     "@babel/types": "^7.18.9",
-    "rigidity-hybrid-router": "0.0.24",
-    "rigidity-meta": "0.0.24",
-    "rigidity-scheduler": "0.0.24",
-    "rigidity-shared": "0.0.24"
+    "caldaria-hybrid-router": "0.0.24",
+    "caldaria-meta": "0.0.24",
+    "caldaria-scheduler": "0.0.24",
+    "caldaria-shared": "0.0.24"
   },
   "peerDependencies": {
     "solid-js": "^1.3"
@@ -50,12 +51,12 @@
   },
   "description": "",
   "repository": {
-    "url": "https://github.com/lxsmnsyc/rigidity.git",
+    "url": "https://github.com/lxsmnsyc/caldaria.git",
     "type": "git"
   },
-  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/core/islands",
+  "homepage": "https://github.com/lxsmnsyc/caldaria/tree/main/packages/core/islands",
   "bugs": {
-    "url": "https://github.com/lxsmnsyc/rigidity/issues"
+    "url": "https://github.com/lxsmnsyc/caldaria/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -65,29 +66,29 @@
   "exports": {
     "./babel": {
       "development": {
-        "require": "./dist/cjs/development/babel.js",
-        "import": "./dist/esm/development/babel.js"
+        "require": "./dist/cjs/development/babel.cjs",
+        "import": "./dist/esm/development/babel.mjs"
       },
-      "require": "./dist/cjs/production/babel.js",
-      "import": "./dist/esm/production/babel.js",
+      "require": "./dist/cjs/production/babel.cjs",
+      "import": "./dist/esm/production/babel.mjs",
       "types": "./dist/types/babel/index.d.ts"
     },
     "./client": {
       "development": {
-        "require": "./dist/cjs/development/client.js",
-        "import": "./dist/esm/development/client.js"
+        "require": "./dist/cjs/development/client.cjs",
+        "import": "./dist/esm/development/client.mjs"
       },
-      "require": "./dist/cjs/production/client.js",
-      "import": "./dist/esm/production/client.js",
+      "require": "./dist/cjs/production/client.cjs",
+      "import": "./dist/esm/production/client.mjs",
       "types": "./dist/types/client/index.d.ts"
     },
     "./server": {
       "development": {
-        "require": "./dist/cjs/development/server.js",
-        "import": "./dist/esm/development/server.js"
+        "require": "./dist/cjs/development/server.cjs",
+        "import": "./dist/esm/development/server.mjs"
       },
-      "require": "./dist/cjs/production/server.js",
-      "import": "./dist/esm/production/server.js",
+      "require": "./dist/cjs/production/server.cjs",
+      "import": "./dist/esm/production/server.mjs",
       "types": "./dist/types/server/index.d.ts"
     }
   },

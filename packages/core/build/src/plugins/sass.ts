@@ -3,7 +3,7 @@ import {
   PluginBuild,
 } from 'esbuild';
 import path from 'path';
-import { forEach, log, red } from 'rigidity-shared';
+import { forEach, log, red } from 'caldaria-shared';
 import createLazyCSS from './utils/create-lazy-css';
 import createStyleId from './utils/create-style-id';
 import forkToCSSInJS from './utils/fork-to-css-in-js';
@@ -80,7 +80,7 @@ async function processSass(
 export default function sassPlugin(options: SassPluginOptions): Plugin {
   const cache = createFileCache('sass');
   return {
-    name: 'rigidity:sass',
+    name: 'caldaria:sass',
     setup(build) {
       const getStyleID = createStyleId('sass');
 

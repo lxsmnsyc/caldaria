@@ -16,13 +16,13 @@ import {
   DOCUMENT_DATA,
   DOCUMENT_MAIN_ROOT,
   RenderResult,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import {
   renderTags,
-} from 'rigidity-meta';
+} from 'caldaria-meta';
 import {
   IslandStyles,
-} from 'rigidity-islands/server';
+} from 'caldaria-islands/server';
 
 const DocumentContext = /* @__PURE__ */ (
   createContext<RenderResult<any>>()

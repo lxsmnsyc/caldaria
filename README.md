@@ -1,4 +1,4 @@
-# ![rigidity](https://github.com/LXSMNSYC/rigidity/blob/main/images/banner.png?raw=true)
+# `caldaria`
 
 ## 🚧 UNDER DEVELOPMENT 🚧
 

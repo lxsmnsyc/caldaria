@@ -6,7 +6,7 @@ import { registerDependencyMarker, resolvePath } from './utils/file-cache';
 
 export default function urlPlugin(): Plugin {
   return {
-    name: 'rigidity:url',
+    name: 'caldaria:url',
 
     setup(build) {
       build.onResolve({ filter: /^https?:\/\// }, () => ({

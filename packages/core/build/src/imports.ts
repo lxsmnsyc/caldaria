@@ -1,5 +1,5 @@
 import path from 'path';
-import { map } from 'rigidity-shared';
+import { map } from 'caldaria-shared';
 import getPOSIXPath from './get-posix-path';
 import {
   getPageLiteral,

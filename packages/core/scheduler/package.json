@@ -1,6 +1,7 @@
 {
-  "name": "rigidity-scheduler",
+  "name": "caldaria-scheduler",
   "version": "0.0.24",
+  "type": "module",
   "files": [
     "dist",
     "src"
@@ -12,8 +13,7 @@
   "keywords": [
     "pridepack"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "peerDependencies": {},
   "devDependencies": {
     "@types/node": "^18.6.3",
@@ -37,12 +37,12 @@
   },
   "description": "",
   "repository": {
-    "url": "https://github.com/lxsmnsyc/rigidity.git",
+    "url": "https://github.com/lxsmnsyc/caldaria.git",
     "type": "git"
   },
-  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/core/scheduler",
+  "homepage": "https://github.com/lxsmnsyc/caldaria/tree/main/packages/core/scheduler",
   "bugs": {
-    "url": "https://github.com/lxsmnsyc/rigidity/issues"
+    "url": "https://github.com/lxsmnsyc/caldaria/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -52,74 +52,74 @@
   "exports": {
     "./animation-frame": {
       "development": {
-        "require": "./dist/cjs/development/animation-frame.js",
-        "import": "./dist/esm/development/animation-frame.js"
+        "require": "./dist/cjs/development/animation-frame.cjs",
+        "import": "./dist/esm/development/animation-frame.mjs"
       },
-      "require": "./dist/cjs/production/animation-frame.js",
-      "import": "./dist/esm/production/animation-frame.js",
+      "require": "./dist/cjs/production/animation-frame.cjs",
+      "import": "./dist/esm/production/animation-frame.mjs",
       "types": "./dist/types/on-animation-frame.d.ts"
     },
     "./delay": {
       "development": {
-        "require": "./dist/cjs/development/delay.js",
-        "import": "./dist/esm/development/delay.js"
+        "require": "./dist/cjs/development/delay.cjs",
+        "import": "./dist/esm/development/delay.mjs"
       },
-      "require": "./dist/cjs/production/delay.js",
-      "import": "./dist/esm/production/delay.js",
+      "require": "./dist/cjs/production/delay.cjs",
+      "import": "./dist/esm/production/delay.mjs",
       "types": "./dist/types/on-delay.d.ts"
     },
     "./interaction": {
       "development": {
-        "require": "./dist/cjs/development/interaction.js",
-        "import": "./dist/esm/development/interaction.js"
+        "require": "./dist/cjs/development/interaction.cjs",
+        "import": "./dist/esm/development/interaction.mjs"
       },
-      "require": "./dist/cjs/production/interaction.js",
-      "import": "./dist/esm/production/interaction.js",
+      "require": "./dist/cjs/production/interaction.cjs",
+      "import": "./dist/esm/production/interaction.mjs",
       "types": "./dist/types/on-interaction.d.ts"
     },
     "./idle": {
       "development": {
-        "require": "./dist/cjs/development/idle.js",
-        "import": "./dist/esm/development/idle.js"
+        "require": "./dist/cjs/development/idle.cjs",
+        "import": "./dist/esm/development/idle.mjs"
       },
-      "require": "./dist/cjs/production/idle.js",
-      "import": "./dist/esm/production/idle.js",
+      "require": "./dist/cjs/production/idle.cjs",
+      "import": "./dist/esm/production/idle.mjs",
       "types": "./dist/types/on-idle.d.ts"
     },
     "./load": {
       "development": {
-        "require": "./dist/cjs/development/load.js",
-        "import": "./dist/esm/development/load.js"
+        "require": "./dist/cjs/development/load.cjs",
+        "import": "./dist/esm/development/load.mjs"
       },
-      "require": "./dist/cjs/production/load.js",
-      "import": "./dist/esm/production/load.js",
+      "require": "./dist/cjs/production/load.cjs",
+      "import": "./dist/esm/production/load.mjs",
       "types": "./dist/types/on-load.d.ts"
     },
     "./media": {
       "development": {
-        "require": "./dist/cjs/development/media.js",
-        "import": "./dist/esm/development/media.js"
+        "require": "./dist/cjs/development/media.cjs",
+        "import": "./dist/esm/development/media.mjs"
       },
-      "require": "./dist/cjs/production/media.js",
-      "import": "./dist/esm/production/media.js",
+      "require": "./dist/cjs/production/media.cjs",
+      "import": "./dist/esm/production/media.mjs",
       "types": "./dist/types/on-media.d.ts"
     },
     "./ready-state": {
       "development": {
-        "require": "./dist/cjs/development/ready-state.js",
-        "import": "./dist/esm/development/ready-state.js"
+        "require": "./dist/cjs/development/ready-state.cjs",
+        "import": "./dist/esm/development/ready-state.mjs"
       },
-      "require": "./dist/cjs/production/ready-state.js",
-      "import": "./dist/esm/production/ready-state.js",
+      "require": "./dist/cjs/production/ready-state.cjs",
+      "import": "./dist/esm/production/ready-state.mjs",
       "types": "./dist/types/on-ready-state.d.ts"
     },
     "./visible": {
       "development": {
-        "require": "./dist/cjs/development/visible.js",
-        "import": "./dist/esm/development/visible.js"
+        "require": "./dist/cjs/development/visible.cjs",
+        "import": "./dist/esm/development/visible.mjs"
       },
-      "require": "./dist/cjs/production/visible.js",
-      "import": "./dist/esm/production/visible.js",
+      "require": "./dist/cjs/production/visible.cjs",
+      "import": "./dist/esm/production/visible.mjs",
       "types": "./dist/types/on-visible.d.ts"
     }
   },

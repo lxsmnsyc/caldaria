@@ -8,9 +8,9 @@ To create a custom root, you need to create a `src/root` file.
 
 ```js
 // src/root.tsx
-import { createRigidityRoot } from 'rigidity/root';
+import { createCaldariaRoot } from 'caldaria/root';
 
-export default createRigidityRoot({});
+export default createCaldariaRoot({});
 ```
 
 ## `App`
@@ -18,9 +18,9 @@ export default createRigidityRoot({});
 When switching between pages, old pages gets unmounted, which might not be preferrable specially if we have a state that's located in the components that we want to preserve or if the most of the page's layout is unchanging between navigations. By building a custom `App` component, this allows one to solve such problem.
 
 ```js
-import { createRigidityRoot } from 'rigidity';
+import { createCaldariaRoot } from 'caldaria';
 
-export default createRigidityRoot({
+export default createCaldariaRoot({
   App(props) {
     return (
       <AppLayout>

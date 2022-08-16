@@ -8,7 +8,7 @@ import {
   Page,
   LazyPage,
   PageProps,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import { useDataContext } from './Data';
 import { useRouter } from './Router';
 import loadData from '../utils/load-data';

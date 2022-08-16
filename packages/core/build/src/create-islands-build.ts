@@ -7,7 +7,7 @@ import {
   BuildOptions,
   DEFAULT_WS_PORT,
   map,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import { outputFile, removeFile } from './fs';
 import {
   getArtifactBaseDirectory,
@@ -45,12 +45,12 @@ async function generateIslandsArtifact(options: BuildOptions) {
   const lines = [];
 
   if (options.mode?.type === 'islands' && (options.mode.enableHybridRouting ?? true)) {
-    lines.push('import { setupHybridRouter } from \'rigidity/islands-client\';');
+    lines.push('import { setupHybridRouter } from \'caldaria/islands-client\';');
     lines.push('setupHybridRouter();');
   }
 
   if (environment !== 'production') {
-    lines.push('import { useHotReload } from \'rigidity/render-client\';');
+    lines.push('import { useHotReload } from \'caldaria/render-client\';');
     lines.push(`useHotReload('${options.dev?.ws ?? DEFAULT_WS_PORT}')`);
   }
 

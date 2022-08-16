@@ -4,7 +4,7 @@
 
 ## File-based routing
 
-Inspired by [Next.js' File-based Routing](https://nextjs.org/docs/routing/introduction), `rigidity` utilizes the same capability for building your app's pages. The pages, when directly accessed, are server-rendered and then hydrated on the client. Switching between pages on the client-side, `rigidity` opts-in to SPA to reduce the need for a server roundtrip, that is going into a full page reload. This way, app state is retained while navigating between pages.
+Inspired by [Next.js' File-based Routing](https://nextjs.org/docs/routing/introduction), `caldaria` utilizes the same capability for building your app's pages. The pages, when directly accessed, are server-rendered and then hydrated on the client. Switching between pages on the client-side, `caldaria` opts-in to SPA to reduce the need for a server roundtrip, that is going into a full page reload. This way, app state is retained while navigating between pages.
 
 ### Index routes
 
@@ -44,10 +44,10 @@ For dynamically sized routes, you can use wildcard routes. Unlike dynamic routes
 
 ## Navigation and Page Linking
 
-Using `<RouterLink>`, `rigidity` allows you to perform client-side routing between pages without losing the app state.
+Using `<RouterLink>`, `caldaria` allows you to perform client-side routing between pages without losing the app state.
 
 ```js
-import { RouterLink } from 'rigidity';
+import { RouterLink } from 'caldaria';
 
 export default function Home() {
   return (
@@ -64,7 +64,7 @@ export default function Home() {
 
 `createResource` may be convenient for performing data fetching however there are sometimes that we might want to utilize some server-side code, for instance, performing DB queries, which `createResource` isn't suitable for. Data loaders allows pages to perform server-side data fetching.
 
-By declaring `load` to the pages' component, `rigidity` runs the function on server-side before the app is server-rendered. `load` receives a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object and the `params` that was parsed from the route.
+By declaring `load` to the pages' component, `caldaria` runs the function on server-side before the app is server-rendered. `load` receives a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object and the `params` that was parsed from the route.
 
 ```js
 // pages/user/[id].js
@@ -83,7 +83,7 @@ if (isServer) {
 export default UserProfile;
 ```
 
-`load` is only used on server-side and never on the client-side. When navigating to another page on client-side, `rigidity`'s client performs a data-only request to the page's route, that is, only `load` is evaluated and the SSR never takes place. This way, the client never opts-out of SPA while still staying true to the benefits of on-demand SSR.
+`load` is only used on server-side and never on the client-side. When navigating to another page on client-side, `caldaria`'s client performs a data-only request to the page's route, that is, only `load` is evaluated and the SSR never takes place. This way, the client never opts-out of SPA while still staying true to the benefits of on-demand SSR.
 
 ## Actions and `<Form>`
 

@@ -6,7 +6,7 @@ import { resolvePath } from './utils/file-cache';
 
 export default function rawPlugin(): Plugin {
   return {
-    name: 'rigidity:raw',
+    name: 'caldaria:raw',
 
     setup(build) {
       build.onResolve({

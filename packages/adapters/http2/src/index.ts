@@ -1,5 +1,5 @@
 import { Http2ServerRequest, Http2ServerResponse } from 'http2';
-import { Adapter } from 'rigidity/types';
+import { Adapter } from 'caldaria/types';
 import { handleHTTP2 } from './utils';
 import './shims';
 
@@ -10,8 +10,8 @@ const ADAPTER: Adapter<HTTP2Listener> = /* @__PURE__ */ {
   generateScript: (config) => `
   import http2 from 'http2';
   import fs from 'fs';
-  import createServer from 'rigidity/server';
-  import adapter from 'rigidity-adapter-http2';
+  import createServer from 'caldaria/server';
+  import adapter from 'caldaria-adapter-http2';
   const server = createServer(${config});
   const listener = adapter.create(server);
   const options = {

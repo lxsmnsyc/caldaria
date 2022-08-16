@@ -8,11 +8,11 @@ import {
 import {
   Style,
   Title,
-} from 'rigidity-meta';
+} from 'caldaria-meta';
 import {
   ErrorProps,
   Page,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 
 const ERROR_ROOT_STYLE: JSX.CSSProperties = {
   color: '#000',

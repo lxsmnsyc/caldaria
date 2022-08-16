@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { Adapter } from 'rigidity/types';
+import { Adapter } from 'caldaria/types';
 import { handleHTTP } from './utils';
 import './shims';
 
@@ -7,8 +7,8 @@ type VercelFunction = (request: VercelRequest, response: VercelResponse) => Prom
 const ADAPTER: Adapter<VercelFunction> = /* @__PURE__ */ {
   enableStaticFileServing: false,
   generateScript: (config) => `
-  import createServer from 'rigidity/server';
-import adapter from 'rigidity-adapter-vercel';
+  import createServer from 'caldaria/server';
+import adapter from 'caldaria-adapter-vercel';
 export default adapter.create(createServer(${config}));
   `,
   create: (fn) => async (request, response) => {

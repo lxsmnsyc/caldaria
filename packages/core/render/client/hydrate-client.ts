@@ -17,13 +17,13 @@ import {
   GlobalRenderOptions,
   RenderResult,
   log,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import {
   createPageTree,
-} from 'rigidity-router';
+} from 'caldaria-router';
 import {
   Root,
-} from 'rigidity-root';
+} from 'caldaria-root';
 import renderApp from '../common/render-app';
 import renderError from '../common/render-error';
 

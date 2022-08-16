@@ -4,4 +4,4 @@ export {
 } from './create-island';
 export {
   setup as setupHybridRouter,
-} from 'rigidity-hybrid-router';
+} from 'caldaria-hybrid-router';

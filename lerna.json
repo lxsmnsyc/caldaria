@@ -3,7 +3,7 @@
   "workspaces": [
     "packages/adapters/*",
     "packages/core/*",
-    "packages/rigidity",
+    "packages/caldaria",
     "examples/*"
   ],
   "command": {

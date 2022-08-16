@@ -1,7 +1,7 @@
 import path from 'path';
 import {
   DIRECTORY_ROOT, filter, map,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import getPOSIXPath from './get-posix-path';
 import {
   getPageLiteral,

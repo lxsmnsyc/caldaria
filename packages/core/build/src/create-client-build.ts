@@ -11,7 +11,7 @@ import {
   CUSTOM_ROOT,
   BuildOptions,
   DEFAULT_WS_PORT,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import { outputFile, removeFile } from './fs';
 import {
   getArtifactBaseDirectory,
@@ -91,7 +91,7 @@ export async function generateClientArtifact(
 
   // Create import header
   const lines = [
-    'import { createClientPage } from "rigidity/router";',
+    'import { createClientPage } from "caldaria/router";',
     ...getPageImports(
       pagesDirectory,
       artifact.directory,
@@ -108,7 +108,7 @@ export async function generateClientArtifact(
 
   lines.push(
     "import { hydrate } from 'solid-js/web';",
-    "import { hydrateClient } from 'rigidity/render-client';",
+    "import { hydrateClient } from 'caldaria/render-client';",
     createHydrateScript(options, pages, customRoot),
   );
 

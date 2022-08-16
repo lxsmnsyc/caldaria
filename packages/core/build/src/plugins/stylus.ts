@@ -4,7 +4,7 @@ import {
 } from 'esbuild';
 import path from 'path';
 import fs from 'fs/promises';
-import { log, red } from 'rigidity-shared';
+import { log, red } from 'caldaria-shared';
 import createLazyCSS from './utils/create-lazy-css';
 import createStyleId from './utils/create-style-id';
 import forkToCSSInJS from './utils/fork-to-css-in-js';
@@ -87,7 +87,7 @@ async function processStylus(
 export default function stylusPlugin(options: LessPluginOptions): Plugin {
   const cache = createFileCache('stylus');
   return {
-    name: 'rigidity:stylus',
+    name: 'caldaria:stylus',
     setup(build) {
       const getStyleID = createStyleId('stylus');
 

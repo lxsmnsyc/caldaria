@@ -20,7 +20,7 @@ export {
   PageRoute,
   Params,
   Query,
-  RigidityRoot,
+  CaldariaRoot,
   SSRMode,
   WebVitalsMetric,
-} from 'rigidity-shared';
+} from 'caldaria-shared';

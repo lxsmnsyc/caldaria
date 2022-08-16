@@ -1,6 +1,7 @@
 {
-  "name": "rigidity-hybrid-router",
+  "name": "caldaria-hybrid-router",
   "version": "0.0.24",
+  "type": "module",
   "files": [
     "dist",
     "src"
@@ -13,8 +14,8 @@
     "pridepack"
   ],
   "dependencies": {
-    "rigidity-scheduler": "0.0.24",
-    "rigidity-shared": "0.0.24"
+    "caldaria-scheduler": "0.0.24",
+    "caldaria-shared": "0.0.24"
   },
   "peerDependencies": {},
   "devDependencies": {
@@ -39,12 +40,12 @@
   },
   "description": "",
   "repository": {
-    "url": "https://github.com/lxsmnsyc/rigidity.git",
+    "url": "https://github.com/lxsmnsyc/caldaria.git",
     "type": "git"
   },
-  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/core/hybrid-router",
+  "homepage": "https://github.com/lxsmnsyc/caldaria/tree/main/packages/core/hybrid-router",
   "bugs": {
-    "url": "https://github.com/lxsmnsyc/rigidity/issues"
+    "url": "https://github.com/lxsmnsyc/caldaria/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -55,15 +56,17 @@
   "exports": {
     ".": {
       "development": {
-        "require": "./dist/cjs/development/index.js",
-        "import": "./dist/esm/development/index.js"
+        "require": "./dist/cjs/development/index.cjs",
+        "import": "./dist/esm/development/index.mjs"
       },
-      "require": "./dist/cjs/production/index.js",
-      "import": "./dist/esm/production/index.js",
+      "require": "./dist/cjs/production/index.cjs",
+      "import": "./dist/esm/production/index.mjs",
       "types": "./dist/types/src/index.d.ts"
     }
   },
   "typesVersions": {
     "*": {}
-  }
+  },
+  "main": "./dist/cjs/production/index.cjs",
+  "module": "./dist/esm/production/index.mjs"
 }

@@ -1,4 +1,4 @@
-import { log } from 'rigidity-shared';
+import { log } from 'caldaria-shared';
 import { onInsert, resetObserver } from './dom-lifecycle';
 import { notify, on } from './page-lifecycle';
 import { registerAnchor, setupEvents } from './register-anchor';

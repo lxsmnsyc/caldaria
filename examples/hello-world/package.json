@@ -9,9 +9,9 @@
   "dependencies": {
     "@vercel/node": "1.12.1",
     "@vercel/static-build": "^0.18.0",
-    "rigidity": "0.0.24",
-    "rigidity-adapter-http": "0.0.24",
-    "rigidity-adapter-vercel": "0.0.24",
+    "caldaria": "0.0.24",
+    "caldaria-adapter-http": "0.0.24",
+    "caldaria-adapter-vercel": "0.0.24",
     "solid-headless": "^0.11.0",
     "solid-js": "^1.4.8"
   },

@@ -1,13 +1,13 @@
 import { RequestListener } from 'http';
-import { Adapter } from 'rigidity/types';
+import { Adapter } from 'caldaria/types';
 import { handleHTTP } from './utils';
 import './shims';
 
 const ADAPTER: Adapter<RequestListener> = /* @__PURE__ */ {
   enableStaticFileServing: true,
   generateScript: (config) => `
-  import createServer from 'rigidity/server';
-import adapter from 'rigidity-adapter-vanilla';
+  import createServer from 'caldaria/server';
+import adapter from 'caldaria-adapter-vanilla';
 export default adapter.create(createServer(${config}));
   `,
   create: (fn) => async (request, response) => {

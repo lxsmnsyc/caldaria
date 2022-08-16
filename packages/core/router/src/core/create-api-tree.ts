@@ -1,4 +1,4 @@
-import { APIRoute, APITree, APICallback } from 'rigidity-shared';
+import { APIRoute, APITree, APICallback } from 'caldaria-shared';
 import {
   addRoute,
   createRouterNode,

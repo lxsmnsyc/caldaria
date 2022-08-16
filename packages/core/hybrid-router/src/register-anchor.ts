@@ -1,4 +1,4 @@
-import onVisible from 'rigidity-scheduler/visible';
+import onVisible from 'caldaria-scheduler/visible';
 import { onRemove } from './dom-lifecycle';
 import { notify, on } from './page-lifecycle';
 import prefetch from './prefetch';

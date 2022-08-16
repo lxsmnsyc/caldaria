@@ -3,7 +3,7 @@ export default function createLazyCSS(
   content: string,
   json: Record<string, string>,
 ) {
-  return `import { renderStyle } from 'rigidity/render-client';
+  return `import { renderStyle } from 'caldaria/render-client';
 renderStyle(${JSON.stringify(id)}, ${JSON.stringify(content)});
 export default ${JSON.stringify(json)};
 `;

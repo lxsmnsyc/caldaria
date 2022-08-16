@@ -58,7 +58,7 @@ async function transformIsland(
       await writeFileCache(cache, file, contents);
       return contents;
     }
-    throw new Error('[rigidity:islands] Babel Transform returned null.');
+    throw new Error('[caldaria:islands] Babel Transform returned null.');
   }
   return readFileCache(cache, file);
 }
@@ -75,7 +75,7 @@ export default function islandsPlugin(options: IslandsOptions): Plugin {
   const cache = createFileCache(`islands-${options.generate}`);
 
   return {
-    name: 'rigidity:islands',
+    name: 'caldaria:islands',
 
     setup(build) {
       registerDependencyMarker(build, /\.[tj]sx$/);

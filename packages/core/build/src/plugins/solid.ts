@@ -52,7 +52,7 @@ async function transform(
       await writeFileCache(cache, file, contents);
       return contents;
     }
-    throw new Error('[rigidity:solid] Babel Transform returned null.');
+    throw new Error('[caldaria:solid] Babel Transform returned null.');
   }
   return readFileCache(cache, file);
 }
@@ -60,7 +60,7 @@ async function transform(
 export default function solidPlugin(options: SolidOptions): Plugin {
   const cache = createFileCache(`solid-${options.generate}`);
   return {
-    name: 'rigidity:solid',
+    name: 'caldaria:solid',
 
     setup(build) {
       build.onLoad({

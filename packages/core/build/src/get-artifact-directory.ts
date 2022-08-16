@@ -4,7 +4,7 @@ import {
   BUILD_PATH,
   BuildOptions,
   BundleType,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 
 export function getArtifactBaseDirectory(
   options: BuildOptions,

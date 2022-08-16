@@ -1,6 +1,7 @@
 {
-  "name": "rigidity-root",
+  "name": "caldaria-root",
   "version": "0.0.24",
+  "type": "module",
   "files": [
     "dist",
     "src"
@@ -30,9 +31,9 @@
     "solid-marked": "^0.4"
   },
   "dependencies": {
-    "rigidity-islands": "0.0.24",
-    "rigidity-meta": "0.0.24",
-    "rigidity-shared": "0.0.24"
+    "caldaria-islands": "0.0.24",
+    "caldaria-meta": "0.0.24",
+    "caldaria-shared": "0.0.24"
   },
   "scripts": {
     "prepublishOnly": "pridepack clean && pridepack build",
@@ -47,12 +48,12 @@
   },
   "description": "",
   "repository": {
-    "url": "https://github.com/lxsmnsyc/rigidity.git",
+    "url": "https://github.com/lxsmnsyc/caldaria.git",
     "type": "git"
   },
-  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/core/root",
+  "homepage": "https://github.com/lxsmnsyc/caldaria/tree/main/packages/core/root",
   "bugs": {
-    "url": "https://github.com/lxsmnsyc/rigidity/issues"
+    "url": "https://github.com/lxsmnsyc/caldaria/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -73,5 +74,7 @@
   "typesVersions": {
     "*": {}
   },
-  "types": "./dist/types/index.d.ts"
+  "types": "./dist/types/index.d.ts",
+  "main": "./dist/cjs/production/index.jsx",
+  "module": "./dist/esm/production/index.jsx"
 }

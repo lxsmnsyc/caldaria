@@ -1,4 +1,4 @@
-import { Link, MetaProvider, useTag } from 'rigidity-meta';
+import { Link, MetaProvider, useTag } from 'caldaria-meta';
 import {
   createComponent,
   createUniqueId,

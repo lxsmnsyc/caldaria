@@ -1,6 +1,7 @@
 {
-  "name": "rigidity-router",
+  "name": "caldaria-router",
   "version": "0.0.24",
+  "type": "module",
   "files": [
     "dist",
     "src"
@@ -26,7 +27,7 @@
     "solid-js": "^1.3"
   },
   "dependencies": {
-    "rigidity-shared": "0.0.24",
+    "caldaria-shared": "0.0.24",
     "solid-use": "^0.5.0"
   },
   "scripts": {
@@ -42,12 +43,12 @@
   },
   "description": "",
   "repository": {
-    "url": "https://github.com/lxsmnsyc/rigidity.git",
+    "url": "https://github.com/lxsmnsyc/caldaria.git",
     "type": "git"
   },
-  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/core/router",
+  "homepage": "https://github.com/lxsmnsyc/caldaria/tree/main/packages/core/router",
   "bugs": {
-    "url": "https://github.com/lxsmnsyc/rigidity/issues"
+    "url": "https://github.com/lxsmnsyc/caldaria/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -68,5 +69,7 @@
   "typesVersions": {
     "*": {}
   },
-  "types": "./dist/types/index.d.ts"
+  "types": "./dist/types/index.d.ts",
+  "main": "./dist/cjs/production/index.jsx",
+  "module": "./dist/esm/production/index.jsx"
 }

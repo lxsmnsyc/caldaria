@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs/promises';
-import { map } from 'rigidity-shared';
+import { map } from 'caldaria-shared';
 
 export default async function traverseDirectory(
   root: string,

@@ -6,19 +6,19 @@ import {
 import {
   DefaultApp,
   useDocumentContext,
-} from 'rigidity-root';
+} from 'caldaria-root';
 import {
   MetaProvider,
-} from 'rigidity-meta';
+} from 'caldaria-meta';
 import {
   Router,
   DataProvider,
-} from 'rigidity-router';
+} from 'caldaria-router';
 import {
   GlobalRenderOptions,
   PageTree,
   StatusCode,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import getErrorPage from './error-page';
 
 export interface RenderAppOptions {

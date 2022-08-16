@@ -1,6 +1,6 @@
 import {
   BuildOptions,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import createClientBuild from './create-client-build';
 import createServerBuild from './create-server-build';
 import createIslandsBuild from './create-islands-build';

@@ -1,10 +1,10 @@
 import {
   DefaultErrorComponent,
-} from 'rigidity-root';
+} from 'caldaria-root';
 import {
   GlobalRenderOptions,
   ErrorPage,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 
 export default function getErrorPage(
   statusCode: number,

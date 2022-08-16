@@ -1,6 +1,6 @@
 /* @jsxImportSource solid-js */
 import { JSX } from 'solid-js';
-import { IslandComponent } from 'rigidity/islands-client';
+import { IslandComponent } from 'caldaria/islands-client';
 
 type MainProps = IslandComponent<{
   children: JSX.Element;

@@ -1,6 +1,6 @@
 /* @jsxImportSource solid-js */
-import { Meta, Title } from 'rigidity/meta';
-import { RouterLink } from 'rigidity/router';
+import { Meta, Title } from 'caldaria/meta';
+import { RouterLink } from 'caldaria/router';
 import { createResource, JSX } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
@@ -34,7 +34,7 @@ function Parametized(props: HelloProps): JSX.Element {
     <div class="flex w-full h-screen items-center justify-center">
       <div class="p-4 rounded-lg bg-indigo-900 bg-opacity-25 flex flex-col space-y-4">
         <Title>{`Welcome to Page ${props.params.id}!`}</Title>
-        <Meta name="description" content={`This is the page ${props.params.id} for Rigidity Demo`} />
+        <Meta name="description" content={`This is the page ${props.params.id} for Caldaria Demo`} />
         <span class="text-2xl text-white font-sans">
           {'Welcome to '}
           <span class="bg-white bg-opacity-25 font-mono p-2 rounded m-1">{`Page ${props.params.id}`}</span>

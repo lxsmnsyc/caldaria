@@ -2,7 +2,7 @@ import path from 'path';
 import {
   filter,
   SUPPORTED_PAGE_EXT,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import traverseDirectory from './traverse-directory';
 
 export default async function getPages(dir: string): Promise<string[]> {

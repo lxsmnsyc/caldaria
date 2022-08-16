@@ -1,9 +1,9 @@
-const rigidity = require('rigidity/build');
-const httpAdapter = require('rigidity-adapter-http').default;
-const vercelAdapter = require('rigidity-adapter-vercel').default;
+const caldaria = require('caldaria/build');
+const httpAdapter = require('caldaria-adapter-http').default;
+const vercelAdapter = require('caldaria-adapter-vercel').default;
 
 if (process.env.NODE_ENV === 'development') {
-  rigidity.createDevBuild({
+  caldaria.createDevBuild({
     mode: {
       type: 'islands',
     },
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
     },
   });
 } else {
-  rigidity.createBuild({
+  caldaria.createBuild({
     mode: {
       type: 'islands',
     },

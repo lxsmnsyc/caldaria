@@ -2,14 +2,14 @@
 import { Show, Suspense } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import {
-  createRigidityRoot,
+  createCaldariaRoot,
   MDXProvider,
-} from 'rigidity/root';
-import { Link } from 'rigidity/meta';
+} from 'caldaria/root';
+import { Link } from 'caldaria/meta';
 import styles from './styles/main.css?url';
 import example from './styles/example.styl?url';
 
-export default createRigidityRoot({
+export default createCaldariaRoot({
   App(appProps) {
     return (
       <MDXProvider

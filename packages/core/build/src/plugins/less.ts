@@ -5,7 +5,7 @@ import {
 import type { RawSourceMap } from 'source-map-js';
 import path from 'path';
 import fs from 'fs/promises';
-import { log, map, red } from 'rigidity-shared';
+import { log, map, red } from 'caldaria-shared';
 import createLazyCSS from './utils/create-lazy-css';
 import createStyleId from './utils/create-style-id';
 import forkToCSSInJS from './utils/fork-to-css-in-js';
@@ -94,7 +94,7 @@ async function processLess(
 export default function lessPlugin(options: LessPluginOptions): Plugin {
   const cache = createFileCache('less');
   return {
-    name: 'rigidity:less',
+    name: 'caldaria:less',
     setup(build) {
       const getStyleID = createStyleId('less');
 

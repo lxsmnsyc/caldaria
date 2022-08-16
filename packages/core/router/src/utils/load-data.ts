@@ -1,4 +1,4 @@
-import { RIGIDITY_DATA } from 'rigidity-shared';
+import { RIGIDITY_DATA } from 'caldaria-shared';
 
 export default async function loadData<T>(
   pathname: string,

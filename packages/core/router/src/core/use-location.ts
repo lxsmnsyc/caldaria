@@ -6,7 +6,7 @@ import {
 import {
   isServer,
 } from 'solid-js/web';
-import { PageTree } from 'rigidity-shared';
+import { PageTree } from 'caldaria-shared';
 import {
   isLocalURL,
   normalizeURL,

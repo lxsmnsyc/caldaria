@@ -1,4 +1,4 @@
-import { LazyPage, PageRoute, PageTree } from 'rigidity-shared';
+import { LazyPage, PageRoute, PageTree } from 'caldaria-shared';
 import {
   addRoute,
   createRouterNode,

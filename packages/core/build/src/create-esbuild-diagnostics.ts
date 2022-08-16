@@ -1,5 +1,5 @@
 import { Message } from 'esbuild';
-import { blue, yellow } from 'rigidity-shared';
+import { blue, yellow } from 'caldaria-shared';
 import createDiagnosticMessage from './create-diagnostic-message';
 
 function createEsbuildDiagnosticString(message: Message): string {

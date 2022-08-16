@@ -31,7 +31,7 @@ export default function postcssPlugin(
 ): Plugin {
   const cache = createFileCache('postcss');
   return {
-    name: 'rigidity:postcss',
+    name: 'caldaria:postcss',
 
     async setup(build) {
       const defaultOptions = build.initialOptions;

@@ -105,7 +105,7 @@ export interface RenderResult<T> {
   isError: boolean;
 }
 
-export interface RigidityRoot {
+export interface CaldariaRoot {
   App?: App;
   Document?: () => JSX.Element;
   Error404?: ErrorPage;
@@ -121,7 +121,7 @@ export interface GlobalRenderOptions {
   assetsUrl: string;
   publicUrl: string;
   ssrMode: SSRMode;
-  root: RigidityRoot;
+  root: CaldariaRoot;
   pages: PageRoute[];
   ws: number;
 }

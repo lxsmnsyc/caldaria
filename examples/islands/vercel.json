@@ -1,7 +1,7 @@
 {
   "builds": [
     {
-      "src": ".rigidity/client/**/*",
+      "src": ".caldaria/client/**/*",
       "use": "@vercel/static"
     },
     {
@@ -12,7 +12,7 @@
   "rewrites": [
     {
       "source": "/assets/:match*",
-      "destination": "/.rigidity/client/:match*"
+      "destination": "/.caldaria/client/:match*"
     },
     {
       "source": "/(.*)",
@@ -21,7 +21,7 @@
   ],
   "headers": [
     {
-      "source": "/.rigidity/(.*)",
+      "source": "/.caldaria/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

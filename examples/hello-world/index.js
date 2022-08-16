@@ -1,1 +1,1 @@
-module.exports = require('./.rigidity/server');
+module.exports = require('./.caldaria/server');

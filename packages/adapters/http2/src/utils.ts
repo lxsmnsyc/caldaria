@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import { Http2ServerRequest, Http2ServerResponse } from 'http2';
-import { ServerFunction } from 'rigidity/types';
+import { ServerFunction } from 'caldaria/types';
 
 export function nodeStreamToBuffer(stream: Readable): Promise<Buffer> {
   return new Promise((resolve, reject) => {

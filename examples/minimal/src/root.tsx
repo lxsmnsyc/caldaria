@@ -1,6 +1,6 @@
 /* @jsxImportSource solid-js */
 import {
-  createRigidityRoot,
-} from 'rigidity/root';
+  createCaldariaRoot,
+} from 'caldaria/root';
 
-export default createRigidityRoot({});
+export default createCaldariaRoot({});

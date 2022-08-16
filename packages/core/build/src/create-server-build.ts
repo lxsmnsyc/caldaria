@@ -13,7 +13,7 @@ import {
   CUSTOM_ROOT,
   BuildOptions,
   map,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import { outputFile, removeFile } from './fs';
 import {
   getArtifactBaseDirectory,
@@ -53,7 +53,7 @@ function generateIsland(
 
   files.push({
     name: artifact,
-    content: `import { createIsland } from 'rigidity/islands-client';export default createIsland(() => import('${relativePath}'));`,
+    content: `import { createIsland } from 'caldaria/islands-client';export default createIsland(() => import('${relativePath}'));`,
   });
 }
 
@@ -136,7 +136,7 @@ export async function generateServerArtifact(options: BuildOptions) {
 
   // Create import header
   const lines = [
-    'import { createServerPage } from "rigidity/router";',
+    'import { createServerPage } from "caldaria/router";',
     ...getAPIImports(
       apiDirectory,
       artifact.directory,

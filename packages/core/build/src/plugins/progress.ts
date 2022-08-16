@@ -1,7 +1,7 @@
 import {
   Plugin,
 } from 'esbuild';
-import { log, green } from 'rigidity-shared';
+import { log, green } from 'caldaria-shared';
 
 function getTime(base: [number, number]) {
   const result = process.hrtime(base);
@@ -15,7 +15,7 @@ interface ProgressPluginOptions {
 export default function progressPlugin(options: ProgressPluginOptions): Plugin {
   let top = true;
   return {
-    name: 'rigidity:progress',
+    name: 'caldaria:progress',
     setup(build) {
       let end: [number, number] | undefined;
       build.onStart(() => {

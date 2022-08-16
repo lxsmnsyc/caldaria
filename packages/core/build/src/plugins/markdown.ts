@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import * as marked from 'solid-marked';
 
-import islands from 'rigidity-islands/babel';
+import islands from 'caldaria-islands/babel';
 import solid from 'babel-preset-solid';
 import ts from '@babel/preset-typescript';
 import solidSFC from 'babel-plugin-solid-sfc';
@@ -37,7 +37,7 @@ async function transform(
   if (isFileDirty(file)) {
     const source = await fs.readFile(file, 'utf-8');
 
-    const markdownResult = await marked.compile('rigidity/root', file, source, {
+    const markdownResult = await marked.compile('caldaria/root', file, source, {
       noDynamicComponents: 'only-mdx',
     });
 
@@ -48,7 +48,7 @@ async function transform(
         ...options.babel.presets,
       ],
       plugins: [
-        options.islands ? [islands] : [],
+        ...(options.islands ? [[islands]] : []),
         [solidSFC, { dev: options.dev }],
         ...options.babel.plugins,
       ],
@@ -62,7 +62,7 @@ async function transform(
       await writeFileCache(cache, file, contents);
       return contents;
     }
-    throw new Error('[rigidity:markdown] Babel Transform returned null.');
+    throw new Error('[caldaria:markdown] Babel Transform returned null.');
   }
   return readFileCache(cache, file);
 }
@@ -71,7 +71,7 @@ export default function markdownPlugin(options: MarkdownOptions): Plugin {
   const cache = createFileCache(`markdown-${options.generate}`);
 
   return {
-    name: 'rigidity:markdown',
+    name: 'caldaria:markdown',
     setup(build) {
       registerDependencyMarker(build, /\.(md|mdx|markdown|mdown|mkdn|mkd|mkdown|ron)$/);
 

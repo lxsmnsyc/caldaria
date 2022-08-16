@@ -13,16 +13,16 @@ import {
   red,
   yellow,
   log,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import {
   renderServer,
   renderServerError,
-} from 'rigidity-render/server';
+} from 'caldaria-render/server';
 import {
   createAPITree,
   createPageTree,
   matchRoute,
-} from 'rigidity-router';
+} from 'caldaria-router';
 import fsPromise from 'fs/promises';
 
 async function fileExists(p: string): Promise<boolean> {

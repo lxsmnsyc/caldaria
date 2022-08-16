@@ -9,7 +9,7 @@ import {
 import {
   PageTree,
   RouterParams,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import {
   matchRoute,
 } from '../core/router';

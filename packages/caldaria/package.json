@@ -1,5 +1,6 @@
 {
   "version": "0.0.24",
+  "type": "module",
   "files": [
     "dist",
     "src",
@@ -12,7 +13,7 @@
   "keywords": [
     "pridepack"
   ],
-  "name": "rigidity",
+  "name": "caldaria",
   "devDependencies": {
     "@types/node": "^17.0.35",
     "eslint": "^8.21.0",
@@ -48,24 +49,24 @@
     "watch": "pridepack watch"
   },
   "dependencies": {
-    "rigidity-build": "0.0.24",
-    "rigidity-islands": "0.0.24",
-    "rigidity-meta": "0.0.24",
-    "rigidity-render": "0.0.24",
-    "rigidity-root": "0.0.24",
-    "rigidity-router": "0.0.24",
-    "rigidity-server": "0.0.24",
-    "rigidity-shared": "0.0.24",
+    "caldaria-build": "0.0.24",
+    "caldaria-islands": "0.0.24",
+    "caldaria-meta": "0.0.24",
+    "caldaria-render": "0.0.24",
+    "caldaria-root": "0.0.24",
+    "caldaria-router": "0.0.24",
+    "caldaria-server": "0.0.24",
+    "caldaria-shared": "0.0.24",
     "solid-marked": "^0.4.0"
   },
   "description": "SSR Framework for SolidJS",
   "repository": {
-    "url": "https://github.com/lxsmnsyc/rigidity.git",
+    "url": "https://github.com/lxsmnsyc/caldaria.git",
     "type": "git"
   },
-  "homepage": "https://github.com/lxsmnsyc/rigidity/tree/main/packages/rigidity",
+  "homepage": "https://github.com/lxsmnsyc/caldaria/tree/main/packages/caldaria",
   "bugs": {
-    "url": "https://github.com/lxsmnsyc/rigidity/issues"
+    "url": "https://github.com/lxsmnsyc/caldaria/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -109,92 +110,92 @@
   "exports": {
     "./build": {
       "development": {
-        "require": "./dist/cjs/development/build.js",
-        "import": "./dist/esm/development/build.js"
+        "require": "./dist/cjs/development/build.cjs",
+        "import": "./dist/esm/development/build.mjs"
       },
-      "require": "./dist/cjs/production/build.js",
-      "import": "./dist/esm/production/build.js",
+      "require": "./dist/cjs/production/build.cjs",
+      "import": "./dist/esm/production/build.mjs",
       "types": "./dist/types/build.d.ts"
     },
     "./islands-client": {
       "development": {
-        "require": "./dist/cjs/development/islands-client.js",
-        "import": "./dist/esm/development/islands-client.js"
+        "require": "./dist/cjs/development/islands-client.cjs",
+        "import": "./dist/esm/development/islands-client.mjs"
       },
-      "require": "./dist/cjs/production/islands-client.js",
-      "import": "./dist/esm/production/islands-client.js",
+      "require": "./dist/cjs/production/islands-client.cjs",
+      "import": "./dist/esm/production/islands-client.mjs",
       "types": "./dist/types/islands-client.d.ts"
     },
     "./islands-server": {
       "development": {
-        "require": "./dist/cjs/development/islands-server.js",
-        "import": "./dist/esm/development/islands-server.js"
+        "require": "./dist/cjs/development/islands-server.cjs",
+        "import": "./dist/esm/development/islands-server.mjs"
       },
-      "require": "./dist/cjs/production/islands-server.js",
-      "import": "./dist/esm/production/islands-server.js",
+      "require": "./dist/cjs/production/islands-server.cjs",
+      "import": "./dist/esm/production/islands-server.mjs",
       "types": "./dist/types/islands-server.d.ts"
     },
     "./meta": {
       "development": {
-        "require": "./dist/cjs/development/meta.js",
-        "import": "./dist/esm/development/meta.js"
+        "require": "./dist/cjs/development/meta.cjs",
+        "import": "./dist/esm/development/meta.mjs"
       },
-      "require": "./dist/cjs/production/meta.js",
-      "import": "./dist/esm/production/meta.js",
+      "require": "./dist/cjs/production/meta.cjs",
+      "import": "./dist/esm/production/meta.mjs",
       "types": "./dist/types/meta.d.ts"
     },
     "./render-server": {
       "development": {
-        "require": "./dist/cjs/development/render-server.js",
-        "import": "./dist/esm/development/render-server.js"
+        "require": "./dist/cjs/development/render-server.cjs",
+        "import": "./dist/esm/development/render-server.mjs"
       },
-      "require": "./dist/cjs/production/render-server.js",
-      "import": "./dist/esm/production/render-server.js",
+      "require": "./dist/cjs/production/render-server.cjs",
+      "import": "./dist/esm/production/render-server.mjs",
       "types": "./dist/types/render-server.d.ts"
     },
     "./render-client": {
       "development": {
-        "require": "./dist/cjs/development/render-client.js",
-        "import": "./dist/esm/development/render-client.js"
+        "require": "./dist/cjs/development/render-client.cjs",
+        "import": "./dist/esm/development/render-client.mjs"
       },
-      "require": "./dist/cjs/production/render-client.js",
-      "import": "./dist/esm/production/render-client.js",
+      "require": "./dist/cjs/production/render-client.cjs",
+      "import": "./dist/esm/production/render-client.mjs",
       "types": "./dist/types/render-client.d.ts"
     },
     "./root": {
       "development": {
-        "require": "./dist/cjs/development/root.js",
-        "import": "./dist/esm/development/root.js"
+        "require": "./dist/cjs/development/root.cjs",
+        "import": "./dist/esm/development/root.mjs"
       },
-      "require": "./dist/cjs/production/root.js",
-      "import": "./dist/esm/production/root.js",
+      "require": "./dist/cjs/production/root.cjs",
+      "import": "./dist/esm/production/root.mjs",
       "types": "./dist/types/root.d.ts"
     },
     "./router": {
       "development": {
-        "require": "./dist/cjs/development/router.js",
-        "import": "./dist/esm/development/router.js"
+        "require": "./dist/cjs/development/router.cjs",
+        "import": "./dist/esm/development/router.mjs"
       },
-      "require": "./dist/cjs/production/router.js",
-      "import": "./dist/esm/production/router.js",
+      "require": "./dist/cjs/production/router.cjs",
+      "import": "./dist/esm/production/router.mjs",
       "types": "./dist/types/router.d.ts"
     },
     "./server": {
       "development": {
-        "require": "./dist/cjs/development/server.js",
-        "import": "./dist/esm/development/server.js"
+        "require": "./dist/cjs/development/server.cjs",
+        "import": "./dist/esm/development/server.mjs"
       },
-      "require": "./dist/cjs/production/server.js",
-      "import": "./dist/esm/production/server.js",
+      "require": "./dist/cjs/production/server.cjs",
+      "import": "./dist/esm/production/server.mjs",
       "types": "./dist/types/server.d.ts"
     },
     "./types": {
       "development": {
-        "require": "./dist/cjs/development/types.js",
-        "import": "./dist/esm/development/types.js"
+        "require": "./dist/cjs/development/types.cjs",
+        "import": "./dist/esm/development/types.mjs"
       },
-      "require": "./dist/cjs/production/types.js",
-      "import": "./dist/esm/production/types.js",
+      "require": "./dist/cjs/production/types.cjs",
+      "import": "./dist/esm/production/types.mjs",
       "types": "./dist/types/types.d.ts"
     }
   }

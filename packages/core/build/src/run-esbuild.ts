@@ -6,7 +6,7 @@ import {
   BuildContext,
   BuildOptions,
   ASSETS_URL,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import resolveTSConfig from './resolve-tsconfig';
 import solidPlugin from './plugins/solid';
 import postcssPlugin from './plugins/postcss';

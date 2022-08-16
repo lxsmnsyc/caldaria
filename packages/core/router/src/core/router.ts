@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { RouterNode, RouterParams, RouterResult } from 'rigidity-shared';
+import { RouterNode, RouterParams, RouterResult } from 'caldaria-shared';
 import DuplicateRouterPathError from '../errors/DuplicateRouterPathError';
 import InvalidRouterPathError from '../errors/InvalidRouterPathError';
 import SharedRouterPathError from '../errors/SharedRouterPathError';

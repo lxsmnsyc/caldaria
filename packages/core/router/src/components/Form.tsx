@@ -9,7 +9,7 @@ import {
   RIGIDITY_DATA,
   RIGIDITY_REDIRECT_HEADER,
   StatusCode,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import {
   useDataContext,
 } from './Data';

@@ -6,14 +6,14 @@ import {
 import {
   DefaultApp,
   useDocumentContext,
-} from 'rigidity-root';
+} from 'caldaria-root';
 import {
   MetaProvider,
-} from 'rigidity-meta';
+} from 'caldaria-meta';
 import {
   GlobalRenderOptions,
   ErrorProps,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import getErrorPage from './error-page';
 
 export default function renderError(

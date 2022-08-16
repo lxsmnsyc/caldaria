@@ -1,7 +1,7 @@
 import {
   isServer,
 } from 'solid-js/web';
-import { on } from 'rigidity-hybrid-router';
+import { on } from 'caldaria-hybrid-router';
 
 function insertStyle(id: string, content: string) {
   if (!document.getElementById(id)) {

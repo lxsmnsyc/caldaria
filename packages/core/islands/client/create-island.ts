@@ -1,8 +1,8 @@
 import { createComponent, JSX, mergeProps } from 'solid-js';
 import { render, hydrate } from 'solid-js/web';
-import { on, onRemove } from 'rigidity-hybrid-router';
-import { MetaProvider } from 'rigidity-meta';
-import { log } from 'rigidity-shared';
+import { on, onRemove } from 'caldaria-hybrid-router';
+import { MetaProvider } from 'caldaria-meta';
+import { log } from 'caldaria-shared';
 import { getRoot, getFragment } from './nodes';
 import processScript from './process-script';
 
@@ -45,21 +45,21 @@ async function renderRoot(
   if (strategy) {
     switch (strategy[0]) {
       case 'media':
-        return (await import('rigidity-scheduler/media')).default(strategy[1], renderCallback);
+        return (await import('caldaria-scheduler/media')).default(strategy[1], renderCallback);
       case 'load':
-        return (await import('rigidity-scheduler/load')).default(renderCallback);
+        return (await import('caldaria-scheduler/load')).default(renderCallback);
       case 'visible':
-        return (await import('rigidity-scheduler/visible')).default(marker, renderCallback, true);
+        return (await import('caldaria-scheduler/visible')).default(marker, renderCallback, true);
       case 'idle':
-        return (await import('rigidity-scheduler/idle')).default(renderCallback);
+        return (await import('caldaria-scheduler/idle')).default(renderCallback);
       case 'animation-frame':
-        return (await import('rigidity-scheduler/animation-frame')).default(renderCallback);
+        return (await import('caldaria-scheduler/animation-frame')).default(renderCallback);
       case 'delay':
-        return (await import('rigidity-scheduler/delay')).default(strategy[1], renderCallback);
+        return (await import('caldaria-scheduler/delay')).default(strategy[1], renderCallback);
       case 'interaction':
-        return (await import('rigidity-scheduler/interaction')).default(strategy[1], marker, renderCallback);
+        return (await import('caldaria-scheduler/interaction')).default(strategy[1], marker, renderCallback);
       case 'ready-state':
-        return (await import('rigidity-scheduler/ready-state')).default(strategy[1], renderCallback);
+        return (await import('caldaria-scheduler/ready-state')).default(strategy[1], renderCallback);
       default:
         break;
     }

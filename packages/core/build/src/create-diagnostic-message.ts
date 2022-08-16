@@ -3,7 +3,7 @@ import {
   green,
   red,
   yellow,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 
 type DiagnosticCategory = 'error' | 'message' | 'suggestion' | 'warning';
 

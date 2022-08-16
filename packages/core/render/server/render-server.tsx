@@ -6,12 +6,12 @@ import {
 import stream from 'stream';
 import {
   Root,
-} from 'rigidity-root';
+} from 'caldaria-root';
 import {
   RenderResult,
   ErrorProps,
   GlobalRenderOptions,
-} from 'rigidity-shared';
+} from 'caldaria-shared';
 import renderApp, { RenderAppOptions } from '../common/render-app';
 import renderError from '../common/render-error';
 

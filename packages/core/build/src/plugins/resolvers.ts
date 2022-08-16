@@ -3,7 +3,7 @@ import { registerDependencyMarker } from './utils/file-cache';
 
 export default function resolversPlugin(): Plugin {
   return {
-    name: 'rigidity:resolvers',
+    name: 'caldaria:resolvers',
     setup(build) {
       // JS/TS
       registerDependencyMarker(build, /\.[mc]?[jt]s$/);

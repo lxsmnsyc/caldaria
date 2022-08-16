@@ -130,7 +130,7 @@ function transformServerComponent(programPath: NodePath<t.Program>): void {
             }
           }
 
-          const ClientID = getHookIdentifier(hooks, path, 'Client', 'rigidity/islands-server');
+          const ClientID = getHookIdentifier(hooks, path, 'Client', 'caldaria/islands-server');
           path.replaceWith(
             t.jsxElement(
               t.jsxOpeningElement(
@@ -208,7 +208,7 @@ interface State extends babel.PluginPass {
 
 export default function islandsPlugin(): babel.PluginObj<State> {
   return {
-    name: 'rigidity:islands',
+    name: 'caldaria:islands',
     visitor: {
       Program(programPath, state) {
         if (state.opts.source) {

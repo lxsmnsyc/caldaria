@@ -1,4 +1,4 @@
-import islands from 'rigidity-islands/babel';
+import islands from 'caldaria-islands/babel';
 
 export type IslandsOnEntry = (id: string, entry: string) => void;
 

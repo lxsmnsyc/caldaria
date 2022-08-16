@@ -104,7 +104,7 @@ function getID(cache: FileCache, file: string) {
   return newID;
 }
 
-const CACHE_DIRECTORY = '.rigidity_cache';
+const CACHE_DIRECTORY = '.caldaria_cache';
 
 function getTargetFile(cache: FileCache, file: string) {
   return path.join(
