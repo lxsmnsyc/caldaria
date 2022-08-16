@@ -13,6 +13,7 @@ module.exports = {
       }
     ],
     "@typescript-eslint/no-unsafe-assignment": "off",
-    "no-void": "off"
+    "no-void": "off",
+    "no-restricted-syntax": "off"
   },
 };

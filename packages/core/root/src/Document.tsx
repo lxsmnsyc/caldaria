@@ -43,36 +43,13 @@ export interface DocumentHeadProps {
 export function DocumentHead(props: DocumentHeadProps): JSX.Element {
   const context = useDocumentContext('DocumentHead');
   return (
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <head $ServerOnly>
+      <meta $ServerOnly charset="UTF-8" />
+      <meta $ServerOnly name="viewport" content="width=device-width, initial-scale=1" />
       <Assets>{ssr(renderTags(context.tags)) as unknown as JSX.Element}</Assets>
       <IslandStyles />
       {props.children}
     </head>
-    // createComponent(Dynamic, {
-    //   component: 'head',
-    //   get children() {
-    //     return [
-    //       createComponent(Dynamic, {
-    //         component: 'meta',
-    //         charset: 'UTF-8',
-    //       }),
-    //       createComponent(Dynamic, {
-    //         component: 'meta',
-    //         name: 'viewport',
-    //         content: 'width=device-width, initial-scale=1',
-    //       }),
-    //       createComponent(Assets, {
-    //         get children() {
-    //           return ssr(renderTags(context?.tags ?? [])) as unknown as JSX.Element;
-    //         },
-    //       }),
-    //       context?.mode === 'islands' && createComponent(IslandStyles, {}),
-    //       props.children,
-    //     ];
-    //   },
-    // })
   );
 }
 
@@ -80,18 +57,9 @@ export function DocumentMain(): JSX.Element {
   const context = useDocumentContext('DocumentMain');
 
   return (
-    <div id={DOCUMENT_MAIN_ROOT}>
+    <div $ServerOnly id={DOCUMENT_MAIN_ROOT}>
       <context.App />
     </div>
-    // createComponent(Dynamic, {
-    //   component: 'div',
-    //   id: DOCUMENT_MAIN_ROOT,
-    //   get children() {
-    //     return createComponent(Dynamic, {
-    //       component: context?.App,
-    //     });
-    //   },
-    // })
   );
 }
 
@@ -102,7 +70,7 @@ export function DocumentScript(): JSX.Element {
     <>
       <HydrationScript />
       {context.mode !== 'islands' && (
-        <script id={DOCUMENT_DATA} type="application/json">
+        <script id={DOCUMENT_DATA} type="application/json" $ServerOnly>
           {JSON.stringify({
             data: context.data,
             isError: context.isError,
@@ -113,41 +81,19 @@ export function DocumentScript(): JSX.Element {
         type="module"
         async
         src={`${context.assets}/index.js`}
+        $ServerOnly
       />
     </>
   );
-  // return [
-  //   createComponent(Dynamic, { component: HydrationScript }),
-  //   !isIslands && createComponent(Dynamic, {
-  //     component: 'script',
-  //     type: 'application/json',
-  //     id: DOCUMENT_DATA,
-  //     children: JSON.stringify({
-  //       data: context?.data,
-  //       isError: context?.isError,
-  //     }),
-  //   }),
-  //   createComponent(Dynamic, {
-  //     component: 'script',
-  //     type: 'module',
-  //     async: true,
-  //     src: `${context?.assets ?? ''}/index.js`,
-  //   }),
-  // ];
 }
 
 export function DocumentHtml(props: JSX.IntrinsicElements['html']): JSX.Element {
   useDocumentContext('DocumentHtml');
 
   return (
-    <html {...props} lang={props.lang ?? 'en'}>
+    <html {...props} lang={props.lang ?? 'en'} $ServerOnly>
       {props.children}
     </html>
-    // createComponent(Dynamic, {
-    //   component: 'html',
-    //   ...props,
-    //   lang: props.lang ?? 'en',
-    // })
   );
 }
 export function DefaultDocument(): JSX.Element {
@@ -156,31 +102,10 @@ export function DefaultDocument(): JSX.Element {
       <DocumentHead>
         <DocumentScript />
       </DocumentHead>
-      <body>
+      <body $ServerOnly>
         <DocumentMain />
       </body>
     </DocumentHtml>
-    // createComponent(DocumentHtml, {
-    //   get children() {
-    //     return [
-    //       createComponent(DocumentHead, {
-    //         get children() {
-    //           return (
-    //             createComponent(DocumentScript, {})
-    //           );
-    //         },
-    //       }),
-    //       createComponent(Dynamic, {
-    //         component: 'body',
-    //         get children() {
-    //           return (
-    //             createComponent(DocumentMain, {})
-    //           );
-    //         },
-    //       }),
-    //     ];
-    //   },
-    // })
   );
 }
 
@@ -208,16 +133,5 @@ export function Root(props: RootProps): JSX.Element {
         <DocumentComponent />
       </DocumentContext.Provider>
     </HydrationBoundary>
-    // createComponent(HydrationBoundary, {
-    //   shouldHydrate: props.mode !== 'islands',
-    //   get children() {
-    //     return createComponent(DocumentContext.Provider, {
-    //       value: props,
-    //       get children() {
-    //         return createComponent(props.document ?? DefaultDocument, {});
-    //       },
-    //     });
-    //   },
-    // })
   );
 }

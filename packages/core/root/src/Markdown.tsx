@@ -14,12 +14,6 @@ export function MDXProvider(props: MDXProps & { children: JSX.Element }): JSX.El
     <MDXContext.Provider value={other}>
       {local.children}
     </MDXContext.Provider>
-    // createComponent(MDXContext.Provider, {
-    //   value: other,
-    //   get children() {
-    //     return local.children;
-    //   },
-    // })
   );
 }
 

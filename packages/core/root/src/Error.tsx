@@ -5,10 +5,6 @@ import {
   createMemo,
   JSX,
 } from 'solid-js';
-// import {
-//   createComponent,
-//   Dynamic,
-// } from 'solid-js/web';
 import {
   Style,
   Title,
@@ -57,38 +53,6 @@ const DefaultErrorComponent: Page<ErrorProps> = (props): JSX.Element => (
         <span style={ERROR_REASON_STYLE}>{phrase}</span>
       </div>
     );
-    // createComponent(Dynamic, {
-    //   component: 'div',
-    //   style: ERROR_ROOT_STYLE,
-    //   get children() {
-    //     return [
-    //       createComponent(Title, {
-    //         get children() {
-    //           return `${code}: ${phrase}`;
-    //         },
-    //       }),
-    //       createComponent(Style, {
-    //         get children() {
-    //           return 'body { margin: 0 }';
-    //         },
-    //       }),
-    //       createComponent(Dynamic, {
-    //         component: 'span',
-    //         style: ERROR_STATUS_CODE_STYLE,
-    //         get children() {
-    //           return code;
-    //         },
-    //       }),
-    //       createComponent(Dynamic, {
-    //         component: 'span',
-    //         style: ERROR_REASON_STYLE,
-    //         get children() {
-    //           return phrase;
-    //         },
-    //       }),
-    //     ];
-    //   },
-    // })
   })
 );
 

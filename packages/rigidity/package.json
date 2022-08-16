@@ -56,7 +56,7 @@
     "rigidity-router": "0.0.24",
     "rigidity-server": "0.0.24",
     "rigidity-shared": "0.0.24",
-    "solid-marked": "^0.3.0"
+    "solid-marked": "^0.4.0"
   },
   "description": "SSR Framework for SolidJS",
   "repository": {
