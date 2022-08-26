@@ -20,9 +20,6 @@ import {
 import {
   renderTags,
 } from 'caldaria-meta';
-import {
-  IslandStyles,
-} from 'caldaria-islands/server';
 
 const DocumentContext = /* @__PURE__ */ (
   createContext<RenderResult<any>>()
@@ -47,7 +44,7 @@ export function DocumentHead(props: DocumentHeadProps): JSX.Element {
       <meta $ServerOnly charset="UTF-8" />
       <meta $ServerOnly name="viewport" content="width=device-width, initial-scale=1" />
       <Assets>{ssr(renderTags(context.tags)) as unknown as JSX.Element}</Assets>
-      <IslandStyles />
+      <style>{'ri-root,ri-fragment,ri-frame{display:contents;}'}</style>
       {props.children}
     </head>
   );
