@@ -23,10 +23,6 @@ async function renderCore<T>(
     case 'async': {
       const documentResult = await renderToStringAsync(() => (
         <Root {...pageResult} document={globalOptions.root.Document} />
-        // createComponent(Root, {
-        //   ...pageResult,
-        //   document: globalOptions.root.Document,
-        // })
       ));
 
       return `<!DOCTYPE html>${documentResult}`;
@@ -41,10 +37,6 @@ async function renderCore<T>(
       writable.write('<!DOCTYPE html>');
       renderToStream(() => (
         <Root {...pageResult} document={globalOptions.root.Document} />
-        // createComponent(Root, {
-        //   ...pageResult,
-        //   document: globalOptions.root.Document,
-        // })
       )).pipe(writable);
       return writable;
     }
@@ -53,10 +45,6 @@ async function renderCore<T>(
       await instance.writable.getWriter().write('<!DOCTYPE html>');
       renderToStream(() => (
         <Root {...pageResult} document={globalOptions.root.Document} />
-        // createComponent(Root, {
-        //   ...pageResult,
-        //   document: globalOptions.root.Document,
-        // })
       )).pipeTo(instance.writable);
       return instance.readable;
     }
@@ -64,10 +52,6 @@ async function renderCore<T>(
     default: {
       const documentResult = renderToString(() => (
         <Root {...pageResult} document={globalOptions.root.Document} />
-        // createComponent(Root, {
-        //   ...pageResult,
-        //   document: globalOptions.root.Document,
-        // })
       ));
 
       return `<!DOCTYPE html>${documentResult}`;
