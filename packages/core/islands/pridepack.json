@@ -1,5 +1,5 @@
 {
-  "target": "es2017",
+  "target": "es2018",
   "entrypoints": {
     "./babel": "./babel/index.ts",
     "./client": "./client/index.ts",

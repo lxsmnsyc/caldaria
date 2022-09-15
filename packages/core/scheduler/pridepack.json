@@ -1,5 +1,5 @@
 {
-  "target": "es2017",
+  "target": "es2018",
   "entrypoints": {
     "./animation-frame": "src/on-animation-frame.ts",
     "./delay": "src/on-delay.ts",

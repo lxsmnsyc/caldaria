@@ -1,5 +1,5 @@
 {
-  "target": "es2017",
+  "target": "es2018",
   "jest": {
     "preset": "ts-jest"
   }

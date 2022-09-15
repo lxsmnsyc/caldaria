@@ -12,8 +12,7 @@ export {
   matchRoute,
 } from './core/router';
 export {
-  createClientPage,
-  createServerPage,
+  default as createPage,
 } from './components/Page';
 export {
   default as createAPITree,
