@@ -108,7 +108,7 @@ export default function runESBuild(
     format: context.isServer ? 'cjs' : 'esm',
     platform: context.isServer ? 'node' : 'browser',
     splitting: !context.isServer,
-    target: esbuildConfig?.target,
+    target: esbuildConfig?.target ?? 'es2017',
     allowOverwrite: true,
     define: {
       ...(esbuildConfig?.define ?? {}),
