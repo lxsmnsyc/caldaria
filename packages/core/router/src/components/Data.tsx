@@ -45,20 +45,5 @@ export function DataProvider<L, A = undefined>(props: DataProviderProps<L, A>) {
     >
       {props.children}
     </DataContext.Provider>
-    // createComponent(DataContext.Provider, {
-    //   value: {
-    //     initial: true,
-    //     get load() {
-    //       return props.load;
-    //     },
-    //     get action() {
-    //       return action();
-    //     },
-    //     setAction,
-    //   },
-    //   get children() {
-    //     return props.children;
-    //   },
-    // })
   );
 }

@@ -42,43 +42,16 @@ export default function Router(
 
   return (
     <LocationContext.Provider value={location}>
-      <Show when={matchedRoute()} fallback={props.fallback}>
+      <Show when={matchedRoute()} fallback={props.fallback} keyed>
         {(route) => (
           <ParamsContext.Provider value={route.params}>
-            <Show when={route.value}>
+            <Show when={route.value} keyed>
               {(Comp) => <Comp />}
             </Show>
           </ParamsContext.Provider>
         )}
       </Show>
     </LocationContext.Provider>
-    // createComponent(LocationContext.Provider, {
-    //   value: location,
-    //   get children() {
-    //     return createMemo(() => {
-    //       const route = matchedRoute();
-    //       if (route != null) {
-    //         const result = route;
-    //         return (
-    //           createComponent(ParamsContext.Provider, {
-    //             get value() {
-    //               return result.params;
-    //             },
-    //             get children() {
-    //               return createMemo(() => {
-    //                 if (result.value) {
-    //                   return createComponent(result.value, {});
-    //                 }
-    //                 return undefined;
-    //               });
-    //             },
-    //           })
-    //         );
-    //       }
-    //       return props.fallback;
-    //     });
-    //   },
-    // })
   );
 }
 

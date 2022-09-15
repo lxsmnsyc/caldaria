@@ -16,6 +16,7 @@ import {
 import {
   useRouter,
 } from './Router';
+import { omitProps } from 'solid-use';
 
 type FormBasePros = JSX.IntrinsicElements['form'];
 
@@ -109,7 +110,7 @@ export default function Form(props: FormProps): JSX.Element {
 
   return (
     <form
-      {...props}
+      {...omitProps(props, ['children'])}
       action={actionUrl()}
       ref={(el) => {
         formEl = el;
@@ -121,19 +122,4 @@ export default function Form(props: FormProps): JSX.Element {
       {props.children}
     </form>
   );
-
-  // return createComponent(Dynamic, mergeProps({
-  //   component: 'form',
-  //   get action() {
-  //     return actionUrl();
-  //   },
-  //   ref(el: HTMLFormElement) {
-  //     formEl = el;
-  //     if (typeof props.ref === 'function') {
-  //       props.ref(el);
-  //     }
-  //   },
-  // }, omitProps(props, [
-  //   'action',
-  // ])));
 }

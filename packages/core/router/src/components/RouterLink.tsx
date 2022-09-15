@@ -32,20 +32,10 @@ export default function RouterLink(
 
   if (!router) {
     return (
-      <a {...omitProps(props, ['prefetch', 'scroll', 'replace'])}>
+      <a {...omitProps(props, ['prefetch', 'scroll', 'replace', 'children'])}>
         {props.children}
       </a>
     );
-    // return createComponent(Dynamic, mergeProps(
-    //   {
-    //     component: 'a',
-    //   },
-    //   omitProps(props, [
-    //     'prefetch',
-    //     'scroll',
-    //     'replace',
-    //   ]),
-    // ));
   }
 
   let anchorRef!: HTMLAnchorElement;
@@ -144,7 +134,7 @@ export default function RouterLink(
 
   return (
     <a
-      {...omitProps(props, ['prefetch', 'scroll', 'replace'])}
+    {...omitProps(props, ['prefetch', 'scroll', 'replace', 'children'])}
       ref={(e: HTMLAnchorElement) => {
         if (typeof props.ref === 'function') {
           props.ref(e);
@@ -155,23 +145,4 @@ export default function RouterLink(
       {props.children}
     </a>
   );
-  // return (
-  //   createComponent(Dynamic, mergeProps(
-  //     {
-  //       component: 'a',
-  //       ref: (e: HTMLAnchorElement) => {
-  //         if (typeof props.ref === 'function') {
-  //           props.ref(e);
-  //         }
-  //         anchorRef = e;
-  //       },
-  //     },
-  //     omitProps(props, [
-  //       'prefetch',
-  //       'scroll',
-  //       'ref',
-  //       'replace',
-  //     ]),
-  //   ))
-  // );
 }
