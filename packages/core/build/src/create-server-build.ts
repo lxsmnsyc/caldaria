@@ -136,7 +136,7 @@ export async function generateServerArtifact(options: BuildOptions) {
 
   // Create import header
   const lines = [
-    'import { createServerPage } from "caldaria/router";',
+    'import { createPage } from "caldaria/router";',
     ...getAPIImports(
       apiDirectory,
       artifact.directory,

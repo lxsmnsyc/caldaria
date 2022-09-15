@@ -11,7 +11,6 @@ export function getPageImports(
   targetDirectory: string,
   artifactDirectory: string,
   pages: string[],
-  isServer: boolean,
 ): string[] {
   return map(pages, (page, index) => {
     const { name, dir, ext } = path.parse(page);
@@ -22,12 +21,8 @@ export function getPageImports(
     const targetFile = getPOSIXPath(path.relative(artifactDirectory, srcFile));
 
     const literal = getPageLiteral(index);
-    if (isServer) {
-      return `import ${literal}Default from '${targetFile}';
-const ${literal} = createServerPage(${literal}Default);`;
-    }
     // Create lazy load declaration
-    return `const ${literal} = createClientPage(() => import('${targetFile}'))`;
+    return `const ${literal} = createPage(() => import('${targetFile}'))`;
   });
 }
 

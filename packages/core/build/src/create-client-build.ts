@@ -91,12 +91,11 @@ export async function generateClientArtifact(
 
   // Create import header
   const lines = [
-    'import { createClientPage } from "caldaria/router";',
+    'import { createPage } from "caldaria/router";',
     ...getPageImports(
       pagesDirectory,
       artifact.directory,
       pages,
-      false,
     ),
   ];
 
