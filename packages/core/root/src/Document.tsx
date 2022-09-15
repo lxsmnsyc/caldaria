@@ -17,6 +17,7 @@ import {
 import {
   renderTags,
 } from 'caldaria-meta';
+import { omitProps } from 'solid-use';
 
 const DocumentContext = /* @__PURE__ */ (
   createContext<RenderResult<any>>()
@@ -86,9 +87,12 @@ export function DocumentHtml(props: JSX.IntrinsicElements['html']): JSX.Element 
   useDocumentContext('DocumentHtml');
 
   return (
-    <html {...props} lang={props.lang ?? 'en'} />
+    <html {...omitProps(props, ['children'])} lang={props.lang ?? 'en'}>
+      {props.children}
+    </html>
   );
 }
+
 export function DefaultDocument(): JSX.Element {
   return (
     <DocumentHtml>
