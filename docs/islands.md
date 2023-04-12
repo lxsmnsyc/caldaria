@@ -1,3 +1,0 @@
-# Islands
-
-## 🚧 UNDER DEVELOPMENT 🚧

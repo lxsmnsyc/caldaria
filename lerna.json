@@ -1,9 +1,7 @@
 {
   "useWorkspaces": true,
   "workspaces": [
-    "packages/adapters/*",
-    "packages/core/*",
-    "packages/caldaria",
+    "packages/*",
     "examples/*"
   ],
   "command": {

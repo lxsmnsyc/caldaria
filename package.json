@@ -2,15 +2,13 @@
   "name": "root",
   "private": true,
   "workspaces": [
-    "packages/adapters/*",
-    "packages/core/*",
-    "packages/caldaria",
+    "packages/*",
     "examples/*"
   ],
   "devDependencies": {
-    "eslint": "^8.21.0",
-    "eslint-config-lxsmnsyc": "^0.4.8",
-    "lerna": "^5.1.8",
-    "typescript": "^4.7.4"
+    "eslint": "^8.38.0",
+    "eslint-config-lxsmnsyc": "^0.5.1",
+    "lerna": "^6.6.1",
+    "typescript": "^4.9.5"
   }
 }
